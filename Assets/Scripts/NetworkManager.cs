@@ -85,11 +85,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         }
 
         instance = this;
-        _logger = new Logger(this, debug);
+        _logger = new(this, debug);
     }
     
     private void Start() {
-        DontDestroyOnLoad(gameObject);
+        DontDestroyOnLoad(this);
         PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName", "Player");
     }
 

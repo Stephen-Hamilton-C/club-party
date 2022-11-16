@@ -1,35 +1,33 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+
+[Serializable]
+public class PlayerTriggerEvent : UnityEvent<GameObject> { }
 
 public class PlayerTrigger : MonoBehaviour {
 
     [SerializeField] private bool debug;
     private Logger _logger;
 
-    public delegate void PlayerTriggerEvent(GameObject playerObject);
-
-    public event PlayerTriggerEvent OnPlayerEntered;
-    public event PlayerTriggerEvent OnPlayerExited;
+    public PlayerTriggerEvent onPlayerEntered = new();
+    public PlayerTriggerEvent onPlayerExited = new();
     
     void Awake() {
-        _logger = new Logger(this);
+        _logger = new(this);
     }
 
     private void OnTriggerEnter(Collider other) {
         if (other.CompareTag("Player")) {
             _logger.Log("A Player entered this trigger.");
-            if (OnPlayerEntered != null)
-                OnPlayerEntered(other.gameObject);
+            onPlayerEntered.Invoke(other.gameObject);
         }
     }
 
     private void OnTriggerExit(Collider other) {
         if (other.CompareTag("Player")) {
             _logger.Log("A Player left this trigger.");
-            if (OnPlayerExited != null)
-                OnPlayerExited(other.gameObject);
+            onPlayerExited.Invoke(other.gameObject);
         }
     }
 }

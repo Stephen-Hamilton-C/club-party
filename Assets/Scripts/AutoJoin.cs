@@ -9,7 +9,7 @@ public class AutoJoin : MonoBehaviour {
     [SerializeField] private GameObject player;
     private Logger _logger;
 
-    private void Start() {
+    private void Awake() {
         _logger = new Logger(this, debug);
         Screen.fullScreen = false;
 
@@ -19,8 +19,10 @@ public class AutoJoin : MonoBehaviour {
         };
         NetworkManager.onJoinedRoom += () => {
             _logger.Log("Room joined. Spawning player...");
-            PhotonNetwork.Instantiate(player.name, new Vector3(0, player.transform.localScale.y / 2, 0),
+            GameObject character = PhotonNetwork.Instantiate(player.name, new Vector3(0, player.transform.localScale.y / 2, 0),
                 Quaternion.identity);
+            
+            PhotonNetwork.LocalPlayer.CustomProperties.Add("Character", character);
         };
         
         _logger.Log("Connecting to Master Server...");
