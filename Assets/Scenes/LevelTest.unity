@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
-  offline: 1
+  offline: 0
   player: {fileID: 3388712837282367556, guid: 321ef25116a5021479d1049b97aaec61, type: 3}
 --- !u!1 &203844586
 GameObject:

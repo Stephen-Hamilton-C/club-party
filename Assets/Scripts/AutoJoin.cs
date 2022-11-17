@@ -13,9 +13,6 @@ public class AutoJoin : MonoBehaviour {
     private void Awake() {
         _logger = new Logger(this, debug);
         Screen.fullScreen = false;
-        if (Application.isEditor) {
-            PhotonNetwork.OfflineMode = offline;
-        }
 
         NetworkManager.onConnectedToMaster += () => {
             _logger.Log("Connected to Master. Joining room...");
@@ -29,8 +26,16 @@ public class AutoJoin : MonoBehaviour {
             PhotonNetwork.LocalPlayer.CustomProperties.Add("Character", character);
         };
         
-        _logger.Log("Connecting to Master Server...");
-        _logger.Log(NetworkManager.Connect() ? "Will connect..." : "Won't connect.");
+        if (Application.isEditor && offline) {
+            PhotonNetwork.OfflineMode = true;
+            _logger.Log("Offline mode activated.");
+            _logger.Log("Joining an offline room...");
+            NetworkManager.LeaveRoom();
+            NetworkManager.JoinRoom();
+        } else {
+            _logger.Log("Connecting to Master Server...");
+            _logger.Log(NetworkManager.Connect() ? "Will connect..." : "Won't connect.");
+        }
     }
     
 }
