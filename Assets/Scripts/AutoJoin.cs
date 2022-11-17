@@ -6,12 +6,16 @@ using UnityEngine;
 public class AutoJoin : MonoBehaviour {
 
     [SerializeField] private bool debug;
+    [SerializeField] private bool offline;
     [SerializeField] private GameObject player;
     private Logger _logger;
 
     private void Awake() {
         _logger = new Logger(this, debug);
         Screen.fullScreen = false;
+        #if UNITY_EDITOR
+        PhotonNetwork.OfflineMode = offline;
+        #endif
 
         NetworkManager.onConnectedToMaster += () => {
             _logger.Log("Connected to Master. Joining room...");

@@ -1,9 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using Photon.Pun;
-using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraTracker : MonoBehaviour {
 
@@ -12,6 +10,26 @@ public class CameraTracker : MonoBehaviour {
     [SerializeField] private float trackSpeed = 10f;
     [SerializeField] private Vector3 positionOffset = Vector3.zero;
     [SerializeField] private Vector3 baseRotation = Vector3.zero;
+
+    private CameraControls _controls;
+    private InputAction _look;
+    private InputAction _unlockCam;
+
+    private void Awake() {
+        _controls = new();
+    }
+
+    private void OnEnable() {
+        _look = _controls.Player.Look;
+        _look.Enable();
+        _unlockCam = _controls.Player.CameraUnlock;
+        _unlockCam.Enable();
+    }
+
+    private void OnDisable() {
+        _look.Disable();
+        _unlockCam.Disable();
+    }
 
     private void Start() {
         NetworkManager.onJoinedRoom += () => {
@@ -28,11 +46,16 @@ public class CameraTracker : MonoBehaviour {
         
         transform.localPosition = positionOffset;
         transform.localRotation = Quaternion.Euler(baseRotation);
+    }
 
-        bool m2Held = Input.GetButton("Fire2");
-        Cursor.visible = !m2Held;
-        if (m2Held) {
-            parent.Rotate(new Vector3(0, 1, 0), Input.GetAxis("Mouse X") * rotationSpeed);
+    private void Update() {
+        if (player == null) return;
+        
+        bool cameraUnlocked = _unlockCam.IsPressed();
+        Cursor.visible = !cameraUnlocked;
+        if (cameraUnlocked) {
+            float mouseX = _look.ReadValue<Vector2>().x;
+            transform.parent.Rotate(new Vector3(0, 1, 0), mouseX * rotationSpeed);
         }
     }
 

@@ -1,16 +1,17 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PhotonView))]
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour {
 
     [SerializeField] private LayerMask clickMask;
-    [SerializeField] private float speed = 50f;
-    [SerializeField] private float maxSpeed = 100f;
+    [SerializeField] private float speed = 2f;
+    [SerializeField] private float maxSpeed = 5f;
+    [SerializeField] private float minSpeed = 0.1f;
     
     private PhotonView _view;
     private Rigidbody _rb;
@@ -20,24 +21,35 @@ public class PlayerController : MonoBehaviour {
         _view = GetComponent<PhotonView>();
         _rb = GetComponent<Rigidbody>();
         _camera = Camera.main;
+        
+        // Don't let the player control other players
+        if (!_view.IsMine)
+            GetComponent<PlayerInput>().DeactivateInput();
     }
 
-    private void Update() {
-        if (!_view.IsMine) return;
+    private void FixedUpdate() {
+        if (_rb.velocity.magnitude < minSpeed) {
+            _rb.velocity = Vector3.zero;
+        }
+    }
 
-        if (Input.GetButtonDown("Fire1")) {
+    /// <summary>
+    /// Called by PlayerInput
+    /// </summary>
+    [UsedImplicitly]
+    public void OnClick() {
+        if (_rb.velocity.magnitude <= minSpeed) {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
-            Debug.DrawRay(ray.origin, ray.direction);
 
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, clickMask.value, QueryTriggerInteraction.Ignore)) {
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickMask.value,
+                    QueryTriggerInteraction.Ignore)) {
                 Vector3 pointToBall = hit.point - transform.position;
                 pointToBall.y = 0;
-                
+
                 Vector3 force = Vector3.ClampMagnitude(-pointToBall * speed, maxSpeed);
                 _rb.AddForce(force, ForceMode.Impulse);
             }
         }
     }
-    
+
 }
