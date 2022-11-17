@@ -13,9 +13,9 @@ public class AutoJoin : MonoBehaviour {
     private void Awake() {
         _logger = new Logger(this, debug);
         Screen.fullScreen = false;
-        #if UNITY_EDITOR
-        PhotonNetwork.OfflineMode = offline;
-        #endif
+        if (Application.isEditor) {
+            PhotonNetwork.OfflineMode = offline;
+        }
 
         NetworkManager.onConnectedToMaster += () => {
             _logger.Log("Connected to Master. Joining room...");
