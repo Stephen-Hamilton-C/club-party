@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void FixedUpdate() {
+        PlayerState.CanStroke = _rb.velocity.magnitude <= minSpeed;
         if (_rb.velocity.magnitude < minSpeed) {
             _rb.velocity = Vector3.zero;
         }
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour {
     /// </summary>
     [UsedImplicitly]
     public void OnClick() {
-        if (_rb.velocity.magnitude <= minSpeed) {
+        if (PlayerState.CanStroke) {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickMask.value,
