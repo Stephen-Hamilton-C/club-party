@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class CameraTracker : MonoBehaviour {
 
+    [SerializeField] private bool debug;
+    
     public Transform player;
     [SerializeField] private float rotationSpeed = 7.5f;
     [SerializeField] private float trackSpeed = 10f;
@@ -24,6 +26,7 @@ public class CameraTracker : MonoBehaviour {
 
     private Transform _pivot;
     private float _pitch;
+    private Logger _logger;
 
     private void Awake() {
         _controls = new();
@@ -45,9 +48,11 @@ public class CameraTracker : MonoBehaviour {
     }
 
     private void Start() {
+        _logger = new(this, debug);
         NetworkManager.onJoinedRoom += () => {
             GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
             player = character?.transform;
+            _logger.Log("Joined room. Character: "+character);
         };
 
         _pivot = transform.parent;
@@ -56,9 +61,9 @@ public class CameraTracker : MonoBehaviour {
     private void FixedUpdate() {
         if (player == null) return;
 
-        _pivot.position = Vector3.Lerp(_pivot.position, player.position, Time.fixedDeltaTime * trackSpeed);
+        _pivot.position = Vector3.Lerp(_pivot.position, player.position, Time.fixedUnscaledDeltaTime * trackSpeed);
 
-        transform.localPosition = Vector3.Lerp(transform.localPosition, positionOffset * zoom, Time.fixedDeltaTime * trackSpeed);
+        transform.localPosition = Vector3.Lerp(transform.localPosition, positionOffset * zoom, Time.fixedUnscaledDeltaTime * trackSpeed);
         transform.localRotation = Quaternion.Euler(baseRotation);
     }
 

@@ -29,6 +29,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         }
     }
 
+    public static byte PlayerCount {
+        get {
+            if (PhotonNetwork.InRoom) {
+                return PhotonNetwork.CurrentRoom.PlayerCount;
+            }
+
+            return 0;
+        }
+    }
+
     public override void OnConnectedToMaster() {
         _logger.Log("Connected to Master Server");
         if (onConnectedToMaster != null)

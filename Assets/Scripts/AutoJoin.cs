@@ -20,8 +20,9 @@ public class AutoJoin : MonoBehaviour {
         };
         NetworkManager.onJoinedRoom += () => {
             _logger.Log("Room joined. Spawning player...");
-            GameObject character = PhotonNetwork.Instantiate(player.name, new Vector3(0, player.transform.localScale.y / 2, 0),
-                Quaternion.identity);
+            var spawnPos = GameManager.Instance.spawn.position;
+            spawnPos.y += player.transform.localScale.y / 2;
+            GameObject character = PhotonNetwork.Instantiate(player.name, spawnPos, Quaternion.identity);
             
             PhotonNetwork.LocalPlayer.CustomProperties.Add("Character", character);
         };

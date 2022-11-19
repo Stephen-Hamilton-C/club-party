@@ -1,8 +1,10 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector3 = UnityEngine.Vector3;
 
+[Obsolete("Old prototype controller. Use PlayerController instead.")]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(PhotonView))]
 public class BasicController : MonoBehaviour {
