@@ -1,11 +1,14 @@
 using System.Collections.Generic;
 using DevLocker.Utils;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using Vector3 = UnityEngine.Vector3;
 
 public class GameManager : MonoBehaviour {
+
+    public const string CharacterName = "Ball";
 
     [SerializeField] private bool debug;
 
@@ -27,6 +30,14 @@ public class GameManager : MonoBehaviour {
         }
 
         Instance = this;
+        
+        // Spawn player
+        var spawnPos = spawn.position;
+        spawnPos.y += 0.1f;
+        GameObject character = PhotonNetwork.Instantiate(CharacterName, spawnPos, Quaternion.identity);
+        character.name = PhotonNetwork.LocalPlayer.NickName;
+            
+        PhotonNetwork.LocalPlayer.CustomProperties["Character"] = character;
     }
 
     private void Start() {
@@ -45,17 +56,9 @@ public class GameManager : MonoBehaviour {
             if (_nextMapTimer >= TimeBeforeNextLevel) {
                 _logger.Log("Timer finished. Loading next level...");
                 _nextMapTimer = 0;
-                foreach (var finishedPlayer in _finishedPlayers) {
-                    // Rigidbody rb = finishedPlayer.GetComponent<Rigidbody>();
-                    // rb.position = spawn.position + new Vector3(0, finishedPlayer.transform.localScale.y / 2, 0);
-                    // rb.velocity = Vector3.zero;
-                    string sceneName = nextLevel.SceneName;
-                    Debug.Log(sceneName);
-                    var scene = SceneManager.GetSceneByName(sceneName);
-                    Debug.Log(scene);
-                    PhotonNetwork.LoadLevel(sceneName);
-                }
                 _finishedPlayers.Clear();
+                
+                PhotonNetwork.LoadLevel(nextLevel.SceneName);
             } else {
                 _nextMapTimer += Time.unscaledDeltaTime;
             }

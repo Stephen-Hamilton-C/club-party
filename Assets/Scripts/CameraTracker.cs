@@ -49,11 +49,10 @@ public class CameraTracker : MonoBehaviour {
 
     private void Start() {
         _logger = new(this, debug);
-        NetworkManager.onJoinedRoom += () => {
-            GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
-            player = character?.transform;
-            _logger.Log("Joined room. Character: "+character);
-        };
+        
+        GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
+        player = character?.transform;
+        _logger.Log("Character: "+character);
 
         _pivot = transform.parent;
     }
