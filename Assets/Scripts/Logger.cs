@@ -11,6 +11,7 @@ public class Logger {
         Enabled = enabled;
 
         _title = context.GetType().Name;
+        Log("Hello, world!");
     }
 
     public void Log(string msg) {
@@ -19,13 +20,11 @@ public class Logger {
     }
 
     public void Warn(string msg) {
-        if(Enabled)
-            Debug.LogWarning(FormatMsg(msg), _context);
+        Debug.LogWarning(FormatMsg(msg), _context);
     }
 
     public void Err(string msg) {
-        if(Enabled)
-            Debug.LogError(FormatMsg(msg), _context);
+        Debug.LogError(FormatMsg(msg), _context);
     }
 
     private string FormatMsg(string msg) {
