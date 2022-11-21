@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour {
         // Spawn player
         var spawnPos = spawn.position;
         spawnPos.y += 0.1f;
-        GameObject character = PhotonNetwork.Instantiate(CharacterName, spawnPos, Quaternion.identity);
+        GameObject character = PhotonNetwork.Instantiate(CharacterName, spawnPos, spawn.rotation);
         character.name = PhotonNetwork.LocalPlayer.NickName;
             
         PhotonNetwork.LocalPlayer.CustomProperties["Character"] = character;
