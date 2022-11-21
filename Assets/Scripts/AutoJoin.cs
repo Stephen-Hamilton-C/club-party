@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 
+[Obsolete("Using UI now to connect")]
 public class AutoJoin : MonoBehaviour {
 
     [SerializeField] private bool debug;
     [SerializeField] private bool offline;
-    [SerializeField] private GameObject player;
     private Logger _logger;
 
     private void Awake() {
@@ -17,14 +18,6 @@ public class AutoJoin : MonoBehaviour {
         NetworkManager.onConnectedToMaster += () => {
             _logger.Log("Connected to Master. Joining room...");
             NetworkManager.JoinRoom();
-        };
-        NetworkManager.onJoinedRoom += () => {
-            _logger.Log("Room joined. Spawning player...");
-            var spawnPos = GameManager.Instance.spawn.position;
-            spawnPos.y += player.transform.localScale.y / 2;
-            GameObject character = PhotonNetwork.Instantiate(player.name, spawnPos, Quaternion.identity);
-            
-            PhotonNetwork.LocalPlayer.CustomProperties.Add("Character", character);
         };
         
         if (Application.isEditor && offline) {
