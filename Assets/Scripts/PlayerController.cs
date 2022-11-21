@@ -10,10 +10,10 @@ public class PlayerController : MonoBehaviour {
 
     [SerializeField] private bool debug;
     
-    [SerializeField] private LayerMask clickMask;
     [SerializeField] private float speed = 2f;
     [SerializeField] private float maxSpeed = 5f;
     [SerializeField] private float minSpeed = 0.1f;
+    [SerializeField] private GameObject mouseIndicator;
     
     private PhotonView _view;
     private Rigidbody _rb;
@@ -41,6 +41,21 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
+    private void LateUpdate() {
+        var currentPos = transform.position;
+        var indicatorPos = PlayerState.MousePosition;
+        indicatorPos.y = currentPos.y;
+
+        mouseIndicator.transform.position = indicatorPos;
+        mouseIndicator.transform.localPosition = Vector3.ClampMagnitude(mouseIndicator.transform.localPosition, maxSpeed);
+
+        var line = mouseIndicator.GetComponent<LineRenderer>();
+        line.SetPositions(new Vector3[] {
+            currentPos,
+            mouseIndicator.transform.position
+        });
+    }
+
     /// <summary>
     /// Called by PlayerInput
     /// </summary>
@@ -49,20 +64,12 @@ public class PlayerController : MonoBehaviour {
         _logger.Log("Registered player click");
         if (PlayerState.CanStroke) {
             _logger.Log("Player can stroke");
-            Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
+            Vector3 pointToBall = PlayerState.MousePosition - transform.position;
+            pointToBall.y = 0;
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickMask.value,
-                    QueryTriggerInteraction.Ignore)) {
-                _logger.Log("Click hit the control plane at "+hit.point);
-                Vector3 pointToBall = hit.point - transform.position;
-                pointToBall.y = 0;
-
-                Vector3 force = Vector3.ClampMagnitude(-pointToBall * speed, maxSpeed);
-                _logger.Log("Applying impulse: "+force);
-                _rb.AddForce(force, ForceMode.Impulse);
-            } else {
-                _logger.Warn("Click missed the control plane");
-            }
+            Vector3 force = Vector3.ClampMagnitude(-pointToBall * speed, maxSpeed);
+            _logger.Log("Applying impulse: "+force);
+            _rb.AddForce(force, ForceMode.Impulse);
         }
     }
 
