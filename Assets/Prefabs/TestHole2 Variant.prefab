@@ -131,11 +131,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -3464447691518478215, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 9e36ae41b1fa3624abc53e1cc6b442cc,
+        type: 2}
+    - target: {fileID: -808966925217029657, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 37be1510fc576ff40800faffcde5fc7b,
+        type: 2}
     - target: {fileID: 919132149155446097, guid: 490b646a382731045a57a14903923bd8,
         type: 3}
       propertyPath: m_Name
       value: TestHole2
       objectReference: {fileID: 0}
+    - target: {fileID: 3182244660871480619, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: 9e36ae41b1fa3624abc53e1cc6b442cc,
+        type: 2}
     m_RemovedComponents:
     - {fileID: -6306251675905053821, guid: 490b646a382731045a57a14903923bd8, type: 3}
     - {fileID: 6459149298229453932, guid: 490b646a382731045a57a14903923bd8, type: 3}

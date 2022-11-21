@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6802252786989121371}
   - component: {fileID: 6802252786989121370}
-  - component: {fileID: 8539097853606404199}
+  - component: {fileID: -2053301650839742936}
+  - component: {fileID: 6654185966478039806}
   m_Layer: 0
   m_Name: HoleTrigger
   m_TagString: Untagged
@@ -46,7 +47,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8539097853606404199
+--- !u!114 &-2053301650839742936
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -55,7 +56,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 6802252786989121372}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a1cd6007dc36514a9ad7a7eddd67895, type: 3}
+  m_Script: {fileID: 11500000, guid: f2977319fd5a47746b4afd87b3e48461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
+--- !u!65 &6654185966478039806
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802252786989121372}
+  m_Material: {fileID: 13400000, guid: 9e36ae41b1fa3624abc53e1cc6b442cc, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: -1}
