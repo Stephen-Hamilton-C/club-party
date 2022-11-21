@@ -36,17 +36,8 @@ public class GameManager : MonoBehaviour {
             spawn = new GameObject().transform;
             _logger.Warn("Spawn reference missing! It has been set to a new empty at "+spawn.position);
         }
-        
-        NetworkManager.onPlayerLeft += player => {
-            GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject; 
-            bool success = _finishedPlayers.Remove(character);
-            _logger.Log("Player left. Character: "+character);
-            if (success) {
-                _logger.Log("Character removed from finished set.");
-            } else {
-                _logger.Log("Player was not in hole.");
-            }
-        };
+
+        NetworkManager.onPlayerLeft += PlayerLeft;
     }
 
     private void Update() {
@@ -76,6 +67,19 @@ public class GameManager : MonoBehaviour {
         if (Instance == this) {
             _logger.Log("The singleton instance is being destroyed.");
             Instance = null;
+        }
+
+        NetworkManager.onPlayerLeft -= PlayerLeft;
+    }
+
+    private void PlayerLeft(Player player) {
+        GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject; 
+        bool success = _finishedPlayers.Remove(character);
+        _logger.Log("Player ("+player.NickName+") left. Character: "+character);
+        if (success) {
+            _logger.Log("Character removed from finished set.");
+        } else {
+            _logger.Log("Player was not in hole.");
         }
     }
 

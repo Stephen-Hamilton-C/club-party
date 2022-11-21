@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,6 +17,10 @@ namespace UI {
 
         private void UpdateColor(bool canStroke) {
             _image.color = canStroke ? Color.green : Color.red;
+        }
+
+        private void OnDestroy() {
+            PlayerState.OnCanStrokeChanged -= UpdateColor;
         }
     }
 }
