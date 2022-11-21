@@ -32,13 +32,16 @@ public class PlayerState : MonoBehaviour {
         _logger = new(this, debug);
         _view = GetComponent<PhotonView>();
 
+        if (!_view.IsMine) {
+            _logger.Log("This is another player's character. Destroying this instance.");
+            Destroy(this);
+        }
+        
         if (_instance != null) {
             if (_view.IsMine) {
                 _logger.Warn("Multiple player characters owned by this player exist! The duplicate character will be destroyed.");
                 PhotonNetwork.Destroy(gameObject);
             }
-            _logger.Log("This is another player's character. Destroying this instance.");
-            Destroy(this);
         } else {
             _instance = this;
         }

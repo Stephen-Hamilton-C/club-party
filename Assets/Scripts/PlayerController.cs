@@ -27,12 +27,14 @@ public class PlayerController : MonoBehaviour {
         _camera = Camera.main;
         
         // Don't let the player control other players
-        _logger.Log("Hello, world! IsMine: "+_view.IsMine);
+        _logger.Log("IsMine: "+_view.IsMine);
         if (!_view.IsMine)
             GetComponent<PlayerInput>().DeactivateInput();
     }
 
     private void FixedUpdate() {
+        if (!_view.IsMine) return;
+        
         PlayerState.CanStroke = _rb.velocity.magnitude <= minSpeed;
         if (_rb.velocity.magnitude < minSpeed) {
             _rb.velocity = Vector3.zero;
