@@ -96,11 +96,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
 
         instance = this;
         _logger = new(this, debug);
-    }
-    
-    private void Start() {
-        DontDestroyOnLoad(this);
+        
         PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName", "Player");
+        PhotonNetwork.AutomaticallySyncScene = true;
+        
+        DontDestroyOnLoad(this);
     }
 
 }
