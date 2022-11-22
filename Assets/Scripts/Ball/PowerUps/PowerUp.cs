@@ -1,7 +1,5 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
-using WebSocketSharp;
 
 namespace Ball.PowerUps {
     [RequireComponent(typeof(PlayerController))]
