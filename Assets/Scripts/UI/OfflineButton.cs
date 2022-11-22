@@ -14,18 +14,11 @@ namespace UI {
         protected override void OnClick() {
             _logger.Log("Enabling offline mode...");
 
-            NetworkManager.onConnectedToMaster += ConnectedToMaster;
             NetworkManager.onJoinedRoom += GameManager.StartGame;
-            NetworkManager.ConnectOffline();
-        }
-
-        private void ConnectedToMaster() {
-            _logger.Log("Joining room...");
-            NetworkManager.JoinRoom();
+            NetworkManager.ConnectOfflineAndJoinRoom();
         }
 
         private void OnDestroy() {
-            NetworkManager.onConnectedToMaster -= ConnectedToMaster;
             NetworkManager.onJoinedRoom -= GameManager.StartGame;
         }
     }

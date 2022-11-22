@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviourPunCallbacks {
@@ -80,7 +79,22 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         return PhotonNetwork.ConnectUsingSettings();
     }
 
+    public static bool ConnectAndJoinRoom() {
+        onConnectedToMaster += JoinAfterConnect;
+        return Connect();
+    }
+
+    private static void JoinAfterConnect() {
+        JoinRoom();
+        onConnectedToMaster -= JoinAfterConnect;
+    }
+
     public static void ConnectOffline() {
+        PhotonNetwork.OfflineMode = true;
+    }
+
+    public static void ConnectOfflineAndJoinRoom() {
+        onConnectedToMaster += JoinAfterConnect;
         PhotonNetwork.OfflineMode = true;
     }
 

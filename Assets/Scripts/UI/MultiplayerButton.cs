@@ -16,27 +16,20 @@ namespace UI {
         }
 
         protected override void OnClick() {
-            bool willConnect = NetworkManager.Connect();
+            bool willConnect = NetworkManager.ConnectAndJoinRoom();
             _logger.Log("Connecting to Master Server...");
             _logger.Log(willConnect ? "Will connect..." : "Won't connect.");
             
             if (willConnect) {
                 // TODO: Need to find a way to communicate to UI that we're connecting
                 // That way, other buttons and stuff can disable/have some other interaction or something
-                NetworkManager.onConnectedToMaster += ConnectedToMaster;
                 NetworkManager.onJoinedRoom += GameManager.StartGame;
                 Button.interactable = false;
                 ButtonText.text = "Connecting...";
             }
         }
 
-        private void ConnectedToMaster() {
-            _logger.Log("Joining room...");
-            NetworkManager.JoinRoom();
-        }
-
         private void OnDestroy() {
-            NetworkManager.onConnectedToMaster -= ConnectedToMaster;
             NetworkManager.onJoinedRoom -= GameManager.StartGame;
         }
     }
