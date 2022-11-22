@@ -22,6 +22,12 @@ public class GameManager : MonoBehaviour {
     private float _nextMapTimer;
     private Logger _logger;
 
+    public static void StartGame() {
+        if (PhotonNetwork.IsMasterClient) {
+            PhotonNetwork.LoadLevel(1);
+        }
+    }
+
     private void Awake() {
         if (Instance != null) {
             Debug.LogError("Cannot have multiple GameManager instances! This duplicate instance will be destroyed.");

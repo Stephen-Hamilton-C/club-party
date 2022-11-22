@@ -76,7 +76,12 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
     }
 
     public static bool Connect() {
+        PhotonNetwork.OfflineMode = false;
         return PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public static void ConnectOffline() {
+        PhotonNetwork.OfflineMode = true;
     }
 
     public static bool JoinRoom() {
