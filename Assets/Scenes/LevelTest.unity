@@ -366,6 +366,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ControlPlane
       objectReference: {fileID: 0}
+    - target: {fileID: 2270386142455224962, guid: 01a8f7ce79b33c74b9c9af5637c8c685,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 01a8f7ce79b33c74b9c9af5637c8c685, type: 3}
 --- !u!1001 &5672259119842973376
