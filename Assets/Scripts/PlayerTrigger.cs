@@ -5,6 +5,7 @@ using UnityEngine.Events;
 [Serializable]
 public class PlayerTriggerEvent : UnityEvent<GameObject> { }
 
+[Obsolete("Replaced with HoleTrigger")]
 public class PlayerTrigger : MonoBehaviour {
 
     [SerializeField] private bool debug;
