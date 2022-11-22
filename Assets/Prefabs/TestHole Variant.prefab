@@ -25,7 +25,7 @@ PrefabInstance:
     - target: {fileID: 6802252786989121371, guid: 416303b01c0fce344a5c3fd4c095e8e4,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.65
+      value: -0.55
       objectReference: {fileID: 0}
     - target: {fileID: 6802252786989121371, guid: 416303b01c0fce344a5c3fd4c095e8e4,
         type: 3}
@@ -66,31 +66,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: HoleTrigger
-      objectReference: {fileID: 0}
-    - target: {fileID: 8539097853606404199, guid: 416303b01c0fce344a5c3fd4c095e8e4,
-        type: 3}
-      propertyPath: onPlayerEntered.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8539097853606404199, guid: 416303b01c0fce344a5c3fd4c095e8e4,
-        type: 3}
-      propertyPath: onPlayerEntered.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8539097853606404199, guid: 416303b01c0fce344a5c3fd4c095e8e4,
-        type: 3}
-      propertyPath: onPlayerEntered.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: PlayerInHole
-      objectReference: {fileID: 0}
-    - target: {fileID: 8539097853606404199, guid: 416303b01c0fce344a5c3fd4c095e8e4,
-        type: 3}
-      propertyPath: onPlayerEntered.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: GameManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 8539097853606404199, guid: 416303b01c0fce344a5c3fd4c095e8e4,
-        type: 3}
-      propertyPath: onPlayerEntered.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 416303b01c0fce344a5c3fd4c095e8e4, type: 3}
@@ -190,7 +165,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
       propertyPath: m_Name
-      value: TestHole
+      value: TestHole Variant
       objectReference: {fileID: 0}
     - target: {fileID: 3182244660871480619, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
