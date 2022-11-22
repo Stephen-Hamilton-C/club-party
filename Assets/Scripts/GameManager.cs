@@ -3,8 +3,6 @@ using DevLocker.Utils;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -63,8 +61,11 @@ public class GameManager : MonoBehaviour {
                 _logger.Log("Timer finished. Loading next level...");
                 _nextMapTimer = 0;
                 _finishedPlayers.Clear();
-                
-                PhotonNetwork.LoadLevel(nextLevel.SceneName);
+
+                PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
+                if (PhotonNetwork.IsMasterClient) {
+                    PhotonNetwork.LoadLevel(nextLevel.SceneName);
+                }
             } else {
                 _nextMapTimer += Time.unscaledDeltaTime;
             }
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour {
     public void PlayerInHole(GameObject playerObject) {
         _logger.Log("Player has made it in the hole. playerObject: "+playerObject);
         _finishedPlayers.Add(playerObject);
+        playerObject.layer = LayerMask.NameToLayer("PlayerNoCollide");
     }
     
 }
