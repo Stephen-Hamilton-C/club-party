@@ -13,9 +13,9 @@ public class PlayerController : MonoBehaviour {
 
     [SerializeField] private bool debug;
     
-    [SerializeField] private float speed = 2f;
-    [SerializeField] private float maxSpeed = 5f;
-    [SerializeField] private float minSpeed = 0.1f;
+    public float speed = 2f;
+    public float maxSpeed = 5f;
+    public float minSpeed = 0.1f;
     [SerializeField] private Transform mouseTarget;
     
     private PhotonView _view;
@@ -106,6 +106,7 @@ public class PlayerController : MonoBehaviour {
             Vector3 force = -pointToBall * speed;
             _logger.Log("Applying impulse: "+force);
             _rb.AddForce(force, ForceMode.Impulse);
+            PlayerState.Stroked();
         }
     }
 

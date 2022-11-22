@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,9 +10,12 @@ public class PlayerState : MonoBehaviour {
     [SerializeField] private bool debug;
     [SerializeField] private LayerMask clickMask;
 
-    public delegate void StrokeEvent(bool canStroke);
+    public delegate void TriggerEvent();
+    public delegate void BoolEvent(bool canStroke);
 
-    public static event StrokeEvent OnCanStrokeChanged;
+    public static event BoolEvent OnCanStrokeChanged;
+    public static event TriggerEvent OnStroke;
+    
     public static Vector3 MousePosition { get; private set; } = Vector3.zero;
 
     public static bool CanStroke {
@@ -69,8 +73,13 @@ public class PlayerState : MonoBehaviour {
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickMask.value, 
                     QueryTriggerInteraction.Ignore)) {
-            PlayerState.MousePosition = hit.point;
+            MousePosition = hit.point;
         }
+    }
+
+    public static void Stroked() {
+        if (OnStroke != null)
+            OnStroke();
     }
 
 }

@@ -583,6 +583,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
+      propertyPath: nextLevel.m_IsDirty
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
+      propertyPath: nextLevel.m_ScenePath
+      value: Assets/Scenes/LevelTest2.unity
+      objectReference: {fileID: 0}
+    - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
+      propertyPath: nextLevel.m_SceneAsset
+      value: 
+      objectReference: {fileID: 102900000, guid: 42f2bb58b4997024086f1a15a2109aa3,
+        type: 3}
     - target: {fileID: 6570246153575660058, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: m_Name
