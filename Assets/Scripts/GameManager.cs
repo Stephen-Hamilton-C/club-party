@@ -8,10 +8,16 @@ public class GameManager : MonoBehaviour {
 
     public const string CharacterName = "Ball";
 
+    public delegate void GameEvent();
+    public delegate void PlayerEvent(GameObject playerObject);
+    
     [SerializeField] private bool debug;
 
     public static GameManager Instance { get; private set; }
     private static readonly float TimeBeforeNextLevel = 3f;
+    public static GameEvent OnHoleStarted;
+    public static GameEvent OnHoleFinished;
+    public static PlayerEvent OnPlayerFinished;
 
     public Transform spawn;
     [SerializeField] private SceneReference nextLevel;
@@ -53,6 +59,9 @@ public class GameManager : MonoBehaviour {
         }
 
         NetworkManager.onPlayerLeft += PlayerLeft;
+
+        if (OnHoleStarted != null)
+            OnHoleStarted();
     }
 
     private void Update() {
@@ -62,6 +71,9 @@ public class GameManager : MonoBehaviour {
                 _nextMapTimer = 0;
                 _finishedPlayers.Clear();
 
+                if (OnHoleFinished != null)
+                    OnHoleFinished();
+                
                 PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
                 if (PhotonNetwork.IsMasterClient) {
                     PhotonNetwork.LoadLevel(nextLevel.SceneName);
@@ -97,6 +109,8 @@ public class GameManager : MonoBehaviour {
         _logger.Log("Player has made it in the hole. playerObject: "+playerObject);
         _finishedPlayers.Add(playerObject);
         playerObject.layer = LayerMask.NameToLayer("PlayerNoCollide");
+        if (OnPlayerFinished != null)
+            OnPlayerFinished(playerObject);
     }
     
 }

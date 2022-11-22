@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour {
     private CameraControls _controls;
     private InputAction _unlockCamCtrl;
     private Logger _logger;
+    private bool _finishedHole;
 
     private void Awake() {
         _controls = new();
@@ -49,7 +50,13 @@ public class PlayerController : MonoBehaviour {
         if (!_view.IsMine) {
             GetComponent<PlayerInput>().DeactivateInput();
             Destroy(mouseTarget.gameObject);
+        } else {
+            GameManager.OnPlayerFinished += PlayerFinishedHole;
         }
+    }
+
+    private void OnDestroy() {
+        GameManager.OnPlayerFinished -= PlayerFinishedHole;
     }
 
     private void FixedUpdate() {
@@ -107,6 +114,14 @@ public class PlayerController : MonoBehaviour {
             _logger.Log("Applying impulse: "+force);
             _rb.AddForce(force, ForceMode.Impulse);
             PlayerState.Stroked();
+        }
+    }
+
+    private void PlayerFinishedHole(GameObject playerObject) {
+        GameManager.OnPlayerFinished -= PlayerFinishedHole;
+        if (gameObject == playerObject) {
+            mouseTarget.gameObject.SetActive(false);
+            Destroy(this);
         }
     }
 
