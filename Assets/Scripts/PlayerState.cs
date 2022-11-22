@@ -1,4 +1,4 @@
-using System;
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -59,6 +59,7 @@ public class PlayerState : MonoBehaviour {
         }
     }
 
+    [UsedImplicitly]
     private void OnMouseMove(InputValue mousePosValue) {
         _mouseScreenPos = mousePosValue.Get<Vector2>();
     }
@@ -69,8 +70,6 @@ public class PlayerState : MonoBehaviour {
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, clickMask.value, 
                     QueryTriggerInteraction.Ignore)) {
             PlayerState.MousePosition = hit.point;
-        } else {
-            _logger.Warn("Mouse raycast missed the control plane");
         }
     }
 
