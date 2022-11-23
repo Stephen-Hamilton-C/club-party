@@ -8,38 +8,20 @@ namespace Ball.PowerUps {
 
         [SerializeField] private bool debug;
         
-        private readonly HashSet<Type> _activePowerUps = new();
+        private readonly HashSet<PowerUp> _activePowerUps = new();
         private Logger _logger;
 
         private void Awake() {
             _logger = new(this, debug);
         }
 
-        public bool AddPowerUp(Type powerUpType) {
-            if (!powerUpType.IsSubclassOf(typeof(PowerUp)))
-                return false;
-            
-            if (_activePowerUps.Contains(powerUpType))
-                return false;
-
-            gameObject.AddComponent(powerUpType);
-            _activePowerUps.Add(powerUpType);
-            return true;
+        public bool AddPowerUp(PowerUp powerUp) {
+            return _activePowerUps.Add(powerUp);
         }
 
-        public bool RemovePowerUp(Type powerUpType) {
-            if (!powerUpType.IsSubclassOf(typeof(PowerUp)))
-                return false;
-            
-            if (!_activePowerUps.Contains(powerUpType))
-                return false;
-
-            if (TryGetComponent(powerUpType, out Component powerUp)) {
-                Destroy(powerUp);
-            }
-
-            return _activePowerUps.Remove(powerUpType);
+        public bool RemovePowerUp(PowerUp powerUp) {
+            return _activePowerUps.Remove(powerUp);
         }
-        
+
     }
 }

@@ -2,39 +2,47 @@ using Photon.Pun;
 using UnityEngine;
 
 namespace Ball.PowerUps {
-    [RequireComponent(typeof(PlayerController))]
     [RequireComponent(typeof(PhotonView))]
-    [RequireComponent(typeof(PowerUpManager))]
     public abstract class PowerUp : MonoBehaviour {
 
         public abstract string PowerUpName { get; protected set; }
         public abstract string PowerUpDescription { get; protected set; }
 
-        protected PlayerController Controller;
+        protected GameObject LocalCharacter;
+        protected PowerUpManager Manager;
         protected PhotonView View;
-
-        private PowerUpManager _manager;
+        protected bool Triggered;
+        
         private Logger _logger;
 
         protected virtual void Awake() {
             _logger = new(this, Application.isEditor);
-            
-            View = GetComponent<PhotonView>();
-            if (!View.IsMine) {
-                Destroy(this);
-            }
-
-            _manager = GetComponent<PowerUpManager>();
-            Controller = GetComponent<PlayerController>();
             PlayerState.OnStroke += Stroked;
+
+            View = GetComponent<PhotonView>();
+            View.OwnershipTransfer = OwnershipOption.Takeover;
         }
+
+        protected virtual void Start() {
+            LocalCharacter = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
+            Manager = LocalCharacter.GetComponent<PowerUpManager>();
+        }
+
+        private void OnTriggerEnter(Collider other) {
+            if (!Triggered && other.CompareTag("Player") && other.gameObject == LocalCharacter) {
+                Triggered = true;
+                View.TransferOwnership(PhotonNetwork.LocalPlayer);
+                OnLocalPlayerEntered();
+            }
+        }
+
+        protected abstract void OnLocalPlayerEntered();
 
         protected virtual void Stroked() {
             _logger.Log("Stroked was not overridden for "+PowerUpName);
         }
 
         private void OnDestroy() {
-            _manager.RemovePowerUp(GetType());
             PlayerState.OnStroke -= Stroked;
         }
     }
