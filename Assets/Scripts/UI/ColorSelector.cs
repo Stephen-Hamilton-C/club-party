@@ -1,6 +1,4 @@
 using Photon.Pun;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,11 +6,10 @@ namespace UI {
     public class ColorSelector : MonoBehaviour {
     
         [SerializeField] private bool debug;
-        [SerializeField] private TMP_InputField hexInput;
 
         private Logger _logger;
         private ToggleGroup _group;
-	
+
         private void Start() {
             _logger = new(this, debug);
             _group = GetComponent<ToggleGroup>();
@@ -38,9 +35,6 @@ namespace UI {
             var color = toggle.GetComponent<Image>().color;
             var colorData = color.r + "," + color.g + "," + color.b;
             PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = colorData;
-
-            // TODO: Need a better implementation of this. Maybe write a custom TMPro validator?
-            hexInput.text = color.ToHexString().Substring(0, 6);
         }
 
     }
