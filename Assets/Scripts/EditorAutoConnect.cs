@@ -13,15 +13,20 @@ public class EditorAutoConnect : MonoBehaviour {
     
     private void Start() {
         if (!PhotonNetwork.IsConnected) {
-            Debug.Log("<b>Not connected. Destroying current GameManager</b>");
+            Log("Not connected. Destroying current GameManager");
             Destroy(GetComponent<GameManager>());
-            Debug.Log("<b>Creating Network Manager</b>");
+            
+            Log("Creating Network Manager");
             gameObject.AddComponent<NetworkManager>();
-            Debug.Log("<b>Connecting offline...</b>");
+            
+            Log("Setting expected CustomProperties...");
+            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = "1,0,1";
+            
+            Log("Connecting offline...");
             NetworkManager.onJoinedRoom += ReloadScene;
             NetworkManager.ConnectOfflineAndJoinRoom();
         } else if(_performedConnection) {
-            Debug.Log("<b>Level loaded. Ignore all errors above this line.</b>");
+            Log("Level loaded. Ignore all errors above this line.");
             
             // Attempt to clear console
             // Source: http://answers.unity.com/answers/1318322/view.html
@@ -35,9 +40,13 @@ public class EditorAutoConnect : MonoBehaviour {
     private void ReloadScene() {
         NetworkManager.onJoinedRoom -= ReloadScene;
         int sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        Debug.Log("<b>Connected. Reloading level...</b>");
+        Log("Connected. Reloading level...");
         _performedConnection = true;
         PhotonNetwork.LoadLevel(sceneIndex);
+    }
+
+    private void Log(string msg) {
+        Debug.Log("<b>"+msg+"</b>", this);
     }
     
     #endif

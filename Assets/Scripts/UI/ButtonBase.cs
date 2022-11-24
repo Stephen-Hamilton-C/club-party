@@ -17,9 +17,6 @@ namespace UI {
             Button = GetComponent<Button>();
             Button.onClick.AddListener(OnClick);
             ButtonText = GetComponentInChildren<TextMeshProUGUI>();
-            if (ButtonText == null) {
-                _logger.Err("No TextMeshProUGUI found in children! This must have a text in its children!");
-            }
         }
 
         protected abstract void OnClick();
