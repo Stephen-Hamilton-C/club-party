@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed = 5f;
     public float minSpeed = 0.1f;
     [SerializeField] private Transform mouseTarget;
+    [SerializeField] private float mouseTargetSpeed = 10f;
     
     private PhotonView _view;
     private Rigidbody _rb;
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour {
     private CameraControls _controls;
     private InputAction _unlockCamCtrl;
     private Logger _logger;
-    private bool _finishedHole;
+    private bool _aiming;
 
     private void Awake() {
         _controls = new();
@@ -72,16 +73,19 @@ public class PlayerController : MonoBehaviour {
     private void LateUpdate() {
         if (!_view.IsMine) return;
 
-        if (_unlockCamCtrl.IsPressed() || !PlayerState.CanStroke) {
+        if (_unlockCamCtrl.IsPressed() || !PlayerState.CanStroke || !_aiming) {
+            _aiming = false;
             mouseTarget.gameObject.SetActive(false);
-        } else {
+            mouseTarget.position = transform.position;
+        } else if(_aiming) {
             mouseTarget.gameObject.SetActive(true);
             
-            // Calculate mouseTarget position
+            // Calculate mouse position
             var currentPos = transform.position;
             var mousePos = PlayerState.MousePosition;
             mousePos.y = currentPos.y;
 
+            Vector3 desiredTargetPosition;
             var mouseToBall = mousePos - currentPos;
             if (mouseToBall.magnitude > maxSpeed) {
                 // Mouse is beyond maximum limit, we must clamp
@@ -92,11 +96,13 @@ public class PlayerController : MonoBehaviour {
                 var excess = mouseToBall + clampedOutward;
                 // Move along the mouseToBall vector by the excess amount
                 var clampedMousePos = Vector3.MoveTowards(mousePos, currentPos, excess.magnitude);
-                mouseTarget.position = clampedMousePos;
+                desiredTargetPosition = clampedMousePos;
             } else {
                 // Mouse is within range, make no further calculation
-                mouseTarget.position = mousePos;
+                desiredTargetPosition = mousePos;
             }
+
+            mouseTarget.position = Vector3.Lerp(mouseTarget.position, desiredTargetPosition, Time.deltaTime * mouseTargetSpeed);
         }
     }
 
@@ -106,7 +112,8 @@ public class PlayerController : MonoBehaviour {
     [UsedImplicitly]
     public void OnClick() {
         _logger.Log("Registered player click");
-        if (PlayerState.CanStroke) {
+        if (_aiming && PlayerState.CanStroke) {
+            _aiming = false;
             Vector3 pointToBall = mouseTarget.position - transform.position;
             pointToBall.y = 0;
 
@@ -114,7 +121,18 @@ public class PlayerController : MonoBehaviour {
             _logger.Log("Applying impulse: "+force);
             _rb.AddForce(force, ForceMode.Impulse);
             PlayerState.Stroked();
+        } else if (!_aiming) {
+            _aiming = PlayerState.CanStroke && !_unlockCamCtrl.IsPressed();
         }
+    }
+
+    /// <summary>
+    /// Called by PlayerInput
+    /// </summary>
+    [UsedImplicitly]
+    public void OnCancelShot() {
+        _logger.Log("Shot canceled");
+        _aiming = false;
     }
 
     private void PlayerFinishedHole(GameObject playerObject) {

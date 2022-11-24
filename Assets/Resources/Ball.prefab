@@ -311,6 +311,7 @@ MonoBehaviour:
   maxSpeed: 2
   minSpeed: 0.25
   mouseTarget: {fileID: 7903855986181342628}
+  mouseTargetSpeed: 10
 --- !u!114 &13049056216025871
 MonoBehaviour:
   m_ObjectHideFlags: 0
