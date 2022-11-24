@@ -67,6 +67,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HoleTrigger
       objectReference: {fileID: 0}
+    - target: {fileID: 6802252786989121372, guid: 416303b01c0fce344a5c3fd4c095e8e4,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 416303b01c0fce344a5c3fd4c095e8e4, type: 3}
 --- !u!1001 &8674092716180180263
@@ -131,6 +136,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: -3464447691518478215, guid: 490b646a382731045a57a14903923bd8,
         type: 3}
       propertyPath: m_Material
@@ -148,12 +168,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestHole2 Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3182244660871480619, guid: 490b646a382731045a57a14903923bd8,
         type: 3}
       propertyPath: m_Material
       value: 
       objectReference: {fileID: 13400000, guid: 9e36ae41b1fa3624abc53e1cc6b442cc,
         type: 2}
+    - target: {fileID: 4175059213566853535, guid: 490b646a382731045a57a14903923bd8,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -6306251675905053821, guid: 490b646a382731045a57a14903923bd8, type: 3}
     - {fileID: 6459149298229453932, guid: 490b646a382731045a57a14903923bd8, type: 3}
