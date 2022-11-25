@@ -311,9 +311,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  speed: 2.5
-  maxSpeed: 2
-  minSpeed: 0.25
+  speed: 3
+  maxPullDistance: 2
+  cutOffVelocity: 0.25
   mouseTarget: {fileID: 7903855986181342628}
   mouseTargetSpeed: 10
 --- !u!114 &13049056216025871
@@ -448,9 +448,10 @@ AudioSource:
   m_GameObject: {fileID: 3388712837282367556}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 6590763357954652470, guid: 54ef617058fc1ee17855ee49a8b31776,
+    type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -560,7 +561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16ad90c881a7a3c97bc3eb927bd6d087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 0
+  debug: 1
   hitSounds:
   - {fileID: 8300000, guid: 10394e53439e95254bc97ac913c1db3a, type: 3}
   - {fileID: 8300000, guid: cdfe0d2bbf0ad5f2899ddbf8a800aa4c, type: 3}
@@ -581,6 +582,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 9b4203130d4e2c3f99758e1194a786b7, type: 3}
   - {fileID: 8300000, guid: 17c8dcbccb51dcf238bdacc71ac58444, type: 3}
   - {fileID: 8300000, guid: d5ef143ec777664a0b0bc5e8e4857f88, type: 3}
+  volumeScale: 10
+  maxVolume: 10
 --- !u!1 &4179339777320401597
 GameObject:
   m_ObjectHideFlags: 0
