@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05eb5d4699cf2b04ea9854e93b267880, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   spawn: {fileID: 6570246153743454816}
   nextLevel:
     m_SceneAsset: {fileID: 0}
