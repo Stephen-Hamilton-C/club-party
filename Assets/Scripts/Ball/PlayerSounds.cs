@@ -1,7 +1,5 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Ball {
     [RequireComponent(typeof(NetworkedAudio))]
@@ -11,6 +9,8 @@ namespace Ball {
         
         [SerializeField] private AudioClip[] hitSounds;
         [SerializeField] private AudioClip[] bounceSounds;
+        [SerializeField] private float volumeScale = 20f;
+        [SerializeField] private float maxVolume = 5f;
 
         private Logger _logger;
         private NetworkedAudio _netAudio;
@@ -37,16 +37,20 @@ namespace Ball {
         
         private void PlayStrokeSound() {
             var clip = PickRandomSound(hitSounds);
+            
             _logger.Log("Playing stroke sound: "+clip.name);
-            _netAudio.PlayOneShot(clip);
+            _netAudio.Pitch = Random.Range(0.9f, 1.1f);
+            _netAudio.PlayOneShot(clip, 1);
         }
 
         private void OnCollisionEnter(Collision collision) {
-            // TODO: Scale volume based on collision impulse
-            
+            var volume = collision.relativeVelocity.sqrMagnitude / volumeScale;
+            var clampedVolume = Mathf.Clamp(volume, 0, maxVolume);
             var clip = PickRandomSound(bounceSounds);
-            _logger.Log("Playing bounce sound: "+clip.name);
-            _netAudio.PlayOneShot(clip);
+            
+            _logger.Log("Playing bounce sound: "+clip.name+" with "+clampedVolume+" volume");
+            _netAudio.Pitch = 1;
+            _netAudio.PlayOneShotLocal(clip, clampedVolume);
         }
 
         private AudioClip PickRandomSound(AudioClip[] clips) {
