@@ -12,15 +12,14 @@ namespace Ball {
 
         [SerializeField] private bool debug;
     
-        public float speed = 2f;
-        public float maxSpeed = 5f;
-        public float minSpeed = 0.1f;
+        public float speed = 2.5f;
+        public float maxPullDistance = 2f;
+        public float cutOffVelocity = 0.25f;
         [SerializeField] private Transform mouseTarget;
         [SerializeField] private float mouseTargetSpeed = 10f;
     
         private PhotonView _view;
         private Rigidbody _rb;
-        private Camera _camera;
         private CameraControls _controls;
         private InputAction _unlockCamCtrl;
         private Logger _logger;
@@ -43,7 +42,6 @@ namespace Ball {
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _rb = GetComponent<Rigidbody>();
-            _camera = Camera.main;
         
             // Don't let the player control other players
             _logger.Log("IsMine: "+_view.IsMine);
@@ -63,7 +61,7 @@ namespace Ball {
             if (!_view.IsMine) return;
         
             // Calculate 
-            PlayerState.CanStroke = _rb.velocity.magnitude <= minSpeed;
+            PlayerState.CanStroke = _rb.velocity.magnitude <= cutOffVelocity;
             if (PlayerState.CanStroke) {
                 _rb.velocity = Vector3.zero;
             }
@@ -86,10 +84,10 @@ namespace Ball {
 
                 Vector3 desiredTargetPosition;
                 var mouseToBall = mousePos - currentPos;
-                if (mouseToBall.magnitude > maxSpeed) {
+                if (mouseToBall.magnitude > maxPullDistance) {
                     // Mouse is beyond maximum limit, we must clamp
                     // First, calculate the largest vector from ball to mouse
-                    var clampedOutward = Vector3.ClampMagnitude(currentPos - mousePos, maxSpeed);
+                    var clampedOutward = Vector3.ClampMagnitude(currentPos - mousePos, maxPullDistance);
                     // Find the amount of excess from mouse to ball
                     // these are in opposite directions, so addition makes it smaller
                     var excess = mouseToBall + clampedOutward;
