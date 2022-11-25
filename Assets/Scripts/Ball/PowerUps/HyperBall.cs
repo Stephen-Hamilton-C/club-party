@@ -14,6 +14,7 @@ namespace Ball.PowerUps {
         
         protected override void OnLocalPlayerEntered() {
             // Make it appear as though the power-up was picked up
+	    // TODO: This needs to be networked
             GetComponent<Renderer>().enabled = false;
             GetComponent<CapsuleCollider>().enabled = false;
 
