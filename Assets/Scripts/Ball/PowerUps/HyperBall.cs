@@ -1,10 +1,11 @@
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 
 namespace Ball.PowerUps {
     public class HyperBall : PowerUp {
 
-        private const float SpeedFactor = 25;
+        private const float SpeedFactor = 10;
         
         public override string PowerUpName { get; protected set; } = "HyperBall";
         public override string PowerUpDescription { get; protected set; } = "Go really, really fast on your next stroke";
@@ -13,11 +14,6 @@ namespace Ball.PowerUps {
         private PlayerController _controller;
         
         protected override void OnLocalPlayerEntered() {
-            // Make it appear as though the power-up was picked up
-	    // TODO: This needs to be networked
-            GetComponent<Renderer>().enabled = false;
-            GetComponent<CapsuleCollider>().enabled = false;
-
             if (Manager.AddPowerUp(this)) {
                 // Power-up not applied, apply effect
                 _controller = LocalCharacter.GetComponent<PlayerController>();
@@ -28,7 +24,7 @@ namespace Ball.PowerUps {
                 PhotonNetwork.Destroy(gameObject);
             }
         }
-
+        
         protected override void Stroked() {
             if (Triggered) {
                 _controller.speed = _oldSpeed;
@@ -36,6 +32,11 @@ namespace Ball.PowerUps {
                 PhotonNetwork.Destroy(gameObject);
             }
         }
-        
+
+        [PunRPC]
+        [UsedImplicitly]
+        protected override void HideRPC() {
+            base.HideRPC();
+        }
     }
 }

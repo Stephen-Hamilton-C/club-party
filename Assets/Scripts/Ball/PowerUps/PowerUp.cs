@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace Ball.PowerUps {
         protected bool Triggered;
         
         private Logger _logger;
+        private Collider _collider;
+        private Renderer _renderer;
 
         protected virtual void Awake() {
             _logger = new(this, Application.isEditor);
@@ -21,6 +24,9 @@ namespace Ball.PowerUps {
 
             View = GetComponent<PhotonView>();
             View.OwnershipTransfer = OwnershipOption.Takeover;
+
+            _collider = GetComponent<Collider>();
+            _renderer = GetComponent<Renderer>();
         }
 
         protected virtual void Start() {
@@ -29,10 +35,13 @@ namespace Ball.PowerUps {
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (!Triggered && other.CompareTag("Player") && other.gameObject == LocalCharacter) {
+            if (!Triggered && other.CompareTag("Player")) {
                 Triggered = true;
-                View.TransferOwnership(PhotonNetwork.LocalPlayer);
-                OnLocalPlayerEntered();
+                if (other.gameObject == LocalCharacter) {
+                    View.RPC("HideRPC", RpcTarget.AllBuffered);
+                    View.TransferOwnership(PhotonNetwork.LocalPlayer);
+                    OnLocalPlayerEntered();
+                }
             }
         }
 
@@ -45,5 +54,13 @@ namespace Ball.PowerUps {
         private void OnDestroy() {
             PlayerState.OnStroke -= Stroked;
         }
+        
+        [PunRPC]
+        [UsedImplicitly]
+        protected virtual void HideRPC() {
+            _collider.enabled = false;
+            _renderer.enabled = false;
+        }
+        
     }
 }
