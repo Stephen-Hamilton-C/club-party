@@ -95,6 +95,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void PlayerLeft(Player player) {
+        // FIXME: Players are getting locked in levels when a player leaves
         GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject; 
         bool success = _finishedPlayers.Remove(character);
         _logger.Log("Player ("+player.NickName+") left. Character: "+character);
