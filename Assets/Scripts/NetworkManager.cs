@@ -1,3 +1,5 @@
+using System;
+using ParrelSync;
 using Photon.Pun;
 using Photon.Realtime;
 using Serializer;
@@ -8,7 +10,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
     [SerializeField] private bool debug;
     private Logger _logger;
 
-    private static NetworkManager instance;
+    private static NetworkManager _instance;
     
     public delegate void TriggerEvent();
     public delegate void DisconnectedEvent(DisconnectCause cause);
@@ -113,13 +115,13 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
     }
     
     private void Awake() {
-        if (instance != null) {
+        if (_instance != null) {
             Debug.LogError("Cannot have multiple NetworkManager instances! This duplicate instance will be destroyed.");
             Destroy(this);
             return;
         }
 
-        instance = this;
+        _instance = this;
         _logger = new(this, debug);
 
         RegisterSerializers();
@@ -128,6 +130,18 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         PhotonNetwork.AutomaticallySyncScene = true;
         
         DontDestroyOnLoad(this);
+        
+        #if UNITY_EDITOR
+        PhotonNetwork.GameVersion += "-DEV";
+
+        if (ClonesManager.IsClone()) {
+            var projectName = ClonesManager.GetCurrentProject().name;
+            var suffixIndex = projectName.IndexOf(ClonesManager.CloneNameSuffix, StringComparison.Ordinal);
+            var suffix = projectName.Substring(suffixIndex);
+
+            PhotonNetwork.NickName += suffix;
+        }
+        #endif
     }
 
 }
