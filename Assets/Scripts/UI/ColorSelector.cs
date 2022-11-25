@@ -32,9 +32,7 @@ namespace UI {
 
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
-            var color = toggle.GetComponent<Image>().color;
-            var colorData = color.r + "," + color.g + "," + color.b;
-            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = colorData;
+            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = toggle.GetComponent<Image>().color;
         }
 
     }

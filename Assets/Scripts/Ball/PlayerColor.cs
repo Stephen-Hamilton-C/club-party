@@ -17,9 +17,7 @@ namespace Ball {
             _view = GetComponent<PhotonView>();
             _renderer = GetComponent<Renderer>();
 
-            var colorData = _view.Owner.CustomProperties["CharacterColor"] as string;
-            var colorSplit = colorData!.Split(",");
-            var color = new Color(float.Parse(colorSplit[0]), float.Parse(colorSplit[1]), float.Parse(colorSplit[2]));
+            var color = (Color) _view.Owner.CustomProperties["CharacterColor"];
             _logger.Log("Changing color to "+color);
             _renderer.material.color = color;
         }

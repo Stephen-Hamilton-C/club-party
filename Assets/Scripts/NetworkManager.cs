@@ -1,5 +1,6 @@
 using Photon.Pun;
 using Photon.Realtime;
+using Serializer;
 using UnityEngine;
 
 public class NetworkManager : MonoBehaviourPunCallbacks {
@@ -106,6 +107,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
         return PhotonNetwork.LeaveRoom(false);
     }
 
+    private void RegisterSerializers() {
+        ColorSerializer.Register();
+        AudioClipSerializer.Register();
+    }
+    
     private void Awake() {
         if (instance != null) {
             Debug.LogError("Cannot have multiple NetworkManager instances! This duplicate instance will be destroyed.");
@@ -115,6 +121,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks {
 
         instance = this;
         _logger = new(this, debug);
+
+        RegisterSerializers();
         
         PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName", "Player");
         PhotonNetwork.AutomaticallySyncScene = true;
