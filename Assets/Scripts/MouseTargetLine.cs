@@ -7,12 +7,9 @@ public class MouseTargetLine : MonoBehaviour {
     private LineRenderer _line;
     private Transform _ball;
     
-    private void Start() {
+    private void OnEnable() {
         _line = GetComponent<LineRenderer>();
         _ball = transform.parent;
-    }
-
-    private void OnEnable() {
         SetPositions();
     }
 
