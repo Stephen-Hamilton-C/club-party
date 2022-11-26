@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using ExitGames.Client.Photon;
 using UnityEngine;
@@ -16,9 +15,13 @@ namespace Serializer {
     /// </summary>
     public static class AudioClipSerializer {
 
+        /// <summary>
+        /// All of the previously played AudioClips. This prevents constant reading from Resources
+        /// </summary>
         private static readonly Dictionary<string, AudioClip> Cache = new();
 
         private static short Serialize(StreamBuffer outStream, object customObject) {
+            // Convert the AudioClip into a string
             var clip = (AudioClip)customObject;
             var clipNameBytes = Encoding.UTF8.GetBytes(clip.name);
             
@@ -28,10 +31,12 @@ namespace Serializer {
         }
 
         private static object Deserialize(StreamBuffer inStream, short length) {
+            // Convert the byte array into a string
             var clipNameBytes = new byte[length];
             inStream.Read(clipNameBytes, 0, length);
             var clipName = Encoding.UTF8.GetString(clipNameBytes, 0, length);
 
+            // Check cache for an already existing clip
             if (Cache.TryGetValue(clipName, out var clip)) {
                 return clip;
             }
@@ -42,14 +47,18 @@ namespace Serializer {
                 // AudioClip not found in Resources/Sounds
                 throw new InvalidOperationException(
                     "Tried to deserialize an AudioClip that was not found in Resources/Sounds! " +
-                    "Make sure the AudioClip " + clipName + " is in Resources/Sounds."
+                    "Make sure the AudioClip \"" + clipName + "\" is in Resources/Sounds."
                 );
             }
 
+            // Add to cache and return the deserialized clip
             Cache.Add(clip.name, clip);
             return clip;
         }
 
+        /// <summary>
+        /// Registers this custom type with Photon
+        /// </summary>
         public static void Register() {
             PhotonPeer.RegisterType(typeof(AudioClip), 2, Serialize, Deserialize);
         }

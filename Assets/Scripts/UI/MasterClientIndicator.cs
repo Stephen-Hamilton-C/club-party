@@ -1,16 +1,20 @@
-using System;
 using Photon.Pun;
 using UnityEngine;
 
-public class MasterClientIndicator : MonoBehaviour {
+namespace UI {
+    /// <summary>
+    /// Indicates if this player character belongs to the master client
+    /// </summary>
+    public class MasterClientIndicator : MonoBehaviour {
 
-    private PhotonView _view;
+        private PhotonView _view;
 
-    private void Start() {
-        _view = GetComponentInParent<PhotonView>();
-    }
+        private void Start() {
+            _view = GetComponentInParent<PhotonView>();
+        }
 
-    private void Update() {
-        gameObject.SetActive(_view.Owner.IsMasterClient);
+        private void Update() {
+            gameObject.SetActive(_view.Owner.IsMasterClient);
+        }
     }
 }

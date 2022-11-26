@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 
 namespace UI {
+    /// <summary>
+    /// Makes the transform on this component look at the main camera
+    /// </summary>
     public class LookAtCamera : MonoBehaviour {
 
         private Transform _camTransform;

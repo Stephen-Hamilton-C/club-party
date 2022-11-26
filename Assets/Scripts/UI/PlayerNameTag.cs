@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 
 namespace UI {
+    /// <summary>
+    /// Sets this text to be the player's name
+    /// </summary>
     [RequireComponent(typeof(TextMeshProUGUI))]
     public class PlayerNameTag : MonoBehaviour {
     

@@ -1,10 +1,12 @@
-using System;
 using Ball;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
-[RequireComponent(typeof(RawImage))]
+    /// <summary>
+    /// Simple prototype indicator to alert the player when they can hit the ball
+    /// </summary>
+    [RequireComponent(typeof(RawImage))]
     public class ReadyIndicator : MonoBehaviour {
 
         private RawImage _image;

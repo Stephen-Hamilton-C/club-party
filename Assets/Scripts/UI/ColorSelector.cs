@@ -3,38 +3,43 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
+    /// <summary>
+    /// Handles applying selected color
+    /// </summary>
     public class ColorSelector : MonoBehaviour {
     
         [SerializeField] private bool debug;
 
         private Logger _logger;
-        private ToggleGroup _group;
 
         private void Start() {
             _logger = new(this, debug);
-            _group = GetComponent<ToggleGroup>();
 
             var colorName = PlayerPrefs.GetString("CharacterColor", "Azure");
-            Toggle[] toggles = GetComponentsInChildren<Toggle>();
+            var toggles = GetComponentsInChildren<Toggle>();
             foreach (var toggle in toggles) {
+                // Ensure the correct toggle is activated
                 toggle.isOn = toggle.name == colorName;
-                toggle.onValueChanged.AddListener((bool value) => { ToggleChanged(toggle, value); });
                 
+                // Update the CharacterColor when a toggle changes
+                toggle.onValueChanged.AddListener((bool value) => {
+                    if(value)
+                        UpdateColor(toggle);
+                });
+                
+                // Update the CharacterColor with the active toggle
                 if (toggle.isOn)
                     UpdateColor(toggle);
             }
-        }
-
-        private void ToggleChanged(Toggle toggle, bool value) {
-            if (value)
-                UpdateColor(toggle);
         }
 
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
             // Usually SetCustomProperties should be used, but we haven't connected yet,
             // so the "readonly" cache will work just fine
-            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = toggle.GetComponent<Image>().color;
+            var color = toggle.GetComponent<Image>().color;
+            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = color;
+            _logger.Log("Saved color as "+toggle.name+" and set CharacterColor to "+color);
         }
 
     }

@@ -6,6 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace UI {
+    /// <summary>
+    /// Initializes a connection with Photon when clicked
+    /// </summary>
     [RequireComponent(typeof(Button))]
     public class MultiplayerButton : ButtonBase {
 
@@ -17,21 +20,17 @@ namespace UI {
         }
 
         protected override void OnClick() {
-            bool willConnect = NetworkManager.ConnectAndJoinRoom();
+            var willConnect = NetworkManager.ConnectAndJoinRoom();
             _logger.Log("Connecting to Master Server...");
             _logger.Log(willConnect ? "Will connect..." : "Won't connect.");
             
             if (willConnect) {
                 // TODO: Need to find a way to communicate to UI that we're connecting
                 // That way, other buttons and stuff can disable/have some other interaction or something
-                NetworkManager.onJoinedRoom += GameManager.StartGame;
                 Button.interactable = false;
-                ButtonText.text = "Connecting...";
+                ButtonText!.text = "Connecting...";
             }
         }
 
-        private void OnDestroy() {
-            NetworkManager.onJoinedRoom -= GameManager.StartGame;
-        }
     }
 }

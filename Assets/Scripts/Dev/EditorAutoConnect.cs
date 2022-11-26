@@ -7,14 +7,18 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Dev {
+    /// <summary>
+    /// Editor script to automatically connect to an offline room if this script starts without being connected
+    /// </summary>
     public class EditorAutoConnect : MonoBehaviour {
     
 #if UNITY_EDITOR
 
         private static bool _performedConnection;
     
-        private void Start() {
+        private void Awake() {
             if (!PhotonNetwork.IsConnected) {
+                // Not connected
                 Log("Not connected. Destroying current GameManager");
                 Destroy(GetComponent<GameManager>());
             
@@ -22,15 +26,16 @@ namespace Dev {
                 gameObject.AddComponent<NetworkManager>();
             
                 Log("Setting expected CustomProperties...");
-                PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = "1,0,1";
+                PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = Color.magenta;
             
                 Log("Connecting offline...");
                 NetworkManager.onJoinedRoom += ReloadScene;
                 NetworkManager.ConnectOfflineAndJoinRoom();
             } else if(_performedConnection) {
+                // Connected via this script
                 Log("Level loaded. Ignore all errors above this line.");
             
-                // Attempt to clear console
+                // Try to clear console
                 // Source: http://answers.unity.com/answers/1318322/view.html
                 Assembly assembly = Assembly.GetAssembly (typeof(SceneView));
                 Type logEntries = assembly.GetType ("UnityEditor.LogEntries");

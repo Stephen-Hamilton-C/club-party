@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour {
             _logger.Log("The singleton instance is being destroyed.");
             Instance = null;
         }
-        
+
         NetworkManager.onPlayerLeft -= PlayerLeft;
     }
 

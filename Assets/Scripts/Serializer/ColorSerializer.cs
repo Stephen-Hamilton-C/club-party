@@ -2,8 +2,15 @@ using ExitGames.Client.Photon;
 using UnityEngine;
 
 namespace Serializer {
+    /// <summary>
+    /// Provides methods to Photon to serialize and deserialize a UnityEngine.Color
+    /// </summary>
     public static class ColorSerializer {
 
+        /// <summary>
+        /// Converts a UnityEngine.Color to 4 floats representing red, green, blue, and alpha in that order
+        /// </summary>
+        /// <returns>The length of the byte array containing the serialized data</returns>
         private static short Serialize(StreamBuffer outStream, object customObject) {
             var color = (Color)customObject;
             var memColor = new byte[4 * 4];
@@ -18,6 +25,9 @@ namespace Serializer {
             return (short)memColor.Length;
         }
 
+        /// <summary>
+        /// Converts serialized UnityEngine.Color data back into a Color
+        /// </summary>
         private static object Deserialize(StreamBuffer inStream, short length) {
             var color = new Color();
             var memColor = new byte[4 * 4];
@@ -33,6 +43,9 @@ namespace Serializer {
             return color;
         }
 
+        /// <summary>
+        /// Registers this custom type with Photon
+        /// </summary>
         public static void Register() {
             PhotonPeer.RegisterType(typeof(Color), 1, Serialize, Deserialize);
         }
