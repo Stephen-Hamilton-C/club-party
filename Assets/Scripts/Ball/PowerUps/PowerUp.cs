@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Network;
 using Photon.Pun;
 using UnityEngine;
 
@@ -6,6 +7,8 @@ namespace Ball.PowerUps {
     [RequireComponent(typeof(PhotonView))]
     public abstract class PowerUp : MonoBehaviour {
 
+        [SerializeField] protected bool debug;
+        
         public abstract string PowerUpName { get; protected set; }
         public abstract string PowerUpDescription { get; protected set; }
 
@@ -19,8 +22,9 @@ namespace Ball.PowerUps {
         private Renderer _renderer;
 
         protected virtual void Awake() {
-            _logger = new(this, Application.isEditor);
-            PlayerState.OnStroke += Stroked;
+            _logger = new(this, debug);
+            LocalPlayerState.OnStroke += Stroked;
+            NetworkManager.onLocalCharacterInitialized += LocalCharacterInitialized;
 
             View = GetComponent<PhotonView>();
             View.OwnershipTransfer = OwnershipOption.Takeover;
@@ -29,7 +33,7 @@ namespace Ball.PowerUps {
             _renderer = GetComponent<Renderer>();
         }
 
-        protected virtual void Start() {
+        private void LocalCharacterInitialized() {
             LocalCharacter = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
             Manager = LocalCharacter.GetComponent<PowerUpManager>();
         }
@@ -52,7 +56,8 @@ namespace Ball.PowerUps {
         }
 
         private void OnDestroy() {
-            PlayerState.OnStroke -= Stroked;
+            LocalPlayerState.OnStroke -= Stroked;
+            NetworkManager.onLocalCharacterInitialized -= LocalCharacterInitialized;
         }
         
         [PunRPC]

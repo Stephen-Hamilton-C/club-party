@@ -1,4 +1,6 @@
 using System;
+using Ball;
+using ExitGames.Client.Photon;
 using ParrelSync;
 using Photon.Pun;
 using Photon.Realtime;
@@ -16,6 +18,7 @@ namespace Network {
         public delegate void TriggerEvent();
         public delegate void DisconnectedEvent(DisconnectCause cause);
         public delegate void PlayerEvent(Player player);
+        public delegate void PlayerPropertyEvent(Player player, Hashtable changedProperties);
 
         public static event TriggerEvent onConnectedToMaster;
         public static event TriggerEvent onJoinedRoom;
@@ -23,6 +26,8 @@ namespace Network {
         public static event PlayerEvent onPlayerJoined;
         public static event PlayerEvent onPlayerLeft;
         public static event DisconnectedEvent onDisconnected;
+        public static event PlayerPropertyEvent onPlayerPropertyChanged;
+        public static event TriggerEvent onLocalCharacterInitialized;
 
         public static string PlayerName {
             get => PhotonNetwork.NickName;
@@ -44,20 +49,17 @@ namespace Network {
 
         public override void OnConnectedToMaster() {
             _logger.Log("Connected to Master Server");
-            if (onConnectedToMaster != null)
-                onConnectedToMaster();
+            onConnectedToMaster?.Invoke();
         }
 
         public override void OnDisconnected(DisconnectCause cause) {
             _logger.Log("Disconnected: "+cause);
-            if (onDisconnected != null)
-                onDisconnected(cause);
+            onDisconnected?.Invoke(cause);
         }
 
         public override void OnJoinedRoom() {
             _logger.Log("Joined room");
-            if (onJoinedRoom != null)
-                onJoinedRoom();
+            onJoinedRoom?.Invoke();
         }
 
         public override void OnLeftRoom() {
@@ -68,14 +70,29 @@ namespace Network {
 
         public override void OnPlayerEnteredRoom(Player player) {
             _logger.Log("Player entered room. Name: "+player.NickName+", ActorNumber: "+player.ActorNumber);
-            if (onPlayerJoined != null)
-                onPlayerJoined(player);
+            onPlayerJoined?.Invoke(player);
         }
 
         public override void OnPlayerLeftRoom(Player player) {
             _logger.Log("Player left room. Name: "+player.NickName+", ActorNumber: "+player.ActorNumber);
-            if (onPlayerLeft != null)
-                onPlayerLeft(player);
+            onPlayerLeft?.Invoke(player);
+        }
+
+        public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {
+            // Update local cache of PlayerProperties
+            if (changedProps.TryGetValue("CharacterName", out var charNameRaw)) {
+                var charName = (string)charNameRaw;
+                var charPath = "/" + PlayerParenter.CharacterContainer.name + "/" + charName;
+                var charObj = GameObject.Find(charPath);
+                
+                _logger.Log("CharacterName changed. Set "+targetPlayer+"'s cached Character to "+charObj);
+                targetPlayer.CustomProperties["Character"] = charObj;
+                if(targetPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
+                    onLocalCharacterInitialized?.Invoke();
+            }
+            
+            _logger.Log("Properties changed: "+changedProps);
+            onPlayerPropertyChanged?.Invoke(targetPlayer, changedProps);
         }
 
         public static bool Connect() {
@@ -108,6 +125,11 @@ namespace Network {
 
         public static bool LeaveRoom() {
             return PhotonNetwork.LeaveRoom(false);
+        }
+
+        public static void SetPlayerProperty(object key, object value) {
+            var table = new Hashtable() {{key, value}};
+            PhotonNetwork.LocalPlayer.SetCustomProperties(table);
         }
 
         private void RegisterSerializers() {

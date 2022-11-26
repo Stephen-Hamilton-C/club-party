@@ -32,6 +32,8 @@ namespace UI {
 
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
+            // Usually SetCustomProperties should be used, but we haven't connected yet,
+            // so the "readonly" cache will work just fine
             PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = toggle.GetComponent<Image>().color;
         }
 
