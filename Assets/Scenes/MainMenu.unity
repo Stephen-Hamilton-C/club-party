@@ -130,6 +130,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9119105375613025820, guid: ef4029760939a8a42bb685c03ebefe35,
+        type: 3}
+      propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9119105375613025821, guid: ef4029760939a8a42bb685c03ebefe35,
         type: 3}
       propertyPath: m_Name
@@ -2444,7 +2449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fafe2cfe61f6974895a912c3755e8f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AllowSwitchOff: 1
+  m_AllowSwitchOff: 0
 --- !u!114 &1418665172
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,8 +12,8 @@ namespace UI {
         private void Start() {
             _image = GetComponent<RawImage>();
             
-            UpdateColor(PlayerState.CanStroke);
-            PlayerState.OnCanStrokeChanged += UpdateColor;
+            UpdateColor(LocalPlayerState.CanStroke);
+            LocalPlayerState.OnCanStrokeChanged += UpdateColor;
         }
 
         private void UpdateColor(bool canStroke) {
@@ -21,7 +21,7 @@ namespace UI {
         }
 
         private void OnDestroy() {
-            PlayerState.OnCanStrokeChanged -= UpdateColor;
+            LocalPlayerState.OnCanStrokeChanged -= UpdateColor;
         }
     }
 }

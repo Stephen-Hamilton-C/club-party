@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 namespace Ball {
     [RequireComponent(typeof(PhotonView))]
-    public class PlayerState : MonoBehaviour {
+    public class LocalPlayerState : MonoBehaviour {
 
         [SerializeField] private bool debug;
         [SerializeField] private LayerMask clickMask;
@@ -31,7 +31,7 @@ namespace Ball {
 
         private static bool _canStroke;
     
-        private static PlayerState _instance;
+        private static LocalPlayerState _instance;
         private PhotonView _view;
         private Camera _camera;
         private Vector2 _mouseScreenPos;
@@ -78,8 +78,7 @@ namespace Ball {
         }
 
         public static void Stroked() {
-            if (OnStroke != null)
-                OnStroke();
+            OnStroke?.Invoke();
         }
 
     }

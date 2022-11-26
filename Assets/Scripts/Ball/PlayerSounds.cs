@@ -28,12 +28,12 @@ namespace Ball {
 
         private void OnEnable() {
             _logger.Log("Subscribing to OnStroke...");
-            PlayerState.OnStroke += PlayStrokeSound;
+            LocalPlayerState.OnStroke += PlayStrokeSound;
         }
         
         private void OnDisable() {
             _logger.Log("Dropping OnStroke...");
-            PlayerState.OnStroke -= PlayStrokeSound;
+            LocalPlayerState.OnStroke -= PlayStrokeSound;
         }
         
         private void PlayStrokeSound() {

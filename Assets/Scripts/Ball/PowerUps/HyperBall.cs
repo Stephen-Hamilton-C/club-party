@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using Photon.Pun;
-using UnityEngine;
 
 namespace Ball.PowerUps {
     public class HyperBall : PowerUp {

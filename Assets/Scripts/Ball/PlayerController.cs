@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector3 = UnityEngine.Vector3;
@@ -61,8 +62,8 @@ namespace Ball {
             if (!_view.IsMine) return;
         
             // Calculate 
-            PlayerState.CanStroke = _rb.velocity.magnitude <= cutOffVelocity;
-            if (PlayerState.CanStroke) {
+            LocalPlayerState.CanStroke = _rb.velocity.magnitude <= cutOffVelocity;
+            if (LocalPlayerState.CanStroke) {
                 _rb.velocity = Vector3.zero;
             }
         }
@@ -70,7 +71,7 @@ namespace Ball {
         private void LateUpdate() {
             if (!_view.IsMine) return;
 
-            if (_unlockCamCtrl.IsPressed() || !PlayerState.CanStroke || !_aiming) {
+            if (_unlockCamCtrl.IsPressed() || !LocalPlayerState.CanStroke || !_aiming) {
                 _aiming = false;
                 mouseTarget.gameObject.SetActive(false);
                 mouseTarget.position = transform.position;
@@ -79,7 +80,7 @@ namespace Ball {
             
                 // Calculate mouse position
                 var currentPos = transform.position;
-                var mousePos = PlayerState.MousePosition;
+                var mousePos = LocalPlayerState.MousePosition;
                 mousePos.y = currentPos.y;
 
                 Vector3 desiredTargetPosition;
@@ -109,7 +110,7 @@ namespace Ball {
         [UsedImplicitly]
         public void OnClick() {
             _logger.Log("Registered player click");
-            if (_aiming && PlayerState.CanStroke) {
+            if (_aiming && LocalPlayerState.CanStroke) {
                 _aiming = false;
                 Vector3 pointToBall = mouseTarget.position - transform.position;
                 pointToBall.y = 0;
@@ -117,9 +118,9 @@ namespace Ball {
                 Vector3 force = -pointToBall * speed;
                 _logger.Log("Applying impulse: "+force);
                 _rb.AddForce(force, ForceMode.Impulse);
-                PlayerState.Stroked();
+                LocalPlayerState.Stroked();
             } else if (!_aiming) {
-                _aiming = PlayerState.CanStroke && !_unlockCamCtrl.IsPressed();
+                _aiming = LocalPlayerState.CanStroke && !_unlockCamCtrl.IsPressed();
             }
         }
 
@@ -132,9 +133,9 @@ namespace Ball {
             _aiming = false;
         }
 
-        private void PlayerFinishedHole(GameObject playerObject) {
+        private void PlayerFinishedHole(Player player) {
             GameManager.OnPlayerFinished -= PlayerFinishedHole;
-            if (gameObject == playerObject) {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber) {
                 mouseTarget.gameObject.SetActive(false);
                 Destroy(this);
             }

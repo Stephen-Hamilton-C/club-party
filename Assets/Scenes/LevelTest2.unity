@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028328, g: 0.22571328, b: 0.3069218, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -253,7 +253,7 @@ GameObject:
   - component: {fileID: 883437933}
   - component: {fileID: 883437932}
   m_Layer: 0
-  m_Name: Capsule
+  m_Name: HyperBall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -350,6 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69776fe80585c254f8fddfaa267b638f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
 --- !u!114 &883437933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,11 +592,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCamera
-      objectReference: {fileID: 0}
-    - target: {fileID: 3081146774288172667, guid: e18da6347746bd64e8bf4add59ed8417,
-        type: 3}
-      propertyPath: debug
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7937043841356286920, guid: e18da6347746bd64e8bf4add59ed8417,
         type: 3}
