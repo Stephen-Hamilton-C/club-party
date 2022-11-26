@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Network;
 using Photon.Pun;
 using UnityEngine;
@@ -37,6 +38,12 @@ namespace Ball {
             if (_view.IsMine) {
                 NetworkManager.SetPlayerProperty("CharacterName", gameObject.name);
             }
+        }
+
+        [PunRPC]
+        [UsedImplicitly]
+        private void SetCharacterRefRPC() {
+            _view.Owner.CustomProperties["Character"] = gameObject;
         }
 
     }

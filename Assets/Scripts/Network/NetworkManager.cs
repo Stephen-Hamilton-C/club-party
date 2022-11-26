@@ -86,7 +86,7 @@ namespace Network {
                 var charObj = GameObject.Find(charPath);
                 
                 _logger.Log("CharacterName changed. Set "+targetPlayer+"'s cached Character to "+charObj);
-                targetPlayer.CustomProperties["Character"] = charObj;
+                charObj.GetComponent<PhotonView>().RPC("SetCharacterRefRPC", RpcTarget.AllBuffered);
                 if(targetPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
                     onLocalCharacterInitialized?.Invoke();
             }
