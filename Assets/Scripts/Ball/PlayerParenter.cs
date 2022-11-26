@@ -4,6 +4,10 @@ using Photon.Pun;
 using UnityEngine;
 
 namespace Ball {
+    /// <summary>
+    /// Handles placing the character into the CharacterContainer
+    /// so that the NetworkManager can find the player characters
+    /// </summary>
     [RequireComponent(typeof(PhotonView))]
     public class PlayerParenter : MonoBehaviour {
     
@@ -12,6 +16,9 @@ namespace Ball {
         private static Logger _logger;
         private PhotonView _view;
 
+        /// <summary>
+        /// The GameObject that contains all characters
+        /// </summary>
         public static Transform CharacterContainer {
             get {
                 if (!_characterContainer) {
@@ -25,7 +32,12 @@ namespace Ball {
         private static Transform _characterContainer;
         
         private void Awake() {
+            // TODO: Did I make this overly complicated???? Can't I just _view.Owner["Character"] = gameObject????????
+            // Lol it's 12 am, I think my brain fried
+            
+            // Only initialize the Logger once
             _logger ??= new(this, false);
+            // If any instance has debug set to true, then by golly enable the logger
             if(debug)
                 _logger.Enabled = true;
             
@@ -35,11 +47,15 @@ namespace Ball {
             transform.parent = CharacterContainer;
             gameObject.name = _view.Owner.ActorNumber + " " + _view.Owner.NickName;
 
+            // Set the CustomProperty 
             if (_view.IsMine) {
                 NetworkManager.SetPlayerProperty("CharacterName", gameObject.name);
             }
         }
 
+        /// <summary>
+        /// Sets the Character reference locally
+        /// </summary>
         [PunRPC]
         [UsedImplicitly]
         private void SetCharacterRefRPC() {

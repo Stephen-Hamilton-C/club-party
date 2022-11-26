@@ -1,15 +1,18 @@
 using UnityEngine;
 
 namespace Ball {
+    /// <summary>
+    /// Draws a line from this transform to its parent
+    /// </summary>
     [RequireComponent(typeof(LineRenderer))]
     public class MouseTargetLine : MonoBehaviour {
 
         private LineRenderer _line;
-        private Transform _ball;
+        private Transform _parent;
     
         private void OnEnable() {
             _line = GetComponent<LineRenderer>();
-            _ball = transform.parent;
+            _parent = transform.parent;
             SetPositions();
         }
 
@@ -20,7 +23,7 @@ namespace Ball {
         private void SetPositions() {
             _line.SetPositions(new[] {
                 transform.position,
-                _ball.position,
+                _parent.position,
             });
         }
     }

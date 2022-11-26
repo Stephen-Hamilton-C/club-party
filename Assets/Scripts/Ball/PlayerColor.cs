@@ -2,6 +2,9 @@ using Photon.Pun;
 using UnityEngine;
 
 namespace Ball {
+    /// <summary>
+    /// Sets the player's color
+    /// </summary>
     [RequireComponent(typeof(PhotonView))]
     [RequireComponent(typeof(Renderer))]
     public class PlayerColor : MonoBehaviour {

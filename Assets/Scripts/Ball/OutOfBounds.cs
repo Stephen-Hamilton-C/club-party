@@ -1,36 +1,45 @@
 using UnityEngine;
 
 namespace Ball {
+    /// <summary>
+    /// Teleports the player back to spawn if they fall off the map
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody))]
     public class OutOfBounds : MonoBehaviour {
 
         [SerializeField] private bool debug;
+        [Tooltip("The lowest Y the player can go")]
         [SerializeField] private float minimumY = -25f;
 
         private Rigidbody _rb;
-        private bool _useRigidbody;
-        private Vector3 _origPosition;
+        private Vector3 _respawnPoint;
         private Logger _logger;
 
-        public void ResetOrigPosition() {
-            _origPosition = transform.position;
-            _logger.Log("Reset original position to "+_origPosition);
+        /// <summary>
+        /// Sets the respawn point to the current position
+        /// </summary>
+        public void SetRespawnPoint() {
+            _respawnPoint = transform.position;
+            _logger.Log("Reset respawn point to "+_respawnPoint);
+        }
+
+        /// <summary>
+        /// Respawns the player to the respawn point
+        /// </summary>
+        public void Respawn() {
+            _rb.velocity = Vector3.zero;
+            _rb.position = _respawnPoint;
+            _logger.Log("Resetting position to " + _respawnPoint);
         }
 
         private void Start() {
             _logger = new(this, debug);
-            _useRigidbody = TryGetComponent(out _rb);
-            ResetOrigPosition();
+            SetRespawnPoint();
         }
 
-        private void LateUpdate() {
-            if (_useRigidbody && _rb.position.y < minimumY) {
-                _rb.velocity = Vector3.zero;
-                _rb.position = _origPosition;
-                _logger.Log("GameObject fell below bounds. Resetting position to "+_origPosition+" using Rigidbody");
-            } else if (transform.position.y < minimumY) {
-                transform.position = _origPosition;
-                _logger.Log("GameObject fell below bounds. Resetting position to "+_origPosition+" using Transform");
-            }
+        private void FixedUpdate() {
+            if (_rb.position.y < minimumY)
+                Respawn();
         }
     
     }

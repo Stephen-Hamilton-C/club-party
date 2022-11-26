@@ -32,14 +32,9 @@ public class GameManager : MonoBehaviour {
     public static PlayerEvent OnPlayerFinished;
     #endregion
 
-    /// <summary>
-    /// The initial spawn point of the map 
-    /// </summary>
+    [Tooltip("The initial spawn point of the map")]
     [SerializeField] private Transform spawn;
-    /// <summary>
-    /// The scene for the next hole.
-    /// If this is null, this is the last hole for the set.
-    /// </summary>
+    [Tooltip("The scene for the next hole. If this is null, this is the last hole for the set.")]
     [SerializeField] private SceneReference nextLevel;
 
     /// <summary>
