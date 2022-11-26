@@ -309,9 +309,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  clickMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!114 &412612965
 MonoBehaviour:
   m_ObjectHideFlags: 0

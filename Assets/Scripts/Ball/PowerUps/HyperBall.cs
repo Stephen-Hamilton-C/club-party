@@ -24,7 +24,7 @@ namespace Ball.PowerUps {
         /// </summary>
         private PlayerController _controller;
         
-        protected override void OnLocalPlayerEntered() {
+        protected override void OnLocalPlayerTouched() {
             if (Manager.AddPowerUp(this)) {
                 // Power-up not already applied, apply effect
                 _controller = LocalCharacter.GetComponent<PlayerController>();

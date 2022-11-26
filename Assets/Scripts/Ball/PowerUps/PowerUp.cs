@@ -48,7 +48,6 @@ namespace Ball.PowerUps {
             
             // Subscribe to events
             LocalPlayerState.OnStroke += Stroked;
-            NetworkManager.onLocalCharacterInitialized += LocalCharacterInitialized;
 
             // Setup PhotonView
             // Needs Takeover ownership so that the PowerUp can be transferred to the affected player
@@ -60,7 +59,7 @@ namespace Ball.PowerUps {
             _renderer = GetComponent<Renderer>();
         }
 
-        private void LocalCharacterInitialized() {
+        protected virtual void Start() {
             LocalCharacter = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
             Manager = LocalCharacter.GetComponent<PowerUpManager>();
         }
@@ -73,12 +72,12 @@ namespace Ball.PowerUps {
                     // The player that touched was the LocalPlayer
                     View.RPC("HideRPC", RpcTarget.AllBuffered);
                     View.TransferOwnership(PhotonNetwork.LocalPlayer);
-                    OnLocalPlayerEntered();
+                    OnLocalPlayerTouched();
                 }
             }
         }
 
-        protected abstract void OnLocalPlayerEntered();
+        protected abstract void OnLocalPlayerTouched();
 
         /// <summary>
         /// Helper for removing an effect on stroke, for PowerUps that take effect on next stroke
@@ -90,7 +89,6 @@ namespace Ball.PowerUps {
         private void OnDestroy() {
             // Drop events
             LocalPlayerState.OnStroke -= Stroked;
-            NetworkManager.onLocalCharacterInitialized -= LocalCharacterInitialized;
         }
         
         [PunRPC]

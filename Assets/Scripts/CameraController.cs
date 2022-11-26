@@ -67,8 +67,6 @@ public class CameraController : MonoBehaviour {
         _lookCtrl = controls.Player.Look;
         _unlockCamCtrl = controls.Player.CameraUnlock;
         _zoomCtrl = controls.Player.Zoom;
-
-        NetworkManager.onLocalCharacterInitialized += CharacterInitialized;
     }
 
     private void OnEnable() {
@@ -83,17 +81,12 @@ public class CameraController : MonoBehaviour {
         _lookCtrl.Disable();
         _unlockCamCtrl.Disable();
         _zoomCtrl.Disable();
-        
-        NetworkManager.onLocalCharacterInitialized -= CharacterInitialized;
     }
 
     private void Start() {
         _logger = new(this, debug);
-        
         _pivot = transform.parent;
-    }
-
-    private void CharacterInitialized() {
+        
         // Get player's character from PhotonNetwork
         GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
         _player = character?.transform;

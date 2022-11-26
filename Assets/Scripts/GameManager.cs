@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Awake() {
+        _logger = new(this, debug);
+        
         // Enforce singleton
         if (Instance != null) {
             Debug.LogError("Cannot have multiple GameManager instances! This duplicate instance will be destroyed.");
@@ -74,8 +76,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        _logger = new(this, debug);
-
         // Fallback spawn point if dev forgets to set spawn
         if (spawn == null) {
             spawn = new GameObject().transform;

@@ -22,7 +22,6 @@ namespace Network {
         public delegate void TriggerEvent();
         public delegate void DisconnectedEvent(DisconnectCause cause);
         public delegate void PlayerEvent(Player player);
-        public delegate void PlayerPropertyEvent(Player player, Hashtable changedProperties);
 
         public static event TriggerEvent onConnectedToMaster;
         public static event TriggerEvent onJoinedRoom;
@@ -30,8 +29,6 @@ namespace Network {
         public static event PlayerEvent onPlayerJoined;
         public static event PlayerEvent onPlayerLeft;
         public static event DisconnectedEvent onDisconnected;
-        public static event PlayerPropertyEvent onPlayerPropertyChanged;
-        public static event TriggerEvent onLocalCharacterInitialized;
         #endregion
 
         /// <summary>
@@ -103,29 +100,6 @@ namespace Network {
         }
 
         /// <summary>
-        /// Pun callback when a custom property is changed
-        /// </summary>
-        /// <param name="targetPlayer">The player that was modified</param>
-        /// <param name="changedProps">The properties that changed</param>
-        public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps) {
-            // Update local cache of PlayerProperties
-            // TODO: I'm doing this all wrong, look at PlayerParenter
-            if (changedProps.TryGetValue("CharacterName", out var charNameRaw)) {
-                var charName = (string)charNameRaw;
-                var charPath = "/" + PlayerParenter.CharacterContainer.name + "/" + charName;
-                var charObj = GameObject.Find(charPath);
-                
-                _logger.Log("CharacterName changed. Set "+targetPlayer+"'s cached Character to "+charObj);
-                charObj.GetComponent<PhotonView>().RPC("SetCharacterRefRPC", RpcTarget.AllBuffered);
-                if(targetPlayer.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
-                    onLocalCharacterInitialized?.Invoke();
-            }
-            
-            _logger.Log("Properties changed: "+changedProps);
-            onPlayerPropertyChanged?.Invoke(targetPlayer, changedProps);
-        }
-
-        /// <summary>
         /// Connect to the master server
         /// </summary>
         /// <returns>Whether the connection was attempted or halted due to an error</returns>
@@ -180,14 +154,6 @@ namespace Network {
         /// <returns>If the current room could be left</returns>
         public static bool LeaveRoom() {
             return PhotonNetwork.LeaveRoom(false);
-        }
-
-        /// <summary>
-        /// Sets a local player's custom property
-        /// </summary>
-        public static void SetPlayerProperty(object key, object value) {
-            var table = new Hashtable() {{key, value}};
-            PhotonNetwork.LocalPlayer.SetCustomProperties(table);
         }
 
         /// <summary>

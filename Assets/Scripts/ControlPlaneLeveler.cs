@@ -10,11 +10,7 @@ public class ControlPlaneLeveler : MonoBehaviour {
 
     private Transform _character;
 
-    private void Awake() {
-        NetworkManager.onLocalCharacterInitialized += LocalCharacterInitialized;
-    }
-
-    private void LocalCharacterInitialized() {
+    private void Start() {
         _character = (PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject)?.transform;
     }
 
@@ -23,7 +19,4 @@ public class ControlPlaneLeveler : MonoBehaviour {
         transform.position = new(0, _character.position.y - _character.localScale.y / 2, 0);
     }
 
-    private void OnDestroy() {
-        NetworkManager.onLocalCharacterInitialized -= LocalCharacterInitialized;
-    }
 }

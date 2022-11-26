@@ -1,3 +1,4 @@
+using Photon.Pun;
 using UnityEngine;
 
 namespace Ball {
@@ -32,8 +33,10 @@ namespace Ball {
             _logger.Log("Resetting position to " + _respawnPoint);
         }
 
-        private void Start() {
+        private void Awake() {
             _logger = new(this, debug);
+            _rb = GetComponent<Rigidbody>();
+            
             SetRespawnPoint();
         }
 
