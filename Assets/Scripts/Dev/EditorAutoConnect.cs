@@ -16,7 +16,7 @@ namespace Dev {
 
         private static bool _performedConnection;
     
-        private void Awake() {
+        private void Start() {
             if (!PhotonNetwork.IsConnected) {
                 // Not connected
                 Log("Not connected. Destroying current GameManager");
