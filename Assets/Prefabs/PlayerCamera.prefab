@@ -553,8 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  player: {fileID: 0}
-  rotationSpeed: 0.25
+  rotationSpeed: 0.1
   trackSpeed: 5
   positionOffset: {x: 0, y: 3, z: -3}
   baseRotation: {x: 40, y: 0, z: 0}

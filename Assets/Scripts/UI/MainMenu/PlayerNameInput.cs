@@ -2,7 +2,7 @@ using Network;
 using TMPro;
 using UnityEngine;
 
-namespace UI {
+namespace UI.MainMenu {
     /// <summary>
     /// Sets the PlayerName when the input field changes
     /// </summary>

@@ -2,7 +2,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI {
+namespace UI.MainMenu {
     /// <summary>
     /// Handles applying selected color
     /// </summary>

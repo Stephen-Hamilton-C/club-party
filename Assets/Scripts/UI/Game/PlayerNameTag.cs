@@ -2,7 +2,7 @@ using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
-namespace UI {
+namespace UI.Game {
     /// <summary>
     /// Sets this text to be the player's name
     /// </summary>

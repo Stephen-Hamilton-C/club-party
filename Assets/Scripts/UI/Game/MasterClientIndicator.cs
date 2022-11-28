@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-namespace UI {
+namespace UI.Game {
     /// <summary>
     /// Indicates if this player character belongs to the master client
     /// </summary>

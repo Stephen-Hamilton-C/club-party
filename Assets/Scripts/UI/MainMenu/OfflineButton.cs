@@ -1,8 +1,6 @@
-using System;
 using Network;
-using UnityEngine;
 
-namespace UI {
+namespace UI.MainMenu {
     /// <summary>
     /// Initializes offline mode when clicked
     /// </summary>
@@ -17,7 +15,12 @@ namespace UI {
 
         protected override void OnClick() {
             _logger.Log("Enabling offline mode...");
+            NetworkManager.onJoinedRoom += GameManager.StartGame;
             NetworkManager.ConnectOfflineAndJoinRoom();
+        }
+
+        private void OnDestroy() {
+            NetworkManager.onJoinedRoom -= GameManager.StartGame;
         }
     }
 }

@@ -1,11 +1,8 @@
-using System;
 using Network;
-using Photon.Pun;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI {
+namespace UI.MainMenu {
     /// <summary>
     /// Initializes a connection with Photon when clicked
     /// </summary>
@@ -27,10 +24,14 @@ namespace UI {
             if (willConnect) {
                 // TODO: Need to find a way to communicate to UI that we're connecting
                 // That way, other buttons and stuff can disable/have some other interaction or something
+                NetworkManager.onJoinedRoom += GameManager.StartGame;
                 Button.interactable = false;
                 ButtonText!.text = "Connecting...";
             }
         }
 
+        private void OnDestroy() {
+            NetworkManager.onJoinedRoom -= GameManager.StartGame;
+        }
     }
 }

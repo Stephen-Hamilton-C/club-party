@@ -21,6 +21,7 @@ namespace Network {
         #region Events
         public delegate void TriggerEvent();
         public delegate void DisconnectedEvent(DisconnectCause cause);
+        public delegate void CustomPropertyEvent(Hashtable changedProperties);
         public delegate void PlayerEvent(Player player);
 
         public static event TriggerEvent onConnectedToMaster;
@@ -29,6 +30,7 @@ namespace Network {
         public static event PlayerEvent onPlayerJoined;
         public static event PlayerEvent onPlayerLeft;
         public static event DisconnectedEvent onDisconnected;
+        public static event CustomPropertyEvent onRoomPropertiesChanged;
         #endregion
 
         /// <summary>
@@ -69,7 +71,6 @@ namespace Network {
         /// </summary>
         public override void OnJoinedRoom() {
             _logger.Log("Joined room");
-            GameManager.StartGame();
             onJoinedRoom?.Invoke();
         }
 
@@ -97,6 +98,14 @@ namespace Network {
         public override void OnPlayerLeftRoom(Player player) {
             _logger.Log("Player left room. Name: "+player.NickName+", ActorNumber: "+player.ActorNumber);
             onPlayerLeft?.Invoke(player);
+        }
+
+        /// <summary>
+        /// Pun callback when the custom properties of the room changed
+        /// </summary>
+        /// <param name="propertiesThatChanged">The properties that changed</param>
+        public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {
+            onRoomPropertiesChanged?.Invoke(propertiesThatChanged);
         }
 
         /// <summary>

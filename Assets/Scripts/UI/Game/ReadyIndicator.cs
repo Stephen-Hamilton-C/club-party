@@ -2,7 +2,7 @@ using Ball;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI {
+namespace UI.Game {
     /// <summary>
     /// Simple prototype indicator to alert the player when they can hit the ball
     /// </summary>
