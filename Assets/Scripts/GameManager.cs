@@ -96,7 +96,12 @@ public class GameManager : MonoBehaviour {
                 // If we don't destroy all player objects, then they somehow get duplicated when other players join
                 PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
                 if (PhotonNetwork.IsMasterClient) {
-                    PhotonNetwork.LoadLevel(nextLevel.SceneName);
+                    if(nextLevel.IsEmpty) {
+                        // Show scoreboard, wait a few seconds, and then StartGame()
+                        StartGame();
+                    } else {
+                        PhotonNetwork.LoadLevel(nextLevel.SceneName);
+                    }
                 }
             } else {
                 _nextMapTimer += Time.unscaledDeltaTime;

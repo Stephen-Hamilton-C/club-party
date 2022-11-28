@@ -1,71 +1,86 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Network;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using WebSocketSharp;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
+using Random = UnityEngine.Random;
 
 namespace UI.Vote {
     [RequireComponent(typeof(PhotonView))]
-    public class Voting : MonoBehaviour, IPunObservable {
+    public class Voting : MonoBehaviour {
 
+        [SerializeField] private bool debug;
+        [SerializeField] private TextMeshProUGUI countdownText;
         [SerializeField] private int courseCount = 4;
         [SerializeField] private List<CourseData> allCourses = new();
-        [SerializeField] private bool debug;
-        [SerializeField] private int countdown = 30;
+        [SerializeField] private int countdownStart = 15;
 
         private Logger _logger;
         private PhotonView _view;
-        private int _timer;
+        private double _timer = Mathf.Infinity;
         private readonly Dictionary<string, TextMeshProUGUI> _texts = new();
         private readonly Dictionary<string, CourseData> _courses = new();
         private string _currentlyVotedCourse = "";
-        
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-            if (stream.IsReading) {
-                _timer = (int)stream.ReceiveNext();
-            } else if(stream.IsWriting) {
-                stream.SendNext(_timer);
-            }
-        }
+        private string _origCountdownText = "";
         
         private void Start() {
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _view.OwnershipTransfer = OwnershipOption.Takeover;
+            _origCountdownText = countdownText.text;
+            Cursor.visible = true;
+            
             if (PhotonNetwork.IsMasterClient) {
                 _view.TransferOwnership(PhotonNetwork.LocalPlayer);
-                StartCoroutine(Countdown());
+                _view.RPC("StartCountdownRPC", RpcTarget.AllBuffered, PhotonNetwork.Time);
                 
+                _logger.Log("Picking next courses...");
                 var coursesToPick = allCourses.ToList();
                 var changedProperties = new Hashtable();
                 for (int i = 0; i < courseCount; i++) {
                     var selectedIndex = Random.Range(0, coursesToPick.Count);
                     var selectedCourse = coursesToPick[selectedIndex];
                     changedProperties["VoteCourseName" + i] = selectedCourse.courseName;
+                    changedProperties["VoteCount_" + selectedCourse.courseName] = 0;
                     coursesToPick.RemoveAt(selectedIndex);
+                    _logger.Log("Course "+i+" selected: "+selectedCourse.courseName);
                 }
 
                 PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
             }
             
             NetworkManager.onRoomPropertiesChanged += RoomPropertiesChanged;
+            RoomPropertiesChanged(PhotonNetwork.CurrentRoom.CustomProperties);
+        }
+
+        private void OnDestroy() {
+            _logger.Log("Goodbye, world!");
+            NetworkManager.onRoomPropertiesChanged -= RoomPropertiesChanged;
         }
 
         private void VoteSelected(CourseData course) {
+            _logger.Log("Voted for "+course.courseName);
             var changedProperties = new Hashtable();
             var currentProperties = PhotonNetwork.CurrentRoom.CustomProperties;
-            if (!_currentlyVotedCourse.IsNullOrEmpty()) {
+            if (_currentlyVotedCourse == "") {
                 var oldCourseKey = "VoteCount_" + _currentlyVotedCourse;
                 changedProperties[oldCourseKey] = (int)currentProperties[oldCourseKey] - 1;
+                _logger.Log("Decremented count from previously voted course: "+_currentlyVotedCourse);
             }
 
             var newCourseKey = "VoteCount_" + course.courseName;
-            changedProperties[newCourseKey] = (int)changedProperties[newCourseKey] + 1;
+            if (changedProperties[newCourseKey] == null) {
+                changedProperties[newCourseKey] = 1;
+                _logger.Log("No previous vote count for course. Set to 1.");
+            } else {
+                changedProperties[newCourseKey] = (int)changedProperties[newCourseKey] + 1;
+                _logger.Log("Set vote count to "+(int)changedProperties[newCourseKey]);
+            }
+
             _currentlyVotedCourse = course.courseName;
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
@@ -73,6 +88,8 @@ namespace UI.Vote {
 
         private void RoomPropertiesChanged(Hashtable changedProperties) {
             if (changedProperties.ContainsKey("VoteCourseName0")) {
+                _logger.Log("Properties changed. Received course names.");
+                
                 // MasterClient decided on rooms
                 var buttons = GetComponentsInChildren<Button>();
                 for (int i = 0; i < courseCount; i++) {
@@ -81,14 +98,17 @@ namespace UI.Vote {
                     _courses.Add(courseName, course);
 
                     var text = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
+                    text.text = courseName + " (0)";
                     _texts.Add(courseName, text);
-                    // TODO: Assign button listeners to VoteSelected
+                    buttons[i].onClick.AddListener(() => VoteSelected(course));
+                    _logger.Log("Added "+courseName);
                 }
             }
             
             foreach (var (courseName, course) in _courses) {
                 if (changedProperties.ContainsKey("VoteCount_" + courseName)) {
                     // Vote count has changed
+                    _logger.Log("Vote count changed for "+courseName);
                     UpdateText(_texts[courseName], course);
                 }
             }
@@ -100,16 +120,51 @@ namespace UI.Vote {
             text.text = course.courseName + " (" + voteCount + ")";
         }
 
-        private IEnumerator Countdown() {
-            _timer = countdown;
-            for (int i = 0; i < countdown; i++) {
-                _timer--;
-                yield return new WaitForSeconds(1);
+        [PunRPC]
+        [UsedImplicitly]
+        private void StartCountdownRPC(double startTime) {
+            var timeDifference = PhotonNetwork.Time - startTime;
+            if (timeDifference > countdownStart * 10) {
+                _logger.Err("PhotonNetwork.Time seems to have wrapped around. startTime: "+startTime+", PhotonNetwork.Time: "+PhotonNetwork.Time);
             }
-            
-            
+            // TODO: Check if difference is larger than countdownStart * 2. If so, PhotonNetwork.Time wrapped around.
+            // Will need to account for this edge case
+            _timer = countdownStart - timeDifference;
+            _logger.Log("RPC received to start countdown. startTime: "+startTime+". Timer set to "+_timer);
         }
 
+        private void Update() {
+            if (double.IsPositiveInfinity(_timer)) return;
+            
+            _timer -= Time.deltaTime;
+            countdownText.text = _origCountdownText + " (" + (int)_timer + ")";
+            
+            if (PhotonNetwork.IsMasterClient && _timer < 0) {
+                _timer = Mathf.Infinity;
+                
+                // Find course with most votes
+                _logger.Log("Timer finished as master client.");
+                CourseData chosenCourse = null;
+                var mostVotes = 0;
+                var changedProperties = new Hashtable();
+                foreach (var (courseName, course) in _courses) {
+                    var votes = (int)PhotonNetwork.CurrentRoom.CustomProperties["VoteCount_" + courseName];
+                    if (votes >= mostVotes) {
+                        chosenCourse = course;
+                        mostVotes = votes;
+                    }
+
+                    // Reset vote count
+                    changedProperties["VoteCount_" + courseName] = 0;
+                }
+
+                _logger.Log("Most voted course: "+chosenCourse!.courseName);
+                PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
+
+                // Load first hole for course
+                PhotonNetwork.LoadLevel(chosenCourse!.firstHole.SceneName);
+            }
+        }
     }
 }
 
