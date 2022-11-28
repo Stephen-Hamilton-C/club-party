@@ -67,6 +67,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HoleTrigger
       objectReference: {fileID: 0}
+    - target: {fileID: 6802252786989121372, guid: 416303b01c0fce344a5c3fd4c095e8e4,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 416303b01c0fce344a5c3fd4c095e8e4, type: 3}
 --- !u!1001 &1002793344479024242
@@ -131,10 +136,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: -7029948723529949830, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: -6306251675905053821, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: -3464447691518478215, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
@@ -151,7 +171,12 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
       propertyPath: m_Name
-      value: TestHole3
+      value: TestHole3 Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 3182244660871480619, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
@@ -163,6 +188,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4175059213566853535, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 6459149298229453932, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
