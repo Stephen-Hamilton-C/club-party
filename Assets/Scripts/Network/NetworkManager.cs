@@ -1,11 +1,13 @@
 using System;
-using Ball;
 using ExitGames.Client.Photon;
-using ParrelSync;
 using Photon.Pun;
 using Photon.Realtime;
 using Serializer;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using ParrelSync;
+#endif
 
 namespace Network {
     /// <summary>
