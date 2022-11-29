@@ -63,21 +63,23 @@ namespace UI.Vote {
         }
 
         private void VoteSelected(CourseData course) {
+            if (_currentlyVotedCourse == course.courseName) return;
             _logger.Log("Voted for "+course.courseName);
+            
             var changedProperties = new Hashtable();
             var currentProperties = PhotonNetwork.CurrentRoom.CustomProperties;
-            if (_currentlyVotedCourse == "") {
+            if (_currentlyVotedCourse != "") {
                 var oldCourseKey = "VoteCount_" + _currentlyVotedCourse;
                 changedProperties[oldCourseKey] = (int)currentProperties[oldCourseKey] - 1;
                 _logger.Log("Decremented count from previously voted course: "+_currentlyVotedCourse);
             }
 
             var newCourseKey = "VoteCount_" + course.courseName;
-            if (changedProperties[newCourseKey] == null) {
+            if (currentProperties[newCourseKey] == null) {
                 changedProperties[newCourseKey] = 1;
                 _logger.Log("No previous vote count for course. Set to 1.");
             } else {
-                changedProperties[newCourseKey] = (int)changedProperties[newCourseKey] + 1;
+                changedProperties[newCourseKey] = (int)currentProperties[newCourseKey] + 1;
                 _logger.Log("Set vote count to "+(int)changedProperties[newCourseKey]);
             }
 
