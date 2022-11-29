@@ -7,7 +7,7 @@ namespace Ball {
     /// so that the NetworkManager can find the player characters
     /// </summary>
     [RequireComponent(typeof(PhotonView))]
-    public class PlayerParenter : MonoBehaviour {
+    public class PlayerSetup : MonoBehaviour {
     
         [SerializeField] private bool debug;
 

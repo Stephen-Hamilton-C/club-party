@@ -71,8 +71,7 @@ public class GameManager : MonoBehaviour {
         var spawnPos = spawn.position;
         spawnPos.y += 0.1f;
         PhotonNetwork.Instantiate(CharacterName, spawnPos, spawn.rotation);
-        // PlayerParenter will do the rest
-        // TODO: Heesh that's a bad name
+        // PlayerSetup will do the rest
     }
 
     private void Start() {
@@ -123,9 +122,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void PlayerLeft(Player player) {
-        // TODO: Players are getting locked in levels when a player leaves
-        // Is PhotonNetwork.PlayerCount being updated?
-        // Maybe it should be room...
         bool success = _finishedPlayers.Remove(player);
         _logger.Log("Player ("+player.NickName+") left.");
         _logger.Log(success ? "Player removed from finished set." : "Player was not in hole.");
