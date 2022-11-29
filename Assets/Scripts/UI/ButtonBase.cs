@@ -19,7 +19,7 @@ namespace UI {
         /// <summary>
         /// The button's text, if any. Initialized in Start.
         /// </summary>
-        [CanBeNull] protected TextMeshProUGUI ButtonText;
+        [CanBeNull] protected TMP_Text ButtonText;
 
         /// <summary>
         /// Initializes common variables and listens for OnClick.
@@ -28,7 +28,7 @@ namespace UI {
         protected virtual void Start() {
             Button = GetComponent<Button>();
             Button.onClick.AddListener(OnClick);
-            ButtonText = GetComponentInChildren<TextMeshProUGUI>();
+            ButtonText = GetComponentInChildren<TMP_Text>();
         }
 
         /// <summary>
