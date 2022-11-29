@@ -114,14 +114,15 @@ public class CameraController : MonoBehaviour {
         if (cameraUnlocked && _lookCtrl.triggered) {
             var mouse = _lookCtrl.ReadValue<Vector2>();
             var localRot = _pivot.localRotation.eulerAngles;
+            var sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2.5f);
             
             // Calculate pitch
             var oldPitch = _pitch;
-            _pitch = Mathf.Clamp(_pitch + mouse.y * rotationSpeed, minPitchRotation, maxPitchRotation);
+            _pitch = Mathf.Clamp(_pitch + mouse.y * rotationSpeed * sensitivity, minPitchRotation, maxPitchRotation);
             localRot.x -= _pitch - oldPitch;
             
             // Calculate yaw
-            localRot.y += mouse.x * rotationSpeed;
+            localRot.y += mouse.x * rotationSpeed * sensitivity;
             
             // Apply rotation
             _pivot.localRotation = Quaternion.Euler(localRot);
