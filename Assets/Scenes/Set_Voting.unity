@@ -1530,13 +1530,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: efbc7085c3081308286b0b9ada187460, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debug: 0
   countdownText: {fileID: 798354960}
   courseCount: 2
   allCourses:
   - {fileID: 11400000, guid: 0ef285da4cc80c68d8fe1fd59a04176a, type: 2}
   - {fileID: 11400000, guid: e26599113567b65938f660df63ed2022, type: 2}
-  debug: 0
-  countdownStart: 30
+  countdownStart: 10
 --- !u!114 &1444487828
 MonoBehaviour:
   m_ObjectHideFlags: 0
