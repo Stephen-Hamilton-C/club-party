@@ -42,6 +42,14 @@ namespace Ball {
         /// The position of the mouse on the control plane
         /// </summary>
         private Vector3 _mousePos;
+        /// <summary>
+        /// The PlayerInput component for the LocalPlayer
+        /// </summary>
+        private static PlayerInput _playerInput;
+        /// <summary>
+        /// The instance of PlayerController for the LocalPlayer
+        /// </summary>
+        private static PlayerController _localInstance;
         private Logger _logger;
         /// <summary>
         /// Whether the player has clicked to prepare a stroke
@@ -71,6 +79,8 @@ namespace Ball {
             _logger.Log("IsMine: "+_view.IsMine);
             if (_view.IsMine) {
                 GameManager.OnPlayerFinished += PlayerFinishedHole;
+                _playerInput = GetComponent<PlayerInput>();
+                _localInstance = this;
             } else {
                 GetComponent<PlayerInput>().DeactivateInput();
                 Destroy(mouseTarget.gameObject);
@@ -189,6 +199,22 @@ namespace Ball {
                 mouseTarget.gameObject.SetActive(false);
                 Destroy(this);
             }
+        }
+
+        /// <summary>
+        /// Activates the local player's controls
+        /// </summary>
+        public static void Activate() {
+            _playerInput.ActivateInput();
+            _localInstance.OnCancelShot();
+        }
+
+        /// <summary>
+        /// Deactivates the local player's controls
+        /// </summary>
+        public static void Deactivate() {
+            _playerInput.DeactivateInput();
+            _localInstance.OnCancelShot();
         }
 
     }
