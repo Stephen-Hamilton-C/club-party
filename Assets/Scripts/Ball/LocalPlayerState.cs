@@ -34,20 +34,22 @@ namespace Ball {
     
         private static LocalPlayerState _instance;
         private PhotonView _view;
-        private OutOfBounds _outOfBounds;
+        private static OutOfBounds _outOfBounds;
         private Logger _logger;
     
         private void Awake() {
             _logger = new(this, debug);
-            _view = GetComponent<PhotonView>();
-            _outOfBounds = GetComponent<OutOfBounds>();
 
+            _view = GetComponent<PhotonView>();
+            
             // LocalPlayerState should only exist on the *local* player
             if (!_view.IsMine) {
                 _logger.Log("This is another player's character. Destroying this instance.");
                 Destroy(this);
             }
         
+            _outOfBounds = GetComponent<OutOfBounds>();
+            
             // Ensure singleton
             if (_instance != null) {
                 if (_view.IsMine) {
@@ -82,6 +84,5 @@ namespace Ball {
         public static void Stroked() {
             OnStroke?.Invoke();
         }
-
     }
 }
