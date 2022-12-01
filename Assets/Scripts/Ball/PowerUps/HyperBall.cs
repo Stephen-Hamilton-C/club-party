@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
 using Photon.Pun;
+using Unity.Services.RemoteConfig;
+using UnityEngine;
 
 namespace Ball.PowerUps {
     /// <summary>
@@ -10,7 +12,7 @@ namespace Ball.PowerUps {
         /// <summary>
         /// How much the ball will zoom when applied
         /// </summary>
-        private const float SpeedFactor = 10;
+        private static float _speedFactor = 10;
         
         public override string PowerUpName { get; protected set; } = "HyperBall";
         public override string PowerUpDescription { get; protected set; } = "Go really, really fast on your next stroke";
@@ -23,13 +25,26 @@ namespace Ball.PowerUps {
         /// The controller of the player affected
         /// </summary>
         private PlayerController _controller;
-        
+
+        protected override void Start() {
+            base.Start();
+            RemoteConfigService.Instance.FetchCompleted += RetrievedFactor;
+        }
+
+        protected override void OnDestroy() {
+            RemoteConfigService.Instance.FetchCompleted -= RetrievedFactor;
+        }
+
+        private void RetrievedFactor(ConfigResponse response) {
+            _speedFactor = RemoteConfigService.Instance.appConfig.GetFloat("Hyperball Factor");
+        }
+
         protected override void OnLocalPlayerTouched() {
             if (Manager.AddPowerUp(this)) {
                 // Power-up not already applied, apply effect
                 _controller = LocalCharacter.GetComponent<PlayerController>();
                 _oldSpeed = _controller.speed;
-                _controller.speed *= SpeedFactor;
+                _controller.speed *= _speedFactor; 
             } else {
                 // Already applied, remove
                 PhotonNetwork.Destroy(gameObject);
