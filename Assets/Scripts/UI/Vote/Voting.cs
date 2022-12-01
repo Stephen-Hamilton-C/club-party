@@ -65,6 +65,7 @@ namespace UI.Vote {
         private void OnDestroy() {
             _logger.Log("Goodbye, world!");
             NetworkManager.onRoomPropertiesChanged -= RoomPropertiesChanged;
+            NetworkManager.onPlayerLeft -= RemovePlayerVote;
         }
 
         private void VoteSelected(CourseData course) {
@@ -165,7 +166,7 @@ namespace UI.Vote {
                 // Find course with most votes
                 _logger.Log("Timer finished as master client.");
                 CourseData chosenCourse = null;
-                var mostVotes = 0;
+                var mostVotes = Mathf.NegativeInfinity;
                 var changedProperties = new Hashtable();
                 foreach (var (courseName, course) in _courses) {
                     var votes = (int)PhotonNetwork.CurrentRoom.CustomProperties["VoteCount_" + courseName];

@@ -34,13 +34,14 @@ namespace Ball {
     
         private static LocalPlayerState _instance;
         private PhotonView _view;
-        private static OutOfBounds _outOfBounds;
+        private OutOfBounds _outOfBounds;
         private Logger _logger;
     
         private void Awake() {
             _logger = new(this, debug);
 
             _view = GetComponent<PhotonView>();
+            _outOfBounds = GetComponent<OutOfBounds>();
             
             // LocalPlayerState should only exist on the *local* player
             if (!_view.IsMine) {
@@ -48,7 +49,6 @@ namespace Ball {
                 Destroy(this);
             }
         
-            _outOfBounds = GetComponent<OutOfBounds>();
             
             // Ensure singleton
             if (_instance != null) {
