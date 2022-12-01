@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Network;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +35,9 @@ namespace UI.Vote {
             _origCountdownText = countdownText.text;
             Cursor.visible = true;
             
+            // Reset vote
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "CurrentVote", null } });
+            
             if (PhotonNetwork.IsMasterClient) {
                 _view.TransferOwnership(PhotonNetwork.LocalPlayer);
                 _view.RPC("StartCountdownRPC", RpcTarget.AllBuffered, PhotonNetwork.Time);
@@ -52,8 +56,9 @@ namespace UI.Vote {
 
                 PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
             }
-            
+
             NetworkManager.onRoomPropertiesChanged += RoomPropertiesChanged;
+            NetworkManager.onPlayerLeft += RemovePlayerVote;
             RoomPropertiesChanged(PhotonNetwork.CurrentRoom.CustomProperties);
         }
 
@@ -73,7 +78,7 @@ namespace UI.Vote {
                 changedProperties[oldCourseKey] = (int)currentProperties[oldCourseKey] - 1;
                 _logger.Log("Decremented count from previously voted course: "+_currentlyVotedCourse);
             }
-
+            
             var newCourseKey = "VoteCount_" + course.courseName;
             if (currentProperties[newCourseKey] == null) {
                 changedProperties[newCourseKey] = 1;
@@ -86,8 +91,9 @@ namespace UI.Vote {
             _currentlyVotedCourse = course.courseName;
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
+            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "CurrentVote", _currentlyVotedCourse } });
         }
-
+        
         private void RoomPropertiesChanged(Hashtable changedProperties) {
             if (changedProperties.ContainsKey("VoteCourseName0")) {
                 _logger.Log("Properties changed. Received course names.");
@@ -114,6 +120,18 @@ namespace UI.Vote {
                     UpdateText(_texts[courseName], course);
                 }
             }
+        }
+
+        private void RemovePlayerVote(Player player) {
+            if (!PhotonNetwork.IsMasterClient) return;
+
+            if (player.CustomProperties["CurrentVote"] == null) return;
+            var votedCourseName = (string) player.CustomProperties["CurrentVote"];
+            var voteCountKey = "VoteCount_" + votedCourseName;
+            var currentVoteCount = (int)PhotonNetwork.CurrentRoom.CustomProperties[voteCountKey];
+            PhotonNetwork.CurrentRoom.SetCustomProperties(
+                new Hashtable() { { voteCountKey, currentVoteCount - 1 } }
+            );
         }
 
         private void UpdateText(TextMeshProUGUI text, CourseData course) {
