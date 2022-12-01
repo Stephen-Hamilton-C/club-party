@@ -178,7 +178,7 @@ namespace Network {
         private void Awake() {
             // Singleton
             if (_instance != null) {
-                Debug.LogError("Cannot have multiple NetworkManager instances! This duplicate instance will be destroyed.");
+                Debug.LogWarning("Cannot have multiple NetworkManager instances! This duplicate instance will be destroyed.");
                 Destroy(this);
                 return;
             }
