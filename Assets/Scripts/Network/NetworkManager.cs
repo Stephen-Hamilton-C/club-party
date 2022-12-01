@@ -4,6 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Serializer;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 #if UNITY_EDITOR
 using ParrelSync;
@@ -65,6 +66,7 @@ namespace Network {
         /// <param name="cause">The reason for the disconnect</param>
         public override void OnDisconnected(DisconnectCause cause) {
             _logger.Log("Disconnected: "+cause);
+            SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);
         }
 
