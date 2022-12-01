@@ -86,7 +86,7 @@ namespace Ball.PowerUps {
             _logger.Log("Stroked was not overridden for "+PowerUpName);
         }
 
-        private void OnDestroy() {
+        protected virtual void OnDestroy() {
             // Drop events
             LocalPlayerState.OnStroke -= Stroked;
         }
