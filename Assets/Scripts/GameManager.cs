@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour {
         _finishedPlayers.Add(player);
         
         // Disable player inter-collision
-        var character = player.CustomProperties["Character"] as GameObject;
+        var character = player.GetCharacter();
         character.layer = LayerMask.NameToLayer("PlayerNoCollide");
         
         // Event invoke

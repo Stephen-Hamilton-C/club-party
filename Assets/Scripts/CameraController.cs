@@ -88,8 +88,8 @@ public class CameraController : MonoBehaviour {
         _pivot = transform.parent;
         
         // Get player's character from PhotonNetwork
-        GameObject character = PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject;
-        _player = character?.transform;
+        var character = PhotonNetwork.LocalPlayer.GetCharacter();
+        _player = character.transform;
         _logger.Log("Character: "+character);
     }
 

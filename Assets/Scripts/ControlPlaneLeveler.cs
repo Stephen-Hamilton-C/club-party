@@ -11,7 +11,7 @@ public class ControlPlaneLeveler : MonoBehaviour {
     private Transform _character;
 
     private void Start() {
-        _character = (PhotonNetwork.LocalPlayer.CustomProperties["Character"] as GameObject)?.transform;
+        _character = PhotonNetwork.LocalPlayer.GetCharacter().transform;
     }
 
     private void Update() {
