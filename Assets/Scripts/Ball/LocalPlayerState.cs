@@ -1,6 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
+// TODO: Make this specific to each player again. Make a static LocalInstance variable instead.
 namespace Ball {
     /// <summary>
     /// Holds general information about the LocalPlayer
