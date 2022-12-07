@@ -1,12 +1,13 @@
+using System;
+using Ball;
 using JetBrains.Annotations;
 using Photon.Pun;
-using Unity.Services.RemoteConfig;
-using UnityEngine;
 
-namespace Ball.PowerUps {
+namespace Legacy {
     /// <summary>
     /// Ball go very fast. Intended to be applied to another player when picked up
     /// </summary>
+    [Obsolete("To be replaced with new PowerUp design")]
     public class HyperBall : PowerUp {
 
         /// <summary>
@@ -28,16 +29,16 @@ namespace Ball.PowerUps {
 
         protected override void Start() {
             base.Start();
-            RemoteConfigService.Instance.FetchCompleted += RetrievedFactor;
+            // RemoteConfigService.Instance.FetchCompleted += RetrievedFactor;
         }
 
         protected override void OnDestroy() {
-            RemoteConfigService.Instance.FetchCompleted -= RetrievedFactor;
+            // RemoteConfigService.Instance.FetchCompleted -= RetrievedFactor;
         }
 
-        private void RetrievedFactor(ConfigResponse response) {
-            _speedFactor = RemoteConfigService.Instance.appConfig.GetFloat("Hyperball Factor");
-        }
+        // private void RetrievedFactor(ConfigResponse response) {
+        //     _speedFactor = RemoteConfigService.Instance.appConfig.GetFloat("Hyperball Factor");
+        // }
 
         protected override void OnLocalPlayerTouched() {
             if (Manager.AddPowerUp(this)) {
