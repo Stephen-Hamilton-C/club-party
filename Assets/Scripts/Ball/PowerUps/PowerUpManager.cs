@@ -1,63 +1,85 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using JetBrains.Annotations;
+using Legacy;
+using Photon.Pun;
 using UnityEngine;
 
 namespace Ball.PowerUps {
-    /// <summary>
-    /// Simply holds the collection of currently active PowerUps for this player
-    /// </summary>
+    [RequireComponent(typeof(PhotonView))]
     public class PowerUpManager : MonoBehaviour {
 
+        public static readonly Dictionary<string, Type> PowerUps = new() {
+            { typeof(HyperBall).ToString(), typeof(HyperBall) }
+        };
+
         [SerializeField] private bool debug;
-        
-        private readonly HashSet<PowerUp> _activePowerUps = new();
+
+        public IReadOnlyList<Type> StoredPowerUps => _storedPowerUps;
+        public IReadOnlyList<Type> ActivePowerUps => _activePowerUps;
+
         private Logger _logger;
+        private PhotonView _view;
+        private readonly List<Type> _storedPowerUps = new();
+        private readonly List<Type> _activePowerUps = new();
 
-        private void Awake() {
+        private void Start() {
             _logger = new(this, debug);
+            _view = GetComponent<PhotonView>();
         }
 
-        /// <summary>
-        /// Adds a PowerUp to the player
-        /// </summary>
-        /// <param name="powerUp">The PowerUp to add</param>
-        /// <returns>True if the PowerUp was added, false if the PowerUp type has already been applied</returns>
-        public bool AddPowerUp(PowerUp powerUp) {
-            var powerUpType = powerUp.GetType();
-            foreach (var activePowerUp in _activePowerUps) {
-                if (activePowerUp.GetType() == powerUpType)
-                    return false;
+        public void AddPowerUp(Type powerUpType) {
+            ValidatePowerUpType(powerUpType);
+            _storedPowerUps.Add(powerUpType);
+            _logger.Log("Added "+powerUpType+" to stored power ups");
+        }
+
+        public bool ActivatePowerUp(Type powerUpType) {
+            ValidatePowerUpType(powerUpType);
+            if (_storedPowerUps.Remove(powerUpType)) {
+                // Actually adding the component should be networked as it is possible for other players to apply
+                // power-ups to this player
+                _logger.Log("Powerup successfully removed, activating powerup across all clients...");
+                _view.RPC("ActivatePowerUpRPC", RpcTarget.AllBuffered, powerUpType.ToString());
+                return true;
             }
 
-            return _activePowerUps.Add(powerUp);
+            _logger.Log("Powerup was not stored, will not activate.");
+            return false;
         }
 
-        /// <summary>
-        /// Removes a PowerUp from the player
-        /// </summary>
-        /// <param name="powerUp">The PowerUp to remove</param>
-        /// <returns>Whether a PowerUp that matched the given PowerUp's type was removed</returns>
-        public bool RemovePowerUp(PowerUp powerUp) {
-            if (!_activePowerUps.Remove(powerUp)) {
-                var powerUpType = powerUp.GetType();
-                foreach (var activePowerUp in _activePowerUps) {
-                    if (activePowerUp.GetType() == powerUpType)
-                        return _activePowerUps.Remove(activePowerUp);
-                }
-
-                return false;
+        [PunRPC, UsedImplicitly]
+        private void ActivatePowerUpRPC(string powerUpName) {
+            _logger.Log("Received RPC for ActivatePowerUp with "+powerUpName);
+            var powerUpType = PowerUps[powerUpName];
+            if (_activePowerUps.Contains(powerUpType)) {
+                _logger.Warn("PowerUp of this type ("+powerUpName+") has already been applied.");
+                return;
             }
-
-            return true;
+            
+            _activePowerUps.Add(powerUpType);
+            gameObject.AddComponent(powerUpType);
+            _logger.Log("Added PowerUp to the character as a component ("+powerUpType+")");
         }
 
-        /// <summary>
-        /// Gets an array copy of the currently active PowerUps
-        /// </summary>
-        /// <returns>An array copy of PowerUps</returns>
-        public PowerUp[] GetPowerUps() {
-            return _activePowerUps.ToArray();
+        public void PowerUpFinished(Type powerUpType) {
+            ValidatePowerUpType(powerUpType);
+            _logger.Log("Powerup finished running ("+powerUpType+")");
+            _view.RPC("PowerUpFinishedRPC", RpcTarget.AllBuffered, powerUpType.ToString());
+        }
+
+        [PunRPC, UsedImplicitly]
+        private void PowerUpFinishedRPC(string powerUpName) {
+            _logger.Log("Received RPC for PowerUpFinished with "+powerUpName);
+            var powerUpType = PowerUps[powerUpName];
+            _activePowerUps.Remove(powerUpType);
+        }
+
+        private void ValidatePowerUpType(Type powerUpType) {
+            if (!powerUpType.IsSubclassOf(typeof(PowerUp)))
+                throw new ArgumentException("Type must be a subclass of PowerUp!");
         }
 
     }
 }
+
