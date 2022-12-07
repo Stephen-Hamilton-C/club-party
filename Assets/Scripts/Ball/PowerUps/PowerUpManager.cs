@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Legacy;
 using Photon.Pun;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace Ball.PowerUps {
     public class PowerUpManager : MonoBehaviour {
 
         public static readonly Dictionary<string, Type> PowerUps = new() {
-            { typeof(HyperBall).ToString(), typeof(HyperBall) }
+            { typeof(Legacy.HyperBall).ToString(), typeof(Legacy.HyperBall) }
         };
 
         [SerializeField] private bool debug;
@@ -29,13 +28,13 @@ namespace Ball.PowerUps {
         }
 
         public void AddPowerUp(Type powerUpType) {
-            ValidatePowerUpType(powerUpType);
+            ValidatePowerUpType<PowerUp>(powerUpType);
             _storedPowerUps.Add(powerUpType);
             _logger.Log("Added "+powerUpType+" to stored power ups");
         }
 
         public bool ActivatePowerUp(Type powerUpType) {
-            ValidatePowerUpType(powerUpType);
+            ValidatePowerUpType<PowerUp>(powerUpType);
             if (_storedPowerUps.Remove(powerUpType)) {
                 // Actually adding the component should be networked as it is possible for other players to apply
                 // power-ups to this player
@@ -52,18 +51,25 @@ namespace Ball.PowerUps {
         private void ActivatePowerUpRPC(string powerUpName) {
             _logger.Log("Received RPC for ActivatePowerUp with "+powerUpName);
             var powerUpType = PowerUps[powerUpName];
-            if (_activePowerUps.Contains(powerUpType)) {
-                _logger.Warn("PowerUp of this type ("+powerUpName+") has already been applied.");
-                return;
+
+            if (powerUpType.IsSubclassOf(typeof(PlayerPowerUp))) {
+                if (_activePowerUps.Contains(powerUpType)) {
+                    _logger.Warn("PowerUp of this type (" + powerUpName + ") has already been applied.");
+                    return;
+                }
+
+                _activePowerUps.Add(powerUpType);
+                gameObject.AddComponent(powerUpType);
+                _logger.Log("Added PowerUp to the character as a component (" + powerUpType + ")");
+            } else if (powerUpType.IsSubclassOf(typeof(EnvironmentPowerUp))) {
+                var environmentContainer = new GameObject(powerUpName);
+                environmentContainer.AddComponent(powerUpType);
+                _logger.Log("Added PowerUp to a new empty GameObject");
             }
-            
-            _activePowerUps.Add(powerUpType);
-            gameObject.AddComponent(powerUpType);
-            _logger.Log("Added PowerUp to the character as a component ("+powerUpType+")");
         }
 
         public void PowerUpFinished(Type powerUpType) {
-            ValidatePowerUpType(powerUpType);
+            ValidatePowerUpType<PlayerPowerUp>(powerUpType);
             _logger.Log("Powerup finished running ("+powerUpType+")");
             _view.RPC("PowerUpFinishedRPC", RpcTarget.AllBuffered, powerUpType.ToString());
         }
@@ -75,9 +81,9 @@ namespace Ball.PowerUps {
             _activePowerUps.Remove(powerUpType);
         }
 
-        private void ValidatePowerUpType(Type powerUpType) {
-            if (!powerUpType.IsSubclassOf(typeof(PowerUp)))
-                throw new ArgumentException("Type must be a subclass of PowerUp!");
+        private void ValidatePowerUpType<T>(Type powerUpType) where T : PowerUp {
+            if (!powerUpType.IsSubclassOf(typeof(T)))
+                throw new ArgumentException("Type must be a subclass of "+typeof(T).Name+"!");
         }
 
     }
