@@ -36,6 +36,7 @@ namespace Ball {
         private static LocalPlayerState _instance;
         private PhotonView _view;
         private OutOfBounds _outOfBounds;
+        private static bool _stroked;
         private Logger _logger;
     
         private void Awake() {
@@ -74,7 +75,8 @@ namespace Ball {
         }
 
         private void CanStrokeChanged(bool value) {
-            if (value) {
+            if (value && _stroked) {
+                _stroked = false;
                 _outOfBounds.SetRespawnPoint();
             }
         }
@@ -83,6 +85,7 @@ namespace Ball {
         /// Informs the LocalPlayerState that a stroke has been performed
         /// </summary>
         public static void Stroked() {
+            _stroked = true;
             OnStroke?.Invoke();
         }
     }
