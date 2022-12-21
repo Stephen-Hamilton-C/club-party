@@ -21,6 +21,10 @@ namespace Dev {
                 // Not connected
                 Log("Not connected. Destroying current GameManager");
                 Destroy(GetComponent<GameManager>());
+                foreach (Transform child in transform) {
+                    Destroy(child.gameObject);
+                }
+                gameObject.name = "AutoConnect NetworkManager";
             
                 Log("Creating Network Manager");
                 gameObject.AddComponent<NetworkManager>();
