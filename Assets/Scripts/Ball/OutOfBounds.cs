@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ namespace Ball {
         [SerializeField] private bool debug;
         [Tooltip("The lowest Y the player can go")]
         [SerializeField] private float minimumY = -25f;
+        [Tooltip("The highest Y the player can go")]
+        [SerializeField] private float maximumY = 1000f;
 
         private Rigidbody _rb;
         private Vector3 _respawnPoint;
@@ -37,11 +40,19 @@ namespace Ball {
             _logger = new(this, debug);
             _rb = GetComponent<Rigidbody>();
             
+            GameManager.OnHoleFinished += SetRespawnPoint;
+        }
+
+        private void Start() {
             SetRespawnPoint();
         }
 
+        private void OnDestroy() {
+            GameManager.OnHoleFinished -= SetRespawnPoint;
+        }
+
         private void FixedUpdate() {
-            if (_rb.position.y < minimumY)
+            if (_rb.position.y < minimumY || _rb.position.y > maximumY)
                 Respawn();
         }
     
