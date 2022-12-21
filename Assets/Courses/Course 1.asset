@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Course 1
   m_EditorClassIdentifier: 
   courseName: Course 1
-  firstHole:
-    m_SceneAsset: {fileID: 102900000, guid: c181b5a6d12ef2d428c55ddc46c645c4, type: 3}
+  courseScene:
+    m_SceneAsset: {fileID: 102900000, guid: a26d34d5f49ff654b8fb2960c4cad358, type: 3}
     m_IsDirty: 0
-    m_ScenePath: Assets/Scenes/Set1/Set1_Level1.unity
+    m_ScenePath: Assets/Scenes/Set1.unity

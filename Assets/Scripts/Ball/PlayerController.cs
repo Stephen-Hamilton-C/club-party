@@ -79,6 +79,7 @@ namespace Ball {
             _logger.Log("IsMine: "+_view.IsMine);
             if (_view.IsMine) {
                 GameManager.OnPlayerFinished += PlayerFinishedHole;
+                GameManager.OnHoleFinished += HoleFinished;
                 _playerInput = GetComponent<PlayerInput>();
                 _localInstance = this;
             } else {
@@ -89,6 +90,7 @@ namespace Ball {
 
         private void OnDestroy() {
             GameManager.OnPlayerFinished -= PlayerFinishedHole;
+            GameManager.OnHoleFinished -= HoleFinished;
         }
 
         private void FixedUpdate() {
@@ -197,8 +199,17 @@ namespace Ball {
                 // TODO: This should be a boolean switch for future plans
                 GameManager.OnPlayerFinished -= PlayerFinishedHole;
                 mouseTarget.gameObject.SetActive(false);
-                Destroy(this);
+                this.enabled = false;
             }
+        }
+
+        /// <summary>
+        /// Called by GameManager when all players finish a hole
+        /// </summary>
+        private void HoleFinished() {
+            GameManager.OnPlayerFinished += PlayerFinishedHole;
+            mouseTarget.gameObject.SetActive(true);
+            this.enabled = true;
         }
 
         /// <summary>

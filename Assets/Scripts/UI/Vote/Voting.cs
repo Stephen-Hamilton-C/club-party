@@ -64,6 +64,8 @@ namespace UI.Vote {
 
         private void OnDestroy() {
             _logger.Log("Goodbye, world!");
+            if(_view.IsMine)
+                PhotonNetwork.CleanRpcBufferIfMine(_view);
             NetworkManager.onRoomPropertiesChanged -= RoomPropertiesChanged;
             NetworkManager.onPlayerLeft -= RemovePlayerVote;
         }
@@ -183,7 +185,7 @@ namespace UI.Vote {
                 PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
 
                 // Load first hole for course
-                PhotonNetwork.LoadLevel(chosenCourse!.firstHole.SceneName);
+                PhotonNetwork.LoadLevel(chosenCourse!.courseScene.SceneName);
             }
         }
     }

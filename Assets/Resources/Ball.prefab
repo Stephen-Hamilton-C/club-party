@@ -434,8 +434,9 @@ GameObject:
   - component: {fileID: 8334964608825702856}
   - component: {fileID: 412612965}
   - component: {fileID: 13049056216025871}
-  - component: {fileID: 8649489284341374653}
+  - component: {fileID: 4368991502919595185}
   - component: {fileID: 5572570985680403450}
+  - component: {fileID: 6123366390072318917}
   - component: {fileID: 5906808786478294935}
   - component: {fileID: -6428909629562943986}
   - component: {fileID: -9147175395872179518}
@@ -641,7 +642,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   minimumY: -10
---- !u!114 &8649489284341374653
+  maximumY: 1000
+--- !u!114 &4368991502919595185
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -650,7 +652,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3388712837282367556}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b14bc42fa9e87bd4ba9a80df9907b74e, type: 3}
+  m_Script: {fileID: 11500000, guid: 6abaec811a859225ab2d59df8d59992d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
@@ -664,6 +666,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d903861a8e0132842996ff0b87f9943b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+--- !u!114 &6123366390072318917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388712837282367556}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85080a6913c5b0a4b89fdf07bbfb1dda, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0

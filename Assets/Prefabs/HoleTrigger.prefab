@@ -10,8 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6802252786989121371}
   - component: {fileID: 6802252786989121370}
-  - component: {fileID: -2053301650839742936}
   - component: {fileID: 6654185966478039806}
+  - component: {fileID: 1829735977568502723}
+  - component: {fileID: -2053301650839742936}
   m_Layer: 0
   m_Name: HoleTrigger
   m_TagString: Untagged
@@ -47,19 +48,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-2053301650839742936
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6802252786989121372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2977319fd5a47746b4afd87b3e48461, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0
 --- !u!65 &6654185966478039806
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73,3 +61,38 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: -1}
+--- !u!114 &1829735977568502723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802252786989121372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-2053301650839742936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6802252786989121372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2977319fd5a47746b4afd87b3e48461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0

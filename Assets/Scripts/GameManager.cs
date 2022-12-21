@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
-using DevLocker.Utils;
 using Network;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 /// <summary>
 /// Handles level management
@@ -17,8 +18,7 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// How much time to wait before loading the next level
     /// </summary>
-    private const float TimeBeforeNextLevel = 2f;
-
+    private const float TimeBeforeNextLevel = 1f;
     
     [SerializeField] private bool debug;
 
@@ -30,13 +30,33 @@ public class GameManager : MonoBehaviour {
     /// Event when a player finishes the level
     /// </summary>
     public static PlayerEvent OnPlayerFinished;
+    /// <summary>
+    /// Event when all players finish the level
+    /// </summary>
+    public static GameEvent OnHoleFinished;
+    /// <summary>
+    /// Event when all holes are finished
+    /// </summary>
+    public static GameEvent OnLevelFinished;
     #endregion
 
-    [Tooltip("The initial spawn point of the map")]
-    [SerializeField] private Transform spawn;
-    [Tooltip("The scene for the next hole. If this is null, this is the last hole for the set.")]
-    [SerializeField] private SceneReference nextLevel;
+    /// <summary>
+    /// Each hole in this course
+    /// </summary>
+    private Hole[] _holes;
+    private Hole CurrentHole => _holes[HoleIndex];
 
+    private static int HoleIndex {
+        get => (int)(PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] ?? 0);
+        set {
+            PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] = value;
+            if (PhotonNetwork.IsMasterClient) {
+                var hashtable = new Hashtable() { { "CurrentHole", value } };
+                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
+            }
+        }
+    }
+    
     /// <summary>
     /// A Set of Players that finished the hole
     /// </summary>
@@ -46,6 +66,8 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     private float _nextMapTimer;
     private Logger _logger;
+    private Rigidbody _localCharRb;
+    private Vector3 _spawnOffset;
 
     /// <summary>
     /// Loads the first level across the network if this player is the first to join
@@ -53,6 +75,7 @@ public class GameManager : MonoBehaviour {
     public static void StartGame() {
         if (PhotonNetwork.IsMasterClient) {
             PhotonNetwork.LoadLevel(1);
+            HoleIndex = 0;
         }
     }
 
@@ -66,22 +89,41 @@ public class GameManager : MonoBehaviour {
             return;
         }
         Instance = this;
+
+        _holes = GetComponentsInChildren<Hole>();
+        if (_holes.Length == 0)
+            throw new InvalidOperationException("There are no spawns for this set!");
         
         // Spawn player
-        var spawnPos = spawn.position;
-        spawnPos.y += 0.1f;
-        PhotonNetwork.Instantiate(CharacterName, spawnPos, spawn.rotation);
+        PhotonNetwork.Instantiate(CharacterName, Vector3.zero, Quaternion.identity);
         // PlayerSetup will do the rest
     }
 
     private void Start() {
-        // Fallback spawn point if dev forgets to set spawn
-        if (spawn == null) {
-            spawn = new GameObject().transform;
-            _logger.Warn("Spawn reference missing! It has been set to a new empty at "+spawn.position);
-        }
+        CurrentHole.isCurrent = true;
+        
+        var character = PhotonNetwork.LocalPlayer.GetCharacter();
+        _spawnOffset = new Vector3(0, character.transform.localScale.y / 2, 0);
+        _localCharRb = character.GetComponent<Rigidbody>();
+        // Must set transform position in Start because physics
+        character.transform.position = CurrentHole.transform.position + _spawnOffset;
 
         NetworkManager.onPlayerLeft += PlayerLeft;
+    }
+
+    private void HoleFinished() {
+        _logger.Log("Hole finished. Old HoleIndex: "+HoleIndex+", new HoleIndex: "+(HoleIndex+1));
+        CurrentHole.isCurrent = false;
+        HoleIndex++;
+        CurrentHole.isCurrent = true;
+        _localCharRb.position = CurrentHole.transform.position + _spawnOffset;
+        OnHoleFinished?.Invoke();
+    }
+
+    private void LevelFinished() {
+        OnLevelFinished?.Invoke();
+        
+        StartGame();
     }
 
     private void Update() {
@@ -92,15 +134,10 @@ public class GameManager : MonoBehaviour {
                 _nextMapTimer = 0;
                 _finishedPlayers.Clear();
 
-                // If we don't destroy all player objects, then they somehow get duplicated when other players join
-                PhotonNetwork.DestroyPlayerObjects(PhotonNetwork.LocalPlayer);
-                if (PhotonNetwork.IsMasterClient) {
-                    if(nextLevel.IsEmpty) {
-                        // Show scoreboard, wait a few seconds, and then StartGame()
-                        StartGame();
-                    } else {
-                        PhotonNetwork.LoadLevel(nextLevel.SceneName);
-                    }
+                if (HoleIndex + 1 < _holes.Length) {
+                    HoleFinished();
+                } else {
+                    LevelFinished();
                 }
             } else {
                 _nextMapTimer += Time.unscaledDeltaTime;
