@@ -98,6 +98,7 @@ namespace Ball {
         
             // Update CanStroke and force the ball to stop if below cutOffVelocity
             LocalPlayerState.CanStroke = _rb.velocity.magnitude <= cutOffVelocity;
+            // TODO: This is causing the ball to get stuck on slopes in certain cases. Perhaps drag should be increased?
             if (LocalPlayerState.CanStroke)
                 _rb.velocity = Vector3.zero;
         }
