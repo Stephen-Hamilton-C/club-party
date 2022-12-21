@@ -441,6 +441,7 @@ GameObject:
   - component: {fileID: -6428909629562943986}
   - component: {fileID: -9147175395872179518}
   - component: {fileID: 9003363312477758094}
+  - component: {fileID: 4131763314515765125}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Player
@@ -910,6 +911,20 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d5ef143ec777664a0b0bc5e8e4857f88, type: 3}
   volumeScale: 10
   maxVolume: 10
+--- !u!114 &4131763314515765125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388712837282367556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f5606bbed5f6c948876ddaa3aff9059, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+  lateJoinScore: 0
 --- !u!1 &4179339777320401597
 GameObject:
   m_ObjectHideFlags: 0

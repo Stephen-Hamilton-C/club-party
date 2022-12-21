@@ -43,10 +43,10 @@ public class GameManager : MonoBehaviour {
     /// <summary>
     /// Each hole in this course
     /// </summary>
-    private Hole[] _holes;
-    private Hole CurrentHole => _holes[HoleIndex];
+    public Hole[] holes;
+    public Hole CurrentHole => holes[HoleIndex];
 
-    private static int HoleIndex {
+    public static int HoleIndex {
         get => (int)(PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] ?? 0);
         set {
             PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] = value;
@@ -90,8 +90,8 @@ public class GameManager : MonoBehaviour {
         }
         Instance = this;
 
-        _holes = GetComponentsInChildren<Hole>();
-        if (_holes.Length == 0)
+        holes = GetComponentsInChildren<Hole>();
+        if (holes.Length == 0)
             throw new InvalidOperationException("There are no spawns for this set!");
         
         // Spawn player
@@ -122,8 +122,6 @@ public class GameManager : MonoBehaviour {
 
     private void LevelFinished() {
         OnLevelFinished?.Invoke();
-        
-        StartGame();
     }
 
     private void Update() {
@@ -134,7 +132,7 @@ public class GameManager : MonoBehaviour {
                 _nextMapTimer = 0;
                 _finishedPlayers.Clear();
 
-                if (HoleIndex + 1 < _holes.Length) {
+                if (HoleIndex + 1 < holes.Length) {
                     HoleFinished();
                 } else {
                     LevelFinished();
