@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace UI.Game {
@@ -24,8 +23,10 @@ namespace UI.Game {
             transform.position = Vector3.MoveTowards(mouseTargetPos, ballPos, distanceFromTarget);
 
             var targetToBall = ballPos - mouseTargetPos;
-            transform.rotation = Quaternion.LookRotation(targetToBall);
-            transform.eulerAngles += rotationOffset;
+            if (targetToBall != Vector3.zero) {
+                transform.rotation = Quaternion.LookRotation(targetToBall);
+                transform.eulerAngles += rotationOffset;
+            }
         }
     }
 }
