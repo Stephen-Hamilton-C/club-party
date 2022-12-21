@@ -7,6 +7,7 @@ namespace Ball {
         [SerializeField] private bool debug;
         [SerializeField] private int lateJoinScore;
 
+	// TODO: Store this with PhotonPlayer.CustomSettings instead
         public IReadOnlyList<int> Scores => _scores;
         private int[] _scores;
 
