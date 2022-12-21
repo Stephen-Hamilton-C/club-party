@@ -15,11 +15,11 @@ public class HoleTrigger : MonoBehaviour {
     }
 
     private void OnTriggerEnter(Collider other) {
-        if (other.CompareTag("Player")) {
-            _logger.Log("Player ("+other.name+") made it into the hole!");
+        if (!other.CompareTag("Player")) return;
+        _logger.Log("Player ("+other.name+") made it into the hole!");
 
-            var player = other.GetComponent<PhotonView>();
-            GameManager.Instance.PlayerInHole(player.Owner);
-        }
+        // TODO: Fix edge case where some clients can detect player as "in the hole" despite not being in the hole
+        var player = other.GetComponent<PhotonView>().Owner;
+        GameManager.Instance.PlayerInHole(player);
     }
 }
