@@ -66,6 +66,11 @@ namespace Network {
         /// <param name="cause">The reason for the disconnect</param>
         public override void OnDisconnected(DisconnectCause cause) {
             _logger.Log("Disconnected: "+cause);
+            
+            // Some properties not meant to be serialized will try to get serialized when connecting
+            // Clear properties on disconnect to stop this
+            PhotonNetwork.LocalPlayer.CustomProperties = new Hashtable();
+            
             SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);
         }
