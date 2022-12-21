@@ -5,6 +5,8 @@ public class Hole : MonoBehaviour {
     
     [SerializeField] private bool debug;
 
+    [SerializeField] private int par = 3;
+    public int Par => par;
     public bool isCurrent;
     public GameObject hole;
 

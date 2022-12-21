@@ -367,6 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
+  par: 3
   isCurrent: 0
   hole: {fileID: 518594442}
 --- !u!1001 &518594441
@@ -728,6 +729,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2146302461431993068, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
+      propertyPath: par
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2146302461431993068, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: hole
