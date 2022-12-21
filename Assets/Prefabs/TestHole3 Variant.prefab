@@ -138,6 +138,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8391222552659086748, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}
+      propertyPath: m_Name
+      value: Walls
+      objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -150,6 +155,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 811f59270218ffd93b444edeed1e3688,
+        type: 3}
+      propertyPath: m_Name
+      value: Hole
       objectReference: {fileID: 0}
     - target: {fileID: -5568371526223589888, guid: 811f59270218ffd93b444edeed1e3688,
         type: 3}

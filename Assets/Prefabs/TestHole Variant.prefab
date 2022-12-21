@@ -153,6 +153,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8391222552659086748, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
+      propertyPath: m_Name
+      value: Walls
+      objectReference: {fileID: 0}
+    - target: {fileID: -8391222552659086748, guid: 7dfd5c2763a490d4997dcdb752283fad,
+        type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
       objectReference: {fileID: 0}
@@ -165,6 +170,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5568371526223589888, guid: 7dfd5c2763a490d4997dcdb752283fad,
+        type: 3}
+      propertyPath: m_Name
+      value: Hole
       objectReference: {fileID: 0}
     - target: {fileID: -5568371526223589888, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
@@ -185,7 +195,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
       propertyPath: m_Name
-      value: TestHole
+      value: TestHole Variant
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7dfd5c2763a490d4997dcdb752283fad,
         type: 3}
