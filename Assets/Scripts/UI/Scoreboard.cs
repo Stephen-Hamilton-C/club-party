@@ -27,6 +27,7 @@ namespace UI {
             timer -= Time.deltaTime;
             if (timer <= 0) {
                 _logger.Log("Timer finished. Loading voting screen...");
+                timer = 15;
                 GameManager.StartGame();
             }
         }

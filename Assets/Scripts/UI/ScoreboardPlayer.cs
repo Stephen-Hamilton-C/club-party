@@ -1,6 +1,4 @@
 using System.Linq;
-using Ball;
-using Network;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
@@ -21,14 +19,13 @@ namespace UI {
         }
 
         public void SetPlayer(Player player) {
-            var character = player.GetCharacter();
-            var scoreTracker = character.GetComponent<ScoreTracker>();
+            var playerScores = (int[])player.CustomProperties["Scores"];
             
             playerName.text = player.NickName;
             for (int i = 0; i < scores.Length; i++) {
-                scores[i].text = (scoreTracker.Scores[i] + GameManager.Instance.holes[i].Par).ToString();
+                scores[i].text = (playerScores[i] + GameManager.Instance.holes[i].Par).ToString();
             }
-            totalScore.text = scoreTracker.Scores.Sum().ToString();
+            totalScore.text = playerScores.Sum().ToString();
         }
     
     }
