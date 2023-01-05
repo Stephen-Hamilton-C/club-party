@@ -1,3 +1,4 @@
+using Network;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.UI;
@@ -35,10 +36,8 @@ namespace UI.MainMenu {
 
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
-            // Usually SetCustomProperties should be used, but we haven't connected yet,
-            // so the "readonly" cache will work just fine
             var color = toggle.GetComponent<Image>().color;
-            PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = color;
+            NetworkManager.LocalPlayerProperties.CharacterColor = color;
             _logger.Log("Saved color as "+toggle.name+" and set CharacterColor to "+color);
         }
 

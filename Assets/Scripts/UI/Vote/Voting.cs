@@ -10,6 +10,7 @@ using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 
+// TODO: Redesign this system to utilize RoomProperties
 namespace UI.Vote {
     [RequireComponent(typeof(PhotonView))]
     public class Voting : MonoBehaviour {
@@ -36,7 +37,7 @@ namespace UI.Vote {
             Cursor.visible = true;
             
             // Reset vote
-            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "CurrentVote", null } });
+            NetworkManager.LocalPlayerProperties.CurrentVote = null;
             
             if (PhotonNetwork.IsMasterClient) {
                 _view.TransferOwnership(PhotonNetwork.LocalPlayer);
@@ -94,7 +95,7 @@ namespace UI.Vote {
             _currentlyVotedCourse = course.courseName;
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
-            PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable() { { "CurrentVote", _currentlyVotedCourse } });
+            NetworkManager.LocalPlayerProperties.CurrentVote = _currentlyVotedCourse;
         }
         
         private void RoomPropertiesChanged(Hashtable changedProperties) {
@@ -128,8 +129,8 @@ namespace UI.Vote {
         private void RemovePlayerVote(Player player) {
             if (!PhotonNetwork.IsMasterClient) return;
 
-            if (player.CustomProperties["CurrentVote"] == null) return;
-            var votedCourseName = (string) player.CustomProperties["CurrentVote"];
+            if (player.GetProperties().CurrentVote == null) return;
+            var votedCourseName = player.GetProperties().CurrentVote;
             var voteCountKey = "VoteCount_" + votedCourseName;
             var currentVoteCount = (int)PhotonNetwork.CurrentRoom.CustomProperties[voteCountKey];
             PhotonNetwork.CurrentRoom.SetCustomProperties(

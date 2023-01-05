@@ -47,14 +47,8 @@ public class GameManager : MonoBehaviour {
     public Hole CurrentHole => holes[HoleIndex];
 
     public static int HoleIndex {
-        get => (int)(PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] ?? 0);
-        set {
-            PhotonNetwork.CurrentRoom.CustomProperties["CurrentHole"] = value;
-            if (PhotonNetwork.IsMasterClient) {
-                var hashtable = new Hashtable() { { "CurrentHole", value } };
-                PhotonNetwork.CurrentRoom.SetCustomProperties(hashtable);
-            }
-        }
+        get => RoomProperties.CurrentHole;
+        private set => RoomProperties.CurrentHole = value;
     }
     
     /// <summary>

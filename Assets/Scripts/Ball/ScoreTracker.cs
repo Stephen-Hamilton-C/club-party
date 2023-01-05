@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using ExitGames.Client.Photon;
+using Network;
 using Photon.Pun;
 using UnityEngine;
 
@@ -39,8 +40,7 @@ namespace Ball {
         }
 
         private void UpdateScores() {
-            var hashtable = new Hashtable() { { "Scores", _scores } };
-            PhotonNetwork.LocalPlayer.SetCustomProperties(hashtable);
+            NetworkManager.LocalPlayerProperties.Scores = _scores;
         }
 
         private void PlayerStroked() {

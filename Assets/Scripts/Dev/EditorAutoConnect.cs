@@ -30,7 +30,7 @@ namespace Dev {
                 gameObject.AddComponent<NetworkManager>();
             
                 Log("Setting expected CustomProperties...");
-                PhotonNetwork.LocalPlayer.CustomProperties["CharacterColor"] = Color.magenta;
+                NetworkManager.LocalPlayerProperties.CharacterColor = Color.magenta;
             
                 Log("Connecting offline...");
                 NetworkManager.onJoinedRoom += ReloadScene;

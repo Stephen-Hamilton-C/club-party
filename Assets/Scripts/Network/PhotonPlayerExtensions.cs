@@ -11,13 +11,17 @@ namespace Network {
         /// <exception cref="InvalidOperationException">If the player's "Character" CustomProperty is null.
         /// This likely happens if this method is called before the player's PlayerSetup.Awake() runs.</exception>
         public static GameObject GetCharacter(this Player player) {
-            var character = player.CustomProperties["Character"];
+            var character = player.GetProperties().Character;
             if (character == null) {
                 throw new InvalidOperationException(
                     "Attempted to get character before PlayerSetup.Awake() could be called for this player ("
                     + player + ")");
             }
-            return (GameObject)character;
+            return character;
+        }
+
+        public static PlayerProperties GetProperties(this Player player) {
+            return new PlayerProperties(player);
         }
     }
 }

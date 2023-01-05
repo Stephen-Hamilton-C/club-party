@@ -1,3 +1,4 @@
+using Network;
 using Photon.Pun;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace Ball {
             _view = GetComponent<PhotonView>();
             _renderer = GetComponent<Renderer>();
 
-            var color = (Color) _view.Owner.CustomProperties["CharacterColor"];
+            var color = _view.Owner.GetProperties().CharacterColor;
             _logger.Log("Changing color to "+color);
             _renderer.material.color = color;
         }

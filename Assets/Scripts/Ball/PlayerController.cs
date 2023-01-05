@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Network;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -195,7 +196,7 @@ namespace Ball {
         /// </summary>
         /// <param name="player">The player that finished</param>
         private void PlayerFinishedHole(Player player) {
-            if (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber) {
+            if (NetworkManager.LocalPlayer.IsLocal) {
                 // Player is LocalPlayer. Hide target and destroy controller.
                 // TODO: This should be a boolean switch for future plans
                 GameManager.OnPlayerFinished -= PlayerFinishedHole;

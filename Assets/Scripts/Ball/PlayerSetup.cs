@@ -1,3 +1,4 @@
+using Network;
 using Photon.Pun;
 using UnityEngine;
 
@@ -37,7 +38,7 @@ namespace Ball {
             // Don't need to RPC this - every client will perform this calculation when the player character is created
             transform.parent = CharacterContainer;
             gameObject.name = _view.Owner.ActorNumber + " " + _view.Owner.NickName;
-            _view.Owner.CustomProperties["Character"] = gameObject;
+            _view.Owner.GetProperties().Character = gameObject;
         }
 
     }

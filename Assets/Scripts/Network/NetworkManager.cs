@@ -52,6 +52,9 @@ namespace Network {
         /// </summary>
         public static byte PlayerCount => PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : (byte)0;
 
+        public static Player LocalPlayer => PhotonNetwork.LocalPlayer;
+        public static PlayerProperties LocalPlayerProperties => LocalPlayer.GetProperties();
+
         /// <summary>
         /// Pun callback when connected to master server
         /// </summary>
@@ -69,7 +72,7 @@ namespace Network {
             
             // Some properties not meant to be serialized will try to get serialized when connecting
             // Clear properties on disconnect to stop this
-            PhotonNetwork.LocalPlayer.CustomProperties = new Hashtable();
+            LocalPlayerProperties.Clear();
             
             SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);

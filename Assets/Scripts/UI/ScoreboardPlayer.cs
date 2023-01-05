@@ -1,4 +1,5 @@
 using System.Linq;
+using Network;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
@@ -19,7 +20,7 @@ namespace UI {
         }
 
         public void SetPlayer(Player player) {
-            var playerScores = (int[])player.CustomProperties["Scores"];
+            var playerScores = player.GetProperties().Scores;
             
             playerName.text = player.NickName;
             for (int i = 0; i < scores.Length; i++) {
