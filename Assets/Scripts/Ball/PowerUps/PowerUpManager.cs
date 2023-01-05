@@ -11,7 +11,7 @@ namespace Ball.PowerUps {
         private const int MaxPowerUps = 3;
 
         public static readonly Dictionary<string, Type> PowerUps = new() {
-            { typeof(HyperBall).ToString(), typeof(HyperBall) }
+            // { typeof(HyperBall).ToString(), typeof(HyperBall) }
         };
 
         [SerializeField] private bool debug;
