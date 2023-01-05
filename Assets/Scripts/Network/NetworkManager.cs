@@ -38,6 +38,7 @@ namespace Network {
         #endregion
 
         #region PhotonNetwork Abstraction
+        // TODO: Documentation pass here
         // Sometimes I need more control over what exactly happens with PhotonNetwork stuff.
         // Consistent use of the NetworkManager allows me to get that specific control without having to think about it.
         // The philosophy is that there should be no PhotonNetwork calls outside of the Network namespace
