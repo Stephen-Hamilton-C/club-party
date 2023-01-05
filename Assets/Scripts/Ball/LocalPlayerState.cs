@@ -1,3 +1,4 @@
+using Network;
 using Photon.Pun;
 using UnityEngine;
 
@@ -56,7 +57,7 @@ namespace Ball {
             if (_instance != null) {
                 if (_view.IsMine) {
                     _logger.Warn("Multiple player characters owned by this player exist! The duplicate character will be destroyed.");
-                    PhotonNetwork.Destroy(gameObject);
+                    NetworkManager.Destroy(gameObject);
                 }
             } else {
                 _instance = this;

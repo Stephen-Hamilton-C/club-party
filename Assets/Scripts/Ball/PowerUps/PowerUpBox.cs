@@ -1,4 +1,5 @@
 using System;
+using Network;
 using Photon.Pun;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -24,7 +25,7 @@ namespace Ball.PowerUps {
             powerUpMan.AddPowerUp(randomPowerUp);
             _logger.Log("Applied "+randomPowerUp+" to player "+other.gameObject.name);
             
-            PhotonNetwork.Destroy(gameObject);
+            NetworkManager.Destroy(gameObject);
         }
         
         /// <summary>

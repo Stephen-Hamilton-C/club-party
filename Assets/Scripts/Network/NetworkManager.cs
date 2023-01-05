@@ -1,4 +1,5 @@
 using System;
+using DevLocker.Utils;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -36,6 +37,11 @@ namespace Network {
         public static event CustomPropertyEvent onRoomPropertiesChanged;
         #endregion
 
+        #region PhotonNetwork Abstraction
+        // Sometimes I need more control over what exactly happens with PhotonNetwork stuff.
+        // Consistent use of the NetworkManager allows me to get that specific control without having to think about it.
+        // The philosophy is that there should be no PhotonNetwork calls outside of the Network namespace
+        
         /// <summary>
         /// The name of the local player
         /// </summary>
@@ -51,10 +57,72 @@ namespace Network {
         /// The number of players in the current room. Returns 0 if not in room.
         /// </summary>
         public static byte PlayerCount => PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : (byte)0;
-
+        /**
+         * Gets this client's Player instance
+         */
         public static Player LocalPlayer => PhotonNetwork.LocalPlayer;
+        /**
+         * Gets the character associated with the current client
+         */
+        public static GameObject LocalCharacter => LocalPlayer.GetCharacter();
+        /**
+         * Gets this client's properties
+         */
         public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
+        /**
+         * Gets all currently connected players
+         */
+        public static Player[] Players => PhotonNetwork.PlayerList;
+        /**
+         * Whether the client is the Master Client or not
+         */
+        public static bool IsMasterClient => PhotonNetwork.IsMasterClient;
 
+        public static bool IsConnected => PhotonNetwork.IsConnected;
+        public static Room CurrentRoom => PhotonNetwork.CurrentRoom;
+        public static double Time => PhotonNetwork.Time;
+
+        public static bool OfflineMode {
+            get => PhotonNetwork.OfflineMode;
+            set => PhotonNetwork.OfflineMode = value;
+        }
+
+        public static void Destroy(GameObject obj) {
+            PhotonNetwork.Destroy(obj);
+        }
+
+        public static void Disconnect() {
+            PhotonNetwork.Disconnect();
+        }
+
+        public static void LoadLevel(int sceneIndex) {
+            PhotonNetwork.LoadLevel(sceneIndex);
+        }
+
+        public static void LoadLevel(Scene scene) {
+            PhotonNetwork.LoadLevel(scene.buildIndex);
+        }
+
+        public static void LoadLevel(SceneReference sceneReference) {
+            PhotonNetwork.LoadLevel(sceneReference.SceneName);
+        }
+
+        public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0,
+            object[] data = null) {
+            return PhotonNetwork.Instantiate(prefabName, position, rotation, group, data);
+        }
+
+        public static GameObject Instantiate(string prefabName, byte group = 0, object[] data = null) {
+            return PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity, group, data);
+        }
+
+        public static void CleanRpcBufferIfMine(PhotonView view) {
+            if (!view.IsMine) return;
+            PhotonNetwork.CleanRpcBufferIfMine(view);
+        }
+
+        #endregion
+        
         /// <summary>
         /// Pun callback when connected to master server
         /// </summary>

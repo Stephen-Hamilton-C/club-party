@@ -17,7 +17,7 @@ namespace Dev {
         private static bool _performedConnection;
     
         private void Start() {
-            if (!PhotonNetwork.IsConnected) {
+            if (!NetworkManager.IsConnected) {
                 // Not connected
                 Log("Not connected. Destroying current GameManager");
                 Destroy(GetComponent<GameManager>());
@@ -50,10 +50,10 @@ namespace Dev {
 
         private void ReloadScene() {
             NetworkManager.onJoinedRoom -= ReloadScene;
-            int sceneIndex = SceneManager.GetActiveScene().buildIndex;
             Log("Connected. Reloading level...");
             _performedConnection = true;
-            PhotonNetwork.LoadLevel(sceneIndex);
+            var scene = SceneManager.GetActiveScene();
+            NetworkManager.LoadLevel(scene);
         }
 
         private void Log(string msg) {

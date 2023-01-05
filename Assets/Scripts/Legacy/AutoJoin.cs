@@ -21,7 +21,7 @@ namespace Legacy {
             };
         
             if (Application.isEditor && offline) {
-                PhotonNetwork.OfflineMode = true;
+                NetworkManager.OfflineMode = true;
                 _logger.Log("Offline mode activated.");
                 _logger.Log("Joining an offline room...");
                 NetworkManager.LeaveRoom();
