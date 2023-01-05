@@ -38,6 +38,7 @@ namespace UI.Vote {
             
             // Reset vote
             NetworkManager.LocalPlayerProperties.CurrentVote = null;
+            NetworkManager.LocalPlayerProperties.ApplyChanges();
             
             if (PhotonNetwork.IsMasterClient) {
                 _view.TransferOwnership(PhotonNetwork.LocalPlayer);
@@ -96,6 +97,7 @@ namespace UI.Vote {
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(changedProperties);
             NetworkManager.LocalPlayerProperties.CurrentVote = _currentlyVotedCourse;
+            NetworkManager.LocalPlayerProperties.ApplyChanges();
         }
         
         private void RoomPropertiesChanged(Hashtable changedProperties) {
@@ -129,8 +131,9 @@ namespace UI.Vote {
         private void RemovePlayerVote(Player player) {
             if (!PhotonNetwork.IsMasterClient) return;
 
-            if (player.GetProperties().CurrentVote == null) return;
-            var votedCourseName = player.GetProperties().CurrentVote;
+            var playerProps = new PlayerProperties(player);
+            if (playerProps.CurrentVote == null) return;
+            var votedCourseName = playerProps.CurrentVote;
             var voteCountKey = "VoteCount_" + votedCourseName;
             var currentVoteCount = (int)PhotonNetwork.CurrentRoom.CustomProperties[voteCountKey];
             PhotonNetwork.CurrentRoom.SetCustomProperties(

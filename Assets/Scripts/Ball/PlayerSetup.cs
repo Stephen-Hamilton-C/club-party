@@ -38,7 +38,7 @@ namespace Ball {
             // Don't need to RPC this - every client will perform this calculation when the player character is created
             transform.parent = CharacterContainer;
             gameObject.name = _view.Owner.ActorNumber + " " + _view.Owner.NickName;
-            _view.Owner.GetProperties().Character = gameObject;
+            new PlayerProperties(_view.Owner).Character = gameObject;
         }
 
     }

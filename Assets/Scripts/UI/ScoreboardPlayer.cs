@@ -20,7 +20,7 @@ namespace UI {
         }
 
         public void SetPlayer(Player player) {
-            var playerScores = player.GetProperties().Scores;
+            var playerScores = new PlayerProperties(player).Scores;
             
             playerName.text = player.NickName;
             for (int i = 0; i < scores.Length; i++) {

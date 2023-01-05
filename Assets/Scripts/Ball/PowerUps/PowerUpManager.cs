@@ -8,19 +8,25 @@ namespace Ball.PowerUps {
     [RequireComponent(typeof(PhotonView))]
     public class PowerUpManager : MonoBehaviour {
 
+        private const int MaxPowerUps = 3;
+
         public static readonly Dictionary<string, Type> PowerUps = new() {
-            { typeof(Legacy.HyperBall).ToString(), typeof(Legacy.HyperBall) }
+            { typeof(HyperBall).ToString(), typeof(HyperBall) }
         };
 
         [SerializeField] private bool debug;
 
+        // TODO: There's a critical issue with this design.
+        // We need data for the power up to display it correctly, but can't create it because it would apply effects
+        // Maybe the Type is of some PowerUpData class with a default constructor.
+        // This PowerUpData class would hold attributes like name, description, offensive, and the component Type
         public IReadOnlyList<Type> StoredPowerUps => _storedPowerUps;
-        public IReadOnlyList<Type> ActivePowerUps => _activePowerUps;
+        public IReadOnlyCollection<Type> ActivePowerUps => _activePowerUps;
 
         private Logger _logger;
         private PhotonView _view;
         private readonly List<Type> _storedPowerUps = new();
-        private readonly List<Type> _activePowerUps = new();
+        private readonly HashSet<Type> _activePowerUps = new();
 
         private void Start() {
             _logger = new(this, debug);
@@ -29,8 +35,17 @@ namespace Ball.PowerUps {
 
         public void AddPowerUp(Type powerUpType) {
             ValidatePowerUpType<PowerUp>(powerUpType);
-            _storedPowerUps.Add(powerUpType);
-            _logger.Log("Added "+powerUpType+" to stored power ups");
+            if (_storedPowerUps.Count < MaxPowerUps) {
+                _storedPowerUps.Add(powerUpType);
+                _logger.Log("Added " + powerUpType + " to stored power ups");
+            } else {
+                _logger.Log("Would've added " + powerUpType + ", but power up storage is full.");
+            }
+        }
+
+        public bool RemovePowerUp(Type powerUpType) {
+            ValidatePowerUpType<PowerUp>(powerUpType);
+            return _storedPowerUps.Remove(powerUpType);
         }
 
         public bool ActivatePowerUp(Type powerUpType) {

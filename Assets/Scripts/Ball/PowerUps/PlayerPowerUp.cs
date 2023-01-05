@@ -11,9 +11,11 @@ namespace Ball.PowerUps {
         public abstract bool Offensive { get; }
         
         private PowerUpManager _powerUpMan;
+        protected PhotonView View;
 	
         protected override void Start() {
             _powerUpMan = GetComponent<PowerUpManager>();
+            View = GetComponent<PhotonView>();
             base.Start();
         }
 

@@ -7,6 +7,7 @@ namespace Network {
     public class PlayerProperties {
         
         private readonly Player _player;
+        private readonly Hashtable _changes = new();
 
         public PlayerProperties(Player player) {
             _player = player;
@@ -31,15 +32,25 @@ namespace Network {
             get => (int[])_player.CustomProperties["Scores"];
             set => SetProperty("Scores", value);
         }
+
+        /// <summary>
+        /// Sends the changes made by this instance to other clients.
+        /// This expects that the player is currently connected to a room.
+        /// </summary>
+        public void ApplyChanges() {
+            if (!PhotonNetwork.IsConnected) return;
+            _player.SetCustomProperties(_changes);
+            _changes.Clear();
+        }
         
         public void Clear() {
             _player.CustomProperties = new Hashtable();
+            _changes.Clear();
         }
 
         private void SetProperty(string property, object value) {
             if (PhotonNetwork.IsConnected) {
-                var hashtable = new Hashtable() { { property, value } };
-                _player.SetCustomProperties(hashtable);
+                _changes[property] = value;
             }
             _player.CustomProperties[property] = value;
         }

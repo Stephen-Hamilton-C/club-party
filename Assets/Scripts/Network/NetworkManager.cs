@@ -53,7 +53,7 @@ namespace Network {
         public static byte PlayerCount => PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : (byte)0;
 
         public static Player LocalPlayer => PhotonNetwork.LocalPlayer;
-        public static PlayerProperties LocalPlayerProperties => LocalPlayer.GetProperties();
+        public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
 
         /// <summary>
         /// Pun callback when connected to master server
