@@ -20,8 +20,7 @@ namespace Network {
         }
 
         private void SetProperty(string property, object value) {
-            // TODO: Pretty sure only applying if MasterClient is wrong, test this
-            if (NetworkManager.IsConnected /*&& NetworkManager.IsMasterClient*/) {
+            if (NetworkManager.IsConnected) {
                 _changes[property] = value;
             }
             NetworkManager.CurrentRoom.CustomProperties[property] = value;
