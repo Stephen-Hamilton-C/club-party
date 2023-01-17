@@ -12,7 +12,7 @@ namespace UI.Game {
         }
 
         protected override void OnClick() {
-            PhotonNetwork.Disconnect();
+            NetworkManager.Disconnect();
         }
     }
 }

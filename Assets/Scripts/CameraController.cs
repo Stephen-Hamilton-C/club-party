@@ -87,8 +87,8 @@ public class CameraController : MonoBehaviour {
         _logger = new(this, debug);
         _pivot = transform.parent;
         
-        // Get player's character from PhotonNetwork
-        var character = PhotonNetwork.LocalPlayer.GetCharacter();
+        // Get player's character from NetworkManager
+        var character = NetworkManager.LocalCharacter;
         _player = character.transform;
         _logger.Log("Character: "+character);
     }

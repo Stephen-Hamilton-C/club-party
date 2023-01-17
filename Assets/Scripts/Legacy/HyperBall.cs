@@ -1,6 +1,7 @@
 using System;
 using Ball;
 using JetBrains.Annotations;
+using Network;
 using Photon.Pun;
 
 namespace Legacy {
@@ -48,7 +49,7 @@ namespace Legacy {
                 _controller.speed *= _speedFactor; 
             } else {
                 // Already applied, remove
-                PhotonNetwork.Destroy(gameObject);
+                NetworkManager.Destroy(gameObject);
             }
         }
         
@@ -57,7 +58,7 @@ namespace Legacy {
                 // Power up has taken effect, remove power up
                 _controller.speed = _oldSpeed;
                 Manager.RemovePowerUp(this);
-                PhotonNetwork.Destroy(gameObject);
+                NetworkManager.Destroy(gameObject);
             }
         }
 

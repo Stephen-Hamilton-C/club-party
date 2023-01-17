@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour {
         get => RoomProps.CurrentHole;
         private set {
             RoomProps.CurrentHole = value;
-            if(PhotonNetwork.IsMasterClient)
+            if(NetworkManager.IsMasterClient)
                 RoomProps.ApplyChanges();
         }
     }
@@ -72,8 +72,8 @@ public class GameManager : MonoBehaviour {
     /// Loads the first level across the network if this player is the first to join
     /// </summary>
     public static void StartGame() {
-        if (PhotonNetwork.IsMasterClient) {
-            PhotonNetwork.LoadLevel(1);
+        if (NetworkManager.IsMasterClient) {
+            NetworkManager.LoadLevel(1);
             HoleIndex = 0;
         }
     }
@@ -94,14 +94,14 @@ public class GameManager : MonoBehaviour {
             throw new InvalidOperationException("There are no spawns for this set!");
         
         // Spawn player
-        PhotonNetwork.Instantiate(CharacterName, Vector3.zero, Quaternion.identity);
+        NetworkManager.Instantiate(CharacterName);
         // PlayerSetup will do the rest
     }
 
     private void Start() {
         CurrentHole.isCurrent = true;
-        
-        var character = PhotonNetwork.LocalPlayer.GetCharacter();
+
+        var character = NetworkManager.LocalCharacter;
         _spawnOffset = new Vector3(0, character.transform.localScale.y / 2, 0);
         _localCharRb = character.GetComponent<Rigidbody>();
         // Must set transform position in Start because physics

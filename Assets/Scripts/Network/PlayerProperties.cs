@@ -38,7 +38,7 @@ namespace Network {
         /// This expects that the player is currently connected to a room.
         /// </summary>
         public void ApplyChanges() {
-            if (!PhotonNetwork.IsConnected) return;
+            if (!NetworkManager.IsConnected) return;
             _player.SetCustomProperties(_changes);
             _changes.Clear();
         }
@@ -49,7 +49,7 @@ namespace Network {
         }
 
         private void SetProperty(string property, object value) {
-            if (PhotonNetwork.IsConnected) {
+            if (NetworkManager.IsConnected) {
                 _changes[property] = value;
             }
             _player.CustomProperties[property] = value;

@@ -1,3 +1,4 @@
+using Network;
 using Photon.Pun;
 using TMPro;
 using UnityEngine;
@@ -38,7 +39,7 @@ namespace UI {
                 parScores[i].text = GameManager.Instance.holes[i].Par.ToString();
             }
             
-            foreach(var player in PhotonNetwork.PlayerList) {
+            foreach(var player in NetworkManager.Players) {
                 var scoreboardPlayer = Instantiate(scoreboardPlayerPrefab, playersContainer);
                 scoreboardPlayer.GetComponent<ScoreboardPlayer>().SetPlayer(player);
             }

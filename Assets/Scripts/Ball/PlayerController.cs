@@ -198,7 +198,6 @@ namespace Ball {
         private void PlayerFinishedHole(Player player) {
             if (NetworkManager.LocalPlayer.IsLocal) {
                 // Player is LocalPlayer. Hide target and destroy controller.
-                // TODO: This should be a boolean switch for future plans
                 GameManager.OnPlayerFinished -= PlayerFinishedHole;
                 mouseTarget.gameObject.SetActive(false);
                 this.enabled = false;
