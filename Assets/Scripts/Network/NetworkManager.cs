@@ -38,7 +38,6 @@ namespace Network {
         #endregion
 
         #region PhotonNetwork Abstraction
-        // TODO: Documentation pass here
         // Sometimes I need more control over what exactly happens with PhotonNetwork stuff.
         // Consistent use of the NetworkManager allows me to get that specific control without having to think about it.
         // The philosophy is that there should be no PhotonNetwork calls outside of the Network namespace
@@ -58,65 +57,116 @@ namespace Network {
         /// The number of players in the current room. Returns 0 if not in room.
         /// </summary>
         public static byte PlayerCount => PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : (byte)0;
-        /**
-         * Gets this client's Player instance
-         */
+        /// <summary>
+        /// Gets this client's Player instance
+        /// </summary>
         public static Player LocalPlayer => PhotonNetwork.LocalPlayer;
-        /**
-         * Gets the character associated with the current client
-         */
+        /// <summary>
+        /// Gets the character associated with the current client
+        /// </summary>
         public static GameObject LocalCharacter => LocalPlayer.GetCharacter();
-        /**
-         * Gets this client's properties
-         */
+        /// <summary>
+        /// Gets this client's properties
+        /// </summary>
         public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
-        /**
-         * Gets all currently connected players
-         */
+        /// <summary>
+        /// Gets all currently connected players
+        /// </summary>
         public static Player[] Players => PhotonNetwork.PlayerList;
-        /**
-         * Whether the client is the Master Client or not
-         */
+        /// <summary>
+        /// Whether the client is the Master Client or not
+        /// </summary>
         public static bool IsMasterClient => PhotonNetwork.IsMasterClient;
-
+        /// <summary>
+        /// Determines if the client is connected to a game
+        /// </summary>
         public static bool IsConnected => PhotonNetwork.IsConnected;
+        /// <summary>
+        /// The Room the client is currently in. This is null if IsConnected is false.
+        /// </summary>
         public static Room CurrentRoom => PhotonNetwork.CurrentRoom;
+        /// <summary>
+        /// Photon Network time, synced with the server
+        /// </summary>
         public static double Time => PhotonNetwork.Time;
 
+        /// <summary>
+        /// Simulates network code without actually connecting to a server when enabled.
+        /// Enabling this immediately starts the simulated connection.
+        /// </summary>
         public static bool OfflineMode {
             get => PhotonNetwork.OfflineMode;
             set => PhotonNetwork.OfflineMode = value;
         }
 
+        /// <summary>
+        /// Network-Destroys the GameObject, unless it is static or not under this client's control.
+        /// </summary>
+        /// <param name="obj">The GameObject to Network-Destroy</param>
         public static void Destroy(GameObject obj) {
             PhotonNetwork.Destroy(obj);
         }
 
+        /// <summary>
+        /// Disconnects from any room and then the Photon servers
+        /// </summary>
         public static void Disconnect() {
             PhotonNetwork.Disconnect();
         }
 
+        /// <summary>
+        /// Loads a scene across the network by scene index
+        /// </summary>
+        /// <param name="sceneIndex">The build index of the scene to load</param>
         public static void LoadLevel(int sceneIndex) {
             PhotonNetwork.LoadLevel(sceneIndex);
         }
 
+        /// <summary>
+        /// Loads a scene across the network by Scene object
+        /// </summary>
+        /// <param name="scene">The Scene to load</param>
         public static void LoadLevel(Scene scene) {
             PhotonNetwork.LoadLevel(scene.buildIndex);
         }
 
+        /// <summary>
+        /// Loads a scene across the network by SceneReference
+        /// </summary>
+        /// <param name="sceneReference">The SceneReference to load</param>
         public static void LoadLevel(SceneReference sceneReference) {
             PhotonNetwork.LoadLevel(sceneReference.SceneName);
         }
 
+        /// <summary>
+        /// Creates a networked GameObject
+        /// </summary>
+        /// <param name="prefabName">The name of the prefab. This prefab must be in Resources.</param>
+        /// <param name="position">The position of the newly instantiated prefab.</param>
+        /// <param name="rotation">The rotation of the newly instantiated prefab.</param>
+        /// <param name="group"></param>
+        /// <param name="data"></param>
+        /// <returns>The newly instantiated prefab</returns>
         public static GameObject Instantiate(string prefabName, Vector3 position, Quaternion rotation, byte group = 0,
             object[] data = null) {
             return PhotonNetwork.Instantiate(prefabName, position, rotation, group, data);
         }
 
+        /// <summary>
+        /// Creates a networked GameObject at position 0, 0, 0 and with default rotation.
+        /// </summary>
+        /// <param name="prefabName">The name of the prefab. This prefab must be in Resources.</param>
+        /// <param name="group"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static GameObject Instantiate(string prefabName, byte group = 0, object[] data = null) {
             return PhotonNetwork.Instantiate(prefabName, Vector3.zero, Quaternion.identity, group, data);
         }
 
+        /// <summary>
+        /// Cancels any buffered RPC events on the given PhotonView if it is owned by this client.
+        /// </summary>
+        /// <param name="view">The PhotonView to clear buffered RPC events on.</param>
         public static void CleanRpcBufferIfMine(PhotonView view) {
             if (!view.IsMine) return;
             PhotonNetwork.CleanRpcBufferIfMine(view);
