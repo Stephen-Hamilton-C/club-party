@@ -1,5 +1,4 @@
-using System;
-using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
 namespace Ball {
@@ -18,11 +17,21 @@ namespace Ball {
         private Rigidbody _rb;
         private Vector3 _respawnPoint;
         private Logger _logger;
+        private bool _respawning;
+        /// <summary>
+        /// Switched to true if SetRespawnPoint was called while _respawning was true
+        /// </summary>
+        private bool _setSpawn;
 
         /// <summary>
         /// Sets the respawn point to the current position
         /// </summary>
         public void SetRespawnPoint() {
+            if (_respawning) {
+                _logger.Log("Attempt to set spawnpoint while respawning. This call will be delayed by two FixedUpdates.");
+                _setSpawn = true;
+                return;
+            }
             _respawnPoint = transform.position;
             _logger.Log("Reset respawn point to "+_respawnPoint);
         }
@@ -31,9 +40,19 @@ namespace Ball {
         /// Respawns the player to the respawn point
         /// </summary>
         public void Respawn() {
-            _rb.velocity = Vector3.zero;
+            _respawning = true;
             _rb.position = _respawnPoint;
+            _rb.velocity = Vector3.zero;
             _logger.Log("Resetting position to " + _respawnPoint);
+            StartCoroutine(FinishSpawning());
+        }
+
+        private IEnumerator FinishSpawning() {
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            _respawning = false;
+            if (_setSpawn)
+                SetRespawnPoint();
         }
 
         private void Awake() {
