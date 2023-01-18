@@ -7,14 +7,19 @@ using UnityEngine;
 public class HoleTrigger : MonoBehaviour {
     
     [SerializeField] private bool debug;
+    [SerializeField] private Hole hole;
 
     private Logger _logger;
 	
     private void Start() {
         _logger = new(this, debug);
+        if (hole == null) {
+            _logger.Err("Hole is not set! This HoleTrigger may cause bugs!");
+        }
     }
 
     private void OnTriggerEnter(Collider other) {
+        if (GameManager.Instance.CurrentHole != hole) return;
         if (!other.CompareTag("Player")) return;
         _logger.Log("Player ("+other.name+") made it into the hole!");
 
