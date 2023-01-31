@@ -15,14 +15,18 @@ def getDeployDir() -> str:
     deployDir = ""
     if os.path.exists(configPath):
         with open(configPath, "r") as configFile:
-            deployDir = configFile.readline().strip()
+            return configFile.readline().strip()
     
-    while not os.path.exists(deployDir) and not os.path.isdir(deployDir):
-        print("Deploy directory is not valid.")
+    # Do-while loop
+    while True:
         deployDir = input("Where do you want to deploy the WebGL build? (Relative to "+scriptDir+"): ")
+        if os.path.exists(deployDir) and os.path.isdir(deployDir):
+            break
+        else:
+            print("Deploy directory is not valid.")
 
     with open(configPath, "w") as configFile:
-        configFile.write(deployDir)
+        configFile.write(deployDir+"\n")
     
     return deployDir
 

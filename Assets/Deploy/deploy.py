@@ -6,34 +6,48 @@ scriptDir = os.path.dirname(__file__)
 os.chdir(scriptDir)
 
 configPath = os.path.join(scriptDir, "deploy-config.txt")
-secrets = "deploy-secrets.txt"
 
 # Reset option
 if len(sys.argv) > 1 and sys.argv[1] == "-r":
-    print("Clearing configuration and secrets...")
+    print("Clearing configuration...")
     if os.path.exists(configPath):
         os.remove(configPath)
-    if os.path.exists(secrets):
-        os.remove(secrets)
 
-## Get build path from config file or prompt user if invalid
-def getBuildPath() -> str:
+## Load config file
+if not os.path.exists(configPath):
+    # Get buildPath
     buildPath = ""
-    if os.path.exists(configPath):
-        with open(configPath, "r") as configFile:
-            buildPath = configFile.readline()
+    # Do-while loop
+    while True:
+        buildPath = input("Where is the WebGL build folder? (Absolute path or relative to "+scriptDir+"): ")
+        if os.path.exists(buildPath):
+            break
+        else:
+            print("Build path is not valid.")
 
-    while not os.path.exists(buildPath):
-        print("Build path is not valid.")
-        buildPath = input("Where is the WebGL build folder? (Relative to "+scriptDir+"): ")
-
+    print()
+    print("Make sure you get these next prompts correct. Getting them wrong will result in errors.")
+    print("You can clear these errors by either running this script again with -r or deleting deploy-config.txt")
+    print()
+    stageDir = input("Where is the staging directory on the remote server? (Absolate path): ")
+    user = input("What is the name of your user on the remote server?: ")
+    url = input("What is the url/ip address of the remote server?: ")
+    remoteUrl = user+"@"+url
     with open(configPath, "w") as configFile:
-        configFile.write(buildPath)
-    return buildPath
+        configFile.write(buildPath+"\n")
+        configFile.write(stageDir+"\n")
+        configFile.write(remoteUrl+"\n")
+else:
+    with open(configPath, "r") as configFile:
+        buildPath = configFile.readline().strip()
+        stageDir = configFile.readline().strip()
+        remoteUrl = configFile.readline().strip()
 
-print("Getting build path...")
-buildPath = os.path.abspath(getBuildPath())
+print()
 print("Build path is located at "+buildPath)
+print("Remote staging directory is at "+stageDir)
+print("Remote URL/IP Address is "+remoteUrl)
+print()
 
 ## Compress WebGL build into zip
 def get_all_file_paths(directory):
@@ -66,43 +80,37 @@ with ZipFile(zipArchive, "w") as zip:
         zip.write(file);
 print("Created "+zipArchive)
 
-## Load secrets
 os.chdir(scriptDir)
-if not os.path.exists(secrets):
-    stageDir = input("Where is the staging directory on the remote server? (Absolate path): ")
-    user = input("What is the name of your user on the remote server?: ")
-    url = input("What is the url/ip address of the remote server?: ")
-    remoteUrl = user+"@"+url
-    with open(secrets, "w") as secretFile:
-        secretFile.write(stageDir+"\n")
-        secretFile.write(remoteUrl)
-else:
-    with open(secrets, "r") as secretFile:
-        stageDir = secretFile.readline().strip()
-        remoteUrl = secretFile.readline().strip()
-print("Loaded secrets.")
 
 ## Deploy to server
 import subprocess
 print("Uploading to server...")
 try:
+    print(zipArchive+", "+str(os.path.exists(zipArchive)))
+    print(remoteUrl)
+    print(stageDir)
+    print(buildPath)
+
     scpProcess = subprocess.run(["scp", zipArchive, remoteUrl+":"+stageDir], cwd=buildPath)
     if scpProcess.returncode != 0:
-        print("scp failed. Perhaps a bad staging directory was provided?")
+        print()
+        print("FATAL: scp failed. Perhaps there is no internet connection, or a bad staging directory was provided.")
         print("If this error persists, run this script again with -r to reset configuration.")
         sys.exit(scpProcess.returncode)
 
     print("Deploying to web server...")
     sshProcess = subprocess.run(["ssh", "-C", remoteUrl, "\""+stageDir+"/server-deploy.py\""])
     if sshProcess.returncode != 0:
-        print("ssh failed. Perhaps a bad remote url or user was provided?")
+        print()
+        print("FATAL: ssh failed. Perhaps there is no internet connection, or a bad remote url or user was provided.")
         print("If this error persists, run this script again with -r to reset configuration.")
         sys.exit(sshProcess.returncode)
 except FileNotFoundError:
     print()
-    print("Could not execute scp and/or ssh!")
+    print("FATAL: Could not execute scp and/or ssh!")
     if os.name == "nt":
-        print("Ensure you have Windows Subsystem for Linux installed")
+        print("Ensure you have Windows Subsystem for Linux installed.")
+        print("See https://learn.microsoft.com/en-us/windows/wsl/install for instructions.")
     else:
         print("Ensure you have ssh and scp installed")
     sys.exit(1)
