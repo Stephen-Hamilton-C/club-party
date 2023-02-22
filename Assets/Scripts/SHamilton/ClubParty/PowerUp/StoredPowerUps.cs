@@ -16,7 +16,8 @@ namespace SHamilton.ClubParty.PowerUp {
 
         [SerializeField] private bool debug;
         [SerializeField] private int maxPowerUps = 3;
-        
+
+        public int MaxPowerUps => maxPowerUps;
         public IReadOnlyList<PowerUpData> PowerUps => _powerUps;
         private readonly List<PowerUpData> _powerUps = new();
 
