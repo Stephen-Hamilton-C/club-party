@@ -16,7 +16,7 @@ namespace SHamilton.ClubParty.Network {
     public class NetworkManager : MonoBehaviourPunCallbacks {
 
         [SerializeField] private bool debug;
-        private Logger _logger;
+        private static Logger _logger;
 
         private static NetworkManager _instance;
 
@@ -234,6 +234,7 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         /// <param name="propertiesThatChanged">The properties that changed</param>
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {
+            _logger.Log("Room properties updated");
             onRoomPropertiesChanged?.Invoke(propertiesThatChanged);
         }
 
@@ -242,10 +243,11 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         /// <returns>Whether the connection was attempted or halted due to an error</returns>
         public static bool Connect() {
+            _logger.Log("Connecting to master server...");
             PhotonNetwork.OfflineMode = false;
             return PhotonNetwork.ConnectUsingSettings();
         }
-
+        
         /// <summary>
         /// Connects to the master server and then immediately joins a room
         /// </summary>
