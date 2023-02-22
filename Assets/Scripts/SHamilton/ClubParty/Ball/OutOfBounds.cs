@@ -10,10 +10,12 @@ namespace SHamilton.ClubParty.Ball {
     public class OutOfBounds : MonoBehaviour {
 
         [SerializeField] private bool debug;
-        [Tooltip("The lowest Y the player can go")]
-        [SerializeField] private float minimumY = -25f;
-        [Tooltip("The highest Y the player can go")]
-        [SerializeField] private float maximumY = 1000f;
+
+        [Tooltip("The lowest bounds of each axis the player can go")]
+        [SerializeField] private Vector3 minimumPosition = new(-1000f, -10f, -1000f);
+
+        [Tooltip("The highest bounds of each axis the player can go")]
+        [SerializeField] private Vector3 maximumPosition = new(1000f, 1000f, 1000f);
 
         private Rigidbody _rb;
         private Vector3 _respawnPoint;
@@ -72,8 +74,12 @@ namespace SHamilton.ClubParty.Ball {
         }
 
         private void FixedUpdate() {
-            if (_rb.position.y < minimumY || _rb.position.y > maximumY)
+            if (_rb.position.x < minimumPosition.x || _rb.position.x > maximumPosition.x ||
+                _rb.position.y < minimumPosition.y || _rb.position.y > maximumPosition.y ||
+                _rb.position.z < minimumPosition.z || _rb.position.z > maximumPosition.z)
+            {
                 Respawn();
+            }
         }
     
     }
