@@ -17,6 +17,10 @@ namespace SHamilton.ClubParty.UI {
         /// </summary>
         protected Button Button;
         /// <summary>
+        /// The Image component attached with this script. Initialized in Start.
+        /// </summary>
+        protected Image ButtonImage;
+        /// <summary>
         /// The button's text, if any. Initialized in Start.
         /// </summary>
         [CanBeNull] protected TMP_Text ButtonText;
@@ -28,6 +32,7 @@ namespace SHamilton.ClubParty.UI {
         protected virtual void Start() {
             Button = GetComponent<Button>();
             Button.onClick.AddListener(OnClick);
+            ButtonImage = GetComponent<Image>();
             ButtonText = GetComponentInChildren<TMP_Text>();
         }
 
@@ -35,5 +40,7 @@ namespace SHamilton.ClubParty.UI {
         /// Event callback for when the Button is clicked.
         /// </summary>
         protected abstract void OnClick();
+        
+        
     }
 }
