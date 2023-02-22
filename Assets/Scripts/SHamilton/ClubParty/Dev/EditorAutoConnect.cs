@@ -1,5 +1,7 @@
 using System;
+using System.Linq;
 using System.Reflection;
+using ParrelSync;
 using SHamilton.ClubParty.Network;
 using UnityEditor;
 using UnityEngine;
@@ -30,10 +32,20 @@ namespace SHamilton.ClubParty.Dev {
             
                 Log("Setting expected CustomProperties...");
                 NetworkManager.LocalPlayerProperties.CharacterColor = Color.magenta;
-            
-                Log("Connecting offline...");
+
+                // Tried to connect online for clones, but it's not working, I don't have time to look into this rn
+                // Check if a clone is running
+                // var isCloneRunning = ClonesManager.IsClone() ||
+                //     ClonesManager.GetCloneProjectsPath().Exists(ClonesManager.IsCloneProjectRunning);
+
                 NetworkManager.onJoinedRoom += ReloadScene;
-                NetworkManager.ConnectOfflineAndJoinRoom();
+                // if (isCloneRunning) {
+                //     Log("Clone detected as running, connecting online...");
+                //     NetworkManager.ConnectAndJoinRoom();
+                // } else {
+                    Log("Connecting offline...");
+                    NetworkManager.ConnectOfflineAndJoinRoom();
+                // }
             } else if(_performedConnection) {
                 // Connected via this script
                 Log("Level loaded. Ignore all errors above this line.");
