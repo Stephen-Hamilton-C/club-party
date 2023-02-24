@@ -120,6 +120,7 @@ namespace SHamilton.ClubParty {
         }
 
         private void LevelFinished() {
+            _logger.Log("Level finished.");
             OnLevelFinished?.Invoke();
         }
 
