@@ -1,13 +1,14 @@
 using Photon.Pun;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
+using SHamilton.ClubParty.UI.PowerUp;
 
 namespace SHamilton.ClubParty.PowerUp {
     public abstract class OffensivePowerUpData : PowerUpData {
         public override void Selected() {
             // Show player select UI
             // (Disable players that already have this power up applied)
-            throw new System.NotImplementedException();
+            OffensivePowerUpSelector.Instance.OffensivePowerUpSelected(this);
         }
 
         public void ApplyToPlayer(Player player) {

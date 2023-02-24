@@ -6,9 +6,11 @@ using UnityEngine;
 namespace SHamilton.Util {
     public class PlaceholderReplacer {
 
+        private readonly bool _debug = false;
+
         private readonly Dictionary<string, (int, int)> _placeholderRanges = new();
         private readonly Dictionary<string, string> _placeholderValues;
-        private readonly string _text = "";
+        private readonly string _text;
         [CanBeNull] private string _replaceString = null;
 
         public PlaceholderReplacer(string text, Dictionary<string, string> placeholderValues = null) {
@@ -19,6 +21,7 @@ namespace SHamilton.Util {
                 _placeholderValues = placeholderValues;
             }
             
+            Log("Text: \""+text+"\"");
             ParsePlaceholders();
         }
 
@@ -32,6 +35,7 @@ namespace SHamilton.Util {
                 throw new InvalidOperationException("Tried to run With(string) before running Replace(string)!");
             }
             _placeholderValues[_replaceString] = value;
+            Log("Will replace \""+_replaceString+"\" with \""+value+"\"");
             _replaceString = null;
             return this;
         }
@@ -54,9 +58,9 @@ namespace SHamilton.Util {
                     if(!inPlaceholder) {
                         inPlaceholder = true;
                         startIndex = i;
-                    } else if (inPlaceholder) {
+                    } else {
                         inPlaceholder = false;
-                        _placeholderRanges.Add(nextPlaceholder, (startIndex, i));
+                        _placeholderRanges.Add(nextPlaceholder, (startIndex, i+1));
                         nextPlaceholder = "";
                     }
                 } else if (inPlaceholder) {
@@ -87,11 +91,18 @@ namespace SHamilton.Util {
                         _placeholderRanges.Count+" placeholder(s) remain.");
             }
             
+            Log("Replaced \""+_text+"\" with \""+replacedText+"\"");
             return replacedText;
         }
 
+        private readonly string _logHeader = "<b>[PlaceholderReplacer]</b>: ";
         private void LogWarn(string msg) {
-            Debug.LogWarning("<b>[PlaceholderReplacer]</b>: " + msg);
+            Debug.LogWarning(_logHeader + msg);
+        }
+
+        private void Log(string msg) {
+            if (!_debug) return;
+            Debug.Log(_logHeader + msg);
         }
     }
 }

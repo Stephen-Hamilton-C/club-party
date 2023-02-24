@@ -72,6 +72,10 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         public static Player[] Players => PhotonNetwork.PlayerList;
         /// <summary>
+        /// Gets all currently connected players except for this LocalPlayer
+        /// </summary>
+        public static Player[] OtherPlayers => PhotonNetwork.PlayerListOthers;
+        /// <summary>
         /// Whether the client is the Master Client or not
         /// </summary>
         public static bool IsMasterClient => PhotonNetwork.IsMasterClient;

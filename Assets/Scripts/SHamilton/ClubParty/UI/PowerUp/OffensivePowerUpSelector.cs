@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
+using Photon.Realtime;
+using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.PowerUp;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
@@ -9,13 +12,15 @@ namespace SHamilton.ClubParty.UI.PowerUp {
     
         [SerializeField] private bool debug;
         [SerializeField] private GameObject panel;
+        [SerializeField] private GameObject playerTargetUITemplate;
 
-        public OffensivePowerUpSelector Instance => _instance;
-        private OffensivePowerUpSelector _instance;
-        [CanBeNull] public OffensivePowerUpData CurrentPowerUp => _currentPowerUp;
+        public static OffensivePowerUpSelector Instance => _instance;
+        private static OffensivePowerUpSelector _instance;
+        [CanBeNull] public static OffensivePowerUpData CurrentPowerUp => _instance._currentPowerUp;
         [CanBeNull] private OffensivePowerUpData _currentPowerUp = null;
 
         private Logger _logger;
+        private readonly Dictionary<Player, GameObject> _playerTargetUIs = new();
 
         private void Awake() {
             _logger = new(this, debug);
@@ -25,11 +30,47 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             } else {
                 _instance = this;
             }
+            
+            foreach (var player in NetworkManager.Players) {
+                CreatePlayerTargetUI(player);
+            }
+
+            NetworkManager.onPlayerJoined += CreatePlayerTargetUI;
+            NetworkManager.onPlayerLeft += DestroyPlayerTargetUI;
+        }
+
+        private void OnDestroy() {
+            NetworkManager.onPlayerJoined -= CreatePlayerTargetUI;
+            NetworkManager.onPlayerLeft -= DestroyPlayerTargetUI;
         }
 
         public void OffensivePowerUpSelected(OffensivePowerUpData powerUp) {
+            _logger.Log("PowerUp "+powerUp.Name+" selected!");
             _currentPowerUp = powerUp;
             panel.SetActive(true);
+        }
+
+        public void PlayerSelected(Player player) {
+            _logger.Log("Player "+player+" selected!");
+            panel.SetActive(false);
+            _currentPowerUp!.ApplyToPlayer(player);
+            _currentPowerUp = null;
+        }
+
+        private void CreatePlayerTargetUI(Player player) {
+            var playerTargetUI = Instantiate(playerTargetUITemplate, playerTargetUITemplate.transform.parent);
+            var playerTarget = playerTargetUI.GetComponent<PlayerTarget>();
+            playerTarget.Player = player;
+            playerTargetUI.SetActive(true);
+            
+            _playerTargetUIs[player] = playerTargetUI;
+            _logger.Log("Created TargetPlayerUI for "+player);
+        }
+
+        private void DestroyPlayerTargetUI(Player player) {
+            Destroy(_playerTargetUIs[player]);
+            _playerTargetUIs.Remove(player);
+            _logger.Log("Destroyed TargetPlayerUI for "+player);
         }
     }
 }

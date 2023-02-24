@@ -10,21 +10,21 @@ namespace SHamilton.ClubParty.UI.PowerUp {
         [SerializeField] private int powerUpIndex;
 
         private Logger _logger;
-        private StoredPowerUps _powerUps;
-        private PowerUpData PowerUp => _powerUps.PowerUps[powerUpIndex];
+        private StoredPowerUps _storedPowerUps;
+        private PowerUpData PowerUp => _storedPowerUps.PowerUps[powerUpIndex];
 	
         protected override void Start() {
             base.Start();
             
             _logger = new(this, debug);
-            _powerUps = NetworkManager.LocalCharacter.GetComponent<StoredPowerUps>();
-            if (powerUpIndex >= _powerUps.MaxPowerUps) {
+            _storedPowerUps = NetworkManager.LocalCharacter.GetComponent<StoredPowerUps>();
+            if (powerUpIndex >= _storedPowerUps.MaxPowerUps) {
                 throw new InvalidOperationException("powerUpIndex is out of bounds!");
             }
         }
 
         private void Update() {
-            var visible = _powerUps.PowerUps.Count - 1 >= powerUpIndex;
+            var visible = _storedPowerUps.PowerUps.Count - 1 >= powerUpIndex;
             Button.enabled = visible;
             ButtonImage.enabled = visible;
             if (visible) {

@@ -6,11 +6,20 @@ namespace SHamilton.ClubParty.UI.PowerUp {
     
         private Logger _logger;
         private PlaceholderReplacer _replacer;
-	
-        private void Start() {
-            _logger = new(this, debug);
-            _replacer = new(Text.text);
+
+        protected override void Start() {
+            base.Start();
+            
+            if(_logger == null)
+                _logger = new(this, debug);
+            
+            _logger.Log("Current power up: "+OffensivePowerUpSelector.CurrentPowerUp!.Name);
+            _replacer = new PlaceholderReplacer(Text.text)
+                .Replace("POWERUP").With(OffensivePowerUpSelector.CurrentPowerUp!.Name);
+
+            Text.text = _replacer.ReplacePlaceholders();
         }
+
     }
 }
 

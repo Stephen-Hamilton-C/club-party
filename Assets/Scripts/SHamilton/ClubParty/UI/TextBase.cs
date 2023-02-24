@@ -10,7 +10,7 @@ namespace SHamilton.ClubParty.UI {
 
         protected TMP_Text Text;
 
-        private void Start() {
+        protected virtual void Start() {
             Text = GetComponent<TMP_Text>();
         }
     }

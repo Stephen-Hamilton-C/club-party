@@ -48,6 +48,9 @@ namespace SHamilton.ClubParty.PowerUp {
         [PunRPC, UsedImplicitly]
         private void AddPowerUpComponentRPC(string powerUpName) {
             var powerUp = PowerUpDatas[powerUpName];
+            // Don't apply if already applied
+            if (TryGetComponent(powerUp.ComponentType, out _)) return;
+            
             gameObject.AddComponent(powerUp.ComponentType);
         }
 
