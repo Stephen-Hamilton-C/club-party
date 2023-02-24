@@ -24,7 +24,7 @@ namespace SHamilton.ClubParty.Ball {
         /// <summary>
         /// Switched to true if SetRespawnPoint was called while _respawning was true
         /// </summary>
-        private bool _setSpawn;
+        private bool _shouldSetSpawnPoint;
 
         /// <summary>
         /// Sets the respawn point to the current position
@@ -32,7 +32,7 @@ namespace SHamilton.ClubParty.Ball {
         public void SetRespawnPoint() {
             if (_respawning) {
                 _logger.Log("Attempt to set spawnpoint while respawning. This call will be delayed by two FixedUpdates.");
-                _setSpawn = true;
+                _shouldSetSpawnPoint = true;
                 return;
             }
             _respawnPoint = transform.position;
@@ -54,15 +54,21 @@ namespace SHamilton.ClubParty.Ball {
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             _respawning = false;
-            if (_setSpawn)
+            if (_shouldSetSpawnPoint)
                 SetRespawnPoint();
+        }
+
+        private void HoleFinished() {
+            _respawning = true;
+            _shouldSetSpawnPoint = true;
+            StartCoroutine(FinishSpawning());
         }
 
         private void Awake() {
             _logger = new(this, debug);
             _rb = GetComponent<Rigidbody>();
             
-            GameManager.OnHoleFinished += SetRespawnPoint;
+            GameManager.OnHoleFinished += HoleFinished;
         }
 
         private void Start() {
@@ -70,7 +76,7 @@ namespace SHamilton.ClubParty.Ball {
         }
 
         private void OnDestroy() {
-            GameManager.OnHoleFinished -= SetRespawnPoint;
+            GameManager.OnHoleFinished -= HoleFinished;
         }
 
         private void FixedUpdate() {
