@@ -31,7 +31,7 @@ namespace SHamilton.ClubParty.UI.PowerUp {
                 _instance = this;
             }
             
-            foreach (var player in NetworkManager.Players) {
+            foreach (var player in NetworkManager.OtherPlayers) {
                 CreatePlayerTargetUI(player);
             }
 
@@ -50,11 +50,15 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             panel.SetActive(true);
         }
 
+        public void CloseSelector() {
+            panel.SetActive(false);
+            _currentPowerUp = null;
+        }
+
         public void PlayerSelected(Player player) {
             _logger.Log("Player "+player+" selected!");
-            panel.SetActive(false);
             _currentPowerUp!.ApplyToPlayer(player);
-            _currentPowerUp = null;
+            CloseSelector();
         }
 
         private void CreatePlayerTargetUI(Player player) {
