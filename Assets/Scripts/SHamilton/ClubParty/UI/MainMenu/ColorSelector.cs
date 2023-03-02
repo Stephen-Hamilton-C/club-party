@@ -37,9 +37,10 @@ namespace SHamilton.ClubParty.UI.MainMenu {
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
             var color = toggle.GetComponent<Image>().color;
-            NetworkManager.LocalPlayerProperties.CharacterColor = color;
-            // Technically this shouldn't be necessary, but this makes the component more portable
-            NetworkManager.LocalPlayerProperties.ApplyChanges();
+            // NetworkManager.LocalPlayerProperties.CharacterColor = color;
+            // // Technically this shouldn't be necessary, but this makes the component more portable
+            // NetworkManager.LocalPlayerProperties.ApplyChanges();
+            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CharacterColor] = color;
             _logger.Log("Saved color as "+toggle.name+" and set CharacterColor to "+color);
         }
 

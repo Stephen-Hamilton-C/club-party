@@ -3,6 +3,7 @@ using Photon.Realtime;
 using UnityEngine;
 
 namespace SHamilton.ClubParty.Network {
+    [System.Obsolete("PlayerProperties is clearing out CustomProperties on its own")]
     public class PlayerProperties {
         
         private readonly Player _player;

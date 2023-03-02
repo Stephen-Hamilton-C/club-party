@@ -63,10 +63,10 @@ namespace SHamilton.ClubParty.Network {
         /// Gets the character associated with the current client
         /// </summary>
         public static GameObject LocalCharacter => LocalPlayer.GetCharacter();
-        /// <summary>
-        /// Gets this client's properties
-        /// </summary>
-        public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
+        // /// <summary>
+        // /// Gets this client's properties
+        // /// </summary>
+        // public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
         /// <summary>
         /// Gets all currently connected players
         /// </summary>
@@ -193,7 +193,8 @@ namespace SHamilton.ClubParty.Network {
             
             // Some properties not meant to be serialized will try to get serialized when connecting
             // Clear properties on disconnect to stop this
-            LocalPlayerProperties.Clear();
+            // LocalPlayerProperties.Clear();
+            LocalPlayer.CustomProperties.Clear();
             
             SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);

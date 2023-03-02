@@ -22,7 +22,8 @@ namespace SHamilton.ClubParty.Ball {
             _view = GetComponent<PhotonView>();
             _renderer = GetComponent<Renderer>();
 
-            var color = new PlayerProperties(_view.Owner).CharacterColor;
+            // var color = new PlayerProperties(_view.Owner).CharacterColor;
+            var color = (Color) _view.Owner.CustomProperties[PropertyKeys.CharacterColor];
             _logger.Log("Changing color to "+color);
             _renderer.material.color = color;
         }

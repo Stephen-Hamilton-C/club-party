@@ -25,13 +25,15 @@ namespace SHamilton.ClubParty.Dev {
                 foreach (Transform child in transform) {
                     Destroy(child.gameObject);
                 }
+
                 gameObject.name = "AutoConnect NetworkManager";
-            
+
                 Log("Creating Network Manager");
                 gameObject.AddComponent<NetworkManager>();
-            
+
                 Log("Setting expected CustomProperties...");
-                NetworkManager.LocalPlayerProperties.CharacterColor = Color.magenta;
+                // NetworkManager.LocalPlayerProperties.CharacterColor = Color.magenta;
+                NetworkManager.LocalPlayer.CustomProperties["CharacterColor"] = Color.magenta;
 
                 // Tried to connect online for clones, but it's not working, I don't have time to look into this rn
                 // Check if a clone is running

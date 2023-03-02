@@ -38,8 +38,11 @@ namespace SHamilton.ClubParty.UI.Vote {
             Cursor.visible = true;
             
             // Reset vote
-            NetworkManager.LocalPlayerProperties.CurrentVote = null;
-            NetworkManager.LocalPlayerProperties.ApplyChanges();
+            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote] = null;
+            var propChanges = new Hashtable() { { PropertyKeys.CurrentVote, null } };
+            NetworkManager.LocalPlayer.SetCustomProperties(propChanges);
+            // NetworkManager.LocalPlayerProperties.CurrentVote = null;
+            // NetworkManager.LocalPlayerProperties.ApplyChanges();
             
             if (NetworkManager.IsMasterClient) {
                 _view.TransferOwnership(NetworkManager.LocalPlayer);
@@ -96,8 +99,11 @@ namespace SHamilton.ClubParty.UI.Vote {
             _currentlyVotedCourse = course.courseName;
 
             NetworkManager.CurrentRoom.SetCustomProperties(changedProperties);
-            NetworkManager.LocalPlayerProperties.CurrentVote = _currentlyVotedCourse;
-            NetworkManager.LocalPlayerProperties.ApplyChanges();
+            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote] = _currentlyVotedCourse;
+            var propChanges = new Hashtable() {{PropertyKeys.CurrentVote, _currentlyVotedCourse}};
+            NetworkManager.LocalPlayer.SetCustomProperties(propChanges);
+            // NetworkManager.LocalPlayerProperties.CurrentVote = _currentlyVotedCourse;
+            // NetworkManager.LocalPlayerProperties.ApplyChanges();
         }
         
         private void RoomPropertiesChanged(Hashtable changedProperties) {
@@ -109,11 +115,11 @@ namespace SHamilton.ClubParty.UI.Vote {
                 for (int i = 0; i < courseCount; i++) {
                     var courseName = (string)changedProperties["VoteCourseName" + i];
                     var course = allCourses.Find(it => it.courseName == courseName);
-                    _courses.Add(courseName, course);
+                    _courses[courseName] = course;
 
                     var text = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
                     text.text = courseName + " (0)";
-                    _texts.Add(courseName, text);
+                    _texts[courseName] = text;
                     buttons[i].onClick.AddListener(() => VoteSelected(course));
                     _logger.Log("Added "+courseName);
                 }
@@ -131,9 +137,11 @@ namespace SHamilton.ClubParty.UI.Vote {
         private void RemovePlayerVote(Player player) {
             if (!NetworkManager.IsMasterClient) return;
 
-            var playerProps = new PlayerProperties(player);
-            if (playerProps.CurrentVote == null) return;
-            var votedCourseName = playerProps.CurrentVote;
+            // var playerProps = new PlayerProperties(player);
+            // if (playerProps.CurrentVote == null) return;
+            // var votedCourseName = playerProps.CurrentVote;
+            var votedCourseName = (string) NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote];
+            if (votedCourseName == null) return;
             var voteCountKey = "VoteCount_" + votedCourseName;
             var currentVoteCount = (int)NetworkManager.CurrentRoom.CustomProperties[voteCountKey];
             NetworkManager.CurrentRoom.SetCustomProperties(

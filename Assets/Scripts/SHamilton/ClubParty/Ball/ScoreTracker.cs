@@ -1,3 +1,4 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using SHamilton.ClubParty.Network;
 using UnityEngine;
@@ -39,7 +40,10 @@ namespace SHamilton.ClubParty.Ball {
         }
 
         private void UpdateScores() {
-            NetworkManager.LocalPlayerProperties.Scores = _scores;
+            // NetworkManager.LocalPlayerProperties.Scores = _scores;
+            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.Scores] = _scores;
+            var propChanges = new Hashtable() { { PropertyKeys.Scores, _scores } };
+            NetworkManager.LocalPlayer.SetCustomProperties(propChanges);
         }
 
         private void PlayerStroked() {
