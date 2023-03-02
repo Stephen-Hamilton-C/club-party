@@ -29,6 +29,16 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             ButtonImage.enabled = visible;
             if (visible) {
                 ButtonText!.text = PowerUp.Name;
+                if (PowerUp is SelfPowerUpData) {
+                    Button.image.color = Color.green;
+                    ButtonText.color = Color.black;
+                } else if (PowerUp is EnvPowerUpData) {
+                    Button.image.color = Color.blue;
+                    ButtonText.color = Color.white;
+                } else if (PowerUp is OffensivePowerUpData) {
+                    Button.image.color = Color.red;
+                    ButtonText.color = Color.white;
+                }
             } else {
                 ButtonText!.text = "";
             }
