@@ -29,7 +29,7 @@ namespace SHamilton.ClubParty.Network {
         public static void SetCharacter(this Player player, GameObject character) {
             if (character == null) {
                 throw new InvalidOperationException(
-                    "Attempted to set character to null this player ("
+                    "Attempted to set character to null for this player ("
                                                     +player+")"
                 );
             }
