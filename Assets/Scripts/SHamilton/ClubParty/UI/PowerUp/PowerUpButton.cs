@@ -1,4 +1,5 @@
 using System;
+using SHamilton.ClubParty.Ball;
 using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.PowerUp;
 using UnityEngine;
@@ -28,6 +29,7 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             Button.enabled = visible;
             ButtonImage.enabled = visible;
             if (visible) {
+                Button.interactable = LocalPlayerState.CanStroke;
                 ButtonText!.text = PowerUp.Name;
                 if (PowerUp is SelfPowerUpData) {
                     Button.image.color = Color.green;
