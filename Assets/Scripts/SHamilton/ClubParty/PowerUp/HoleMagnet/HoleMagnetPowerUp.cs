@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using Photon.Pun;
 using SHamilton.ClubParty.Ball;
@@ -25,11 +24,12 @@ namespace SHamilton.ClubParty.PowerUp.HoleMagnet {
                 var hole = GameManager.Instance.CurrentHole.hole.transform;
                 _magnet = Instantiate(magnetResource, hole.position, Quaternion.identity);
 
-                LocalPlayerState.OnStrokeFinished += StrokeFinished;
+                LocalPlayerState.OnStrokeFinished += RemovePowerUp;
+                LocalPlayerState.OnHoleFinished += RemovePowerUp;
             }
         }
 
-        private void StrokeFinished() {
+        private void RemovePowerUp() {
             _view.RPC("RemoveHoleMagnetRPC", RpcTarget.AllBuffered);
         }
 
@@ -38,7 +38,8 @@ namespace SHamilton.ClubParty.PowerUp.HoleMagnet {
             if(_magnet != null)
                 Destroy(_magnet);
 
-            LocalPlayerState.OnStrokeFinished -= StrokeFinished;
+            LocalPlayerState.OnStrokeFinished -= RemovePowerUp;
+            LocalPlayerState.OnHoleFinished -= RemovePowerUp;
         }
 
         [PunRPC, UsedImplicitly]
