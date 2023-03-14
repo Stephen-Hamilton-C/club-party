@@ -818,6 +818,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1431052263}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1431052265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 994181546159069998, guid: 8fc9b74ab07d071cd80021c6867158e7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1431052263}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1540555998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -935,7 +941,8 @@ MonoBehaviour:
   debug: 0
   par: 3
   isCurrent: 0
-  hole: {fileID: 1431052264}
+  map: {fileID: 1431052264}
+  hole: {fileID: 1431052265}
 --- !u!1 &1790070965
 GameObject:
   m_ObjectHideFlags: 0
@@ -1113,6 +1120,12 @@ PrefabInstance:
 --- !u!1 &2093774579 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 84384125426952483, guid: 2ba099d06145f1c77b6db7bae08dc48d,
+    type: 3}
+  m_PrefabInstance: {fileID: 2093774578}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2093774580 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4563141079687715442, guid: 2ba099d06145f1c77b6db7bae08dc48d,
     type: 3}
   m_PrefabInstance: {fileID: 2093774578}
   m_PrefabAsset: {fileID: 0}
@@ -2742,6 +2755,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2146302461431993068, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
+      propertyPath: map
+      value: 
+      objectReference: {fileID: 2093774579}
+    - target: {fileID: 2146302461431993068, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
       propertyPath: par
       value: 3
       objectReference: {fileID: 0}
@@ -2749,7 +2767,7 @@ PrefabInstance:
         type: 3}
       propertyPath: hole
       value: 
-      objectReference: {fileID: 2093774579}
+      objectReference: {fileID: 2093774580}
     - target: {fileID: 6570246153575660056, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: m_RootOrder
