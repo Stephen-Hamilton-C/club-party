@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Photon.Pun;
+using SHamilton.ClubParty.PowerUp.HoleMagnet;
 using SHamilton.ClubParty.PowerUp.Hyperball;
 using Logger = SHamilton.Util.Logger;
 
@@ -12,6 +13,7 @@ namespace SHamilton.ClubParty.PowerUp {
         public static readonly Dictionary<string, PowerUpData> PowerUpDatas = new() {
             // NOTE: It's very important that the key exactly matches the Name property
             {"Hyperball", new HyperballData()},
+            {"Hole Magnet", new HoleMagnetData()},
         };
 
         [SerializeField] private bool debug;
