@@ -19,6 +19,7 @@ namespace SHamilton.ClubParty.Ball {
         public delegate void BoolEvent(bool canStroke);
         public static event BoolEvent OnCanStrokeChanged;
         public static event TriggerEvent OnStroke;
+        public static event TriggerEvent OnStrokeFinished;
         #endregion
     
         /// <summary>
@@ -80,6 +81,7 @@ namespace SHamilton.ClubParty.Ball {
             if (value && _stroked) {
                 _stroked = false;
                 _outOfBounds.SetRespawnPoint();
+                OnStrokeFinished?.Invoke();
             }
         }
 
