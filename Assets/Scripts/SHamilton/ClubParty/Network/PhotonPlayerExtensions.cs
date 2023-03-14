@@ -21,5 +21,20 @@ namespace SHamilton.ClubParty.Network {
             return character;
         }
 
+        /// <summary>
+        /// Sets the player's character. This should only be called once when the player's character is instantiated.
+        /// </summary>
+        /// <param name="character">The player's character</param>
+        /// <exception cref="InvalidOperationException">If the character parameter given is null</exception>
+        public static void SetCharacter(this Player player, GameObject character) {
+            if (character == null) {
+                throw new InvalidOperationException(
+                    "Attempted to set character to null this player ("
+                                                    +player+")"
+                );
+            }
+
+            player.CustomProperties[PropertyKeys.Character] = character;
+        }
     }
 }

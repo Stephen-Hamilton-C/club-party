@@ -40,7 +40,7 @@ namespace SHamilton.ClubParty.Ball {
             transform.parent = CharacterContainer;
             gameObject.name = _view.Owner.ActorNumber + " " + _view.Owner.NickName;
             //new PlayerProperties(_view.Owner).Character = gameObject;
-            _view.Owner.CustomProperties[PropertyKeys.Character] = gameObject;
+            _view.Owner.SetCharacter(gameObject);
         }
 
     }
