@@ -434,7 +434,6 @@ GameObject:
   - component: {fileID: 8334964608825702856}
   - component: {fileID: 412612965}
   - component: {fileID: 13049056216025871}
-  - component: {fileID: 4368991502919595185}
   - component: {fileID: 5572570985680403450}
   - component: {fileID: 6123366390072318917}
   - component: {fileID: 5906808786478294935}
@@ -442,6 +441,7 @@ GameObject:
   - component: {fileID: -9147175395872179518}
   - component: {fileID: 9003363312477758094}
   - component: {fileID: 4131763314515765125}
+  - component: {fileID: 182112766547483379}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Player
@@ -642,21 +642,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  minimumY: -10
-  maximumY: 1000
---- !u!114 &4368991502919595185
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3388712837282367556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6abaec811a859225ab2d59df8d59992d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  debug: 0
+  minimumPosition: {x: -1000, y: -10, z: -1000}
+  maximumPosition: {x: 1000, y: 1000, z: 1000}
 --- !u!114 &5572570985680403450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,6 +912,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   lateJoinScore: 0
+--- !u!114 &182112766547483379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3388712837282367556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f185ade73c46647b9d3240634637430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debug: 0
+  maxPowerUps: 3
 --- !u!1 &4179339777320401597
 GameObject:
   m_ObjectHideFlags: 0

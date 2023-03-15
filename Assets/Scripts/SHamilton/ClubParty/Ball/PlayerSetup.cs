@@ -39,7 +39,8 @@ namespace SHamilton.ClubParty.Ball {
             // Don't need to RPC this - every client will perform this calculation when the player character is created
             transform.parent = CharacterContainer;
             gameObject.name = _view.Owner.ActorNumber + " " + _view.Owner.NickName;
-            new PlayerProperties(_view.Owner).Character = gameObject;
+            //new PlayerProperties(_view.Owner).Character = gameObject;
+            _view.Owner.SetCharacter(gameObject);
         }
 
     }

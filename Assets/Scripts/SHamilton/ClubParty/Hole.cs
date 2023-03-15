@@ -1,5 +1,6 @@
 using SHamilton.ClubParty.Ball;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty {
@@ -10,6 +11,9 @@ namespace SHamilton.ClubParty {
         [SerializeField] private int par = 3;
         public int Par => par;
         public bool isCurrent;
+        [Tooltip("The root GameObject for the hole")]
+        public GameObject map;
+        [Tooltip("The hole GameObject in the map")]
         public GameObject hole;
 
         private Logger _logger;
@@ -18,7 +22,8 @@ namespace SHamilton.ClubParty {
         private void Start() {
             _logger = new(this, debug);
 
-            var colliders = hole.GetComponentsInChildren<Collider>();
+            // Populate colliders
+            var colliders = map.GetComponentsInChildren<Collider>();
             _holeColliders = new HoleCollider[colliders.Length];
             var i = 0;
             _logger.Log("Found "+colliders.Length+" colliders in hole.");
@@ -29,6 +34,14 @@ namespace SHamilton.ClubParty {
                 _holeColliders[i] = holeCollider;
                 _logger.Log("Created HoleCollider");
                 i++;
+            }
+            
+            // Check that hole exists
+            if (hole == null) {
+                // Try to automatically find the hole
+                _logger.Warn("Hole was not set! Will attempt to automatically find the hole by looking for " +
+                             "a GameObject called \"Hole\"");
+                hole = map.transform.Find("Hole")?.gameObject;
             }
         }
 

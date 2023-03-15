@@ -197,7 +197,7 @@ namespace SHamilton.ClubParty.Ball {
         /// </summary>
         /// <param name="player">The player that finished</param>
         private void PlayerFinishedHole(Player player) {
-            if (NetworkManager.LocalPlayer.IsLocal) {
+            if (player.IsLocal) {
                 // Player is LocalPlayer. Hide target and destroy controller.
                 GameManager.OnPlayerFinished -= PlayerFinishedHole;
                 mouseTarget.gameObject.SetActive(false);

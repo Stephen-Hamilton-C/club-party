@@ -21,7 +21,8 @@ namespace SHamilton.ClubParty.UI {
         }
 
         public void SetPlayer(Player player) {
-            var playerScores = new PlayerProperties(player).Scores;
+            // var playerScores = new PlayerProperties(player).Scores;
+            var playerScores = (int[]) player.CustomProperties[PropertyKeys.Scores];
             
             playerName.text = player.NickName;
             for (int i = 0; i < scores.Length; i++) {

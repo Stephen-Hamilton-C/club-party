@@ -10,10 +10,12 @@ namespace SHamilton.ClubParty.Ball {
     public class OutOfBounds : MonoBehaviour {
 
         [SerializeField] private bool debug;
-        [Tooltip("The lowest Y the player can go")]
-        [SerializeField] private float minimumY = -25f;
-        [Tooltip("The highest Y the player can go")]
-        [SerializeField] private float maximumY = 1000f;
+
+        [Tooltip("The lowest bounds of each axis the player can go")]
+        [SerializeField] private Vector3 minimumPosition = new(-1000f, -10f, -1000f);
+
+        [Tooltip("The highest bounds of each axis the player can go")]
+        [SerializeField] private Vector3 maximumPosition = new(1000f, 1000f, 1000f);
 
         private Rigidbody _rb;
         private Vector3 _respawnPoint;
@@ -22,7 +24,7 @@ namespace SHamilton.ClubParty.Ball {
         /// <summary>
         /// Switched to true if SetRespawnPoint was called while _respawning was true
         /// </summary>
-        private bool _setSpawn;
+        private bool _shouldSetSpawnPoint;
 
         /// <summary>
         /// Sets the respawn point to the current position
@@ -30,7 +32,7 @@ namespace SHamilton.ClubParty.Ball {
         public void SetRespawnPoint() {
             if (_respawning) {
                 _logger.Log("Attempt to set spawnpoint while respawning. This call will be delayed by two FixedUpdates.");
-                _setSpawn = true;
+                _shouldSetSpawnPoint = true;
                 return;
             }
             _respawnPoint = transform.position;
@@ -52,15 +54,21 @@ namespace SHamilton.ClubParty.Ball {
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
             _respawning = false;
-            if (_setSpawn)
+            if (_shouldSetSpawnPoint)
                 SetRespawnPoint();
+        }
+
+        private void HoleFinished() {
+            _respawning = true;
+            _shouldSetSpawnPoint = true;
+            StartCoroutine(FinishSpawning());
         }
 
         private void Awake() {
             _logger = new(this, debug);
             _rb = GetComponent<Rigidbody>();
             
-            GameManager.OnHoleFinished += SetRespawnPoint;
+            GameManager.OnHoleFinished += HoleFinished;
         }
 
         private void Start() {
@@ -68,12 +76,16 @@ namespace SHamilton.ClubParty.Ball {
         }
 
         private void OnDestroy() {
-            GameManager.OnHoleFinished -= SetRespawnPoint;
+            GameManager.OnHoleFinished -= HoleFinished;
         }
 
         private void FixedUpdate() {
-            if (_rb.position.y < minimumY || _rb.position.y > maximumY)
+            if (_rb.position.x < minimumPosition.x || _rb.position.x > maximumPosition.x ||
+                _rb.position.y < minimumPosition.y || _rb.position.y > maximumPosition.y ||
+                _rb.position.z < minimumPosition.z || _rb.position.z > maximumPosition.z)
+            {
                 Respawn();
+            }
         }
     
     }

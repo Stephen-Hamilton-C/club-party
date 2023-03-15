@@ -27,7 +27,7 @@ namespace SHamilton.ClubParty {
         public delegate void PlayerEvent(Player player);
         public static GameManager Instance { get; private set; }
         /// <summary>
-        /// Event when a player finishes the level
+        /// Event when a player gets in a hole
         /// </summary>
         public static PlayerEvent OnPlayerFinished;
         /// <summary>
@@ -120,6 +120,7 @@ namespace SHamilton.ClubParty {
         }
 
         private void LevelFinished() {
+            _logger.Log("Level finished.");
             OnLevelFinished?.Invoke();
         }
 

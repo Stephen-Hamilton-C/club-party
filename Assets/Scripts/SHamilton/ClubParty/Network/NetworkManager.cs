@@ -16,7 +16,7 @@ namespace SHamilton.ClubParty.Network {
     public class NetworkManager : MonoBehaviourPunCallbacks {
 
         [SerializeField] private bool debug;
-        private Logger _logger;
+        private static Logger _logger;
 
         private static NetworkManager _instance;
 
@@ -63,14 +63,18 @@ namespace SHamilton.ClubParty.Network {
         /// Gets the character associated with the current client
         /// </summary>
         public static GameObject LocalCharacter => LocalPlayer.GetCharacter();
-        /// <summary>
-        /// Gets this client's properties
-        /// </summary>
-        public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
+        // /// <summary>
+        // /// Gets this client's properties
+        // /// </summary>
+        // public static readonly PlayerProperties LocalPlayerProperties = new(LocalPlayer);
         /// <summary>
         /// Gets all currently connected players
         /// </summary>
         public static Player[] Players => PhotonNetwork.PlayerList;
+        /// <summary>
+        /// Gets all currently connected players except for this LocalPlayer
+        /// </summary>
+        public static Player[] OtherPlayers => PhotonNetwork.PlayerListOthers;
         /// <summary>
         /// Whether the client is the Master Client or not
         /// </summary>
@@ -189,7 +193,8 @@ namespace SHamilton.ClubParty.Network {
             
             // Some properties not meant to be serialized will try to get serialized when connecting
             // Clear properties on disconnect to stop this
-            LocalPlayerProperties.Clear();
+            // LocalPlayerProperties.Clear();
+            LocalPlayer.CustomProperties.Clear();
             
             SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);
@@ -234,6 +239,7 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         /// <param name="propertiesThatChanged">The properties that changed</param>
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {
+            _logger.Log("Room properties updated");
             onRoomPropertiesChanged?.Invoke(propertiesThatChanged);
         }
 
@@ -242,10 +248,11 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         /// <returns>Whether the connection was attempted or halted due to an error</returns>
         public static bool Connect() {
+            _logger.Log("Connecting to master server...");
             PhotonNetwork.OfflineMode = false;
             return PhotonNetwork.ConnectUsingSettings();
         }
-
+        
         /// <summary>
         /// Connects to the master server and then immediately joins a room
         /// </summary>

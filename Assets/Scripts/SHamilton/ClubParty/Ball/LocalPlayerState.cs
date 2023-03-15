@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using SHamilton.ClubParty.Network;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
@@ -19,6 +20,8 @@ namespace SHamilton.ClubParty.Ball {
         public delegate void BoolEvent(bool canStroke);
         public static event BoolEvent OnCanStrokeChanged;
         public static event TriggerEvent OnStroke;
+        public static event TriggerEvent OnStrokeFinished;
+        public static event TriggerEvent OnHoleFinished;
         #endregion
     
         /// <summary>
@@ -65,6 +68,13 @@ namespace SHamilton.ClubParty.Ball {
             }
 
             OnCanStrokeChanged += CanStrokeChanged;
+            GameManager.OnPlayerFinished += PlayerFinished;
+        }
+
+        private void PlayerFinished(Player player) {
+            if (player.IsLocal) {
+                OnHoleFinished?.Invoke();
+            }
         }
 
         private void OnDestroy() {
@@ -74,12 +84,14 @@ namespace SHamilton.ClubParty.Ball {
             }
 
             OnCanStrokeChanged -= CanStrokeChanged;
+            GameManager.OnPlayerFinished -= PlayerFinished;
         }
 
         private void CanStrokeChanged(bool value) {
             if (value && _stroked) {
                 _stroked = false;
                 _outOfBounds.SetRespawnPoint();
+                OnStrokeFinished?.Invoke();
             }
         }
 

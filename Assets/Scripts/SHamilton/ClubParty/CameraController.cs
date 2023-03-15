@@ -17,6 +17,8 @@ namespace SHamilton.ClubParty {
         [SerializeField] private float trackSpeed = 10f;
         [Tooltip("The position of the camera relative to the player")]
         [SerializeField] private Vector3 positionOffset = Vector3.zero;
+        [Tooltip("The maximum distance the camera can be from the player before it locks")]
+        [SerializeField] private float maxDistance = 10f;
         [Tooltip("The rotation of the camera so it looks at the player")]
         [SerializeField] private Vector3 baseRotation = Vector3.zero;
         [Tooltip("The minimum pitch rotation of the camera")]
@@ -97,7 +99,12 @@ namespace SHamilton.ClubParty {
             if (!_player) return;
 
             // Lerp camera to player's position
-            _pivot.position = Vector3.Lerp(_pivot.position, _player.position, Time.fixedUnscaledDeltaTime * trackSpeed);
+            var nextPivotPos = Vector3.Lerp(_pivot.position, _player.position, Time.fixedUnscaledDeltaTime * trackSpeed); 
+            if ((nextPivotPos - _player.position).magnitude > maxDistance) {
+                // Ball was probably launched really fast, don't let the camera take forever to get to the ball
+                nextPivotPos = Vector3.MoveTowards(_player.position, nextPivotPos, maxDistance);
+            }
+            _pivot.position = nextPivotPos;
 
             // Lerp camera zoom
             transform.localPosition = Vector3.Lerp(transform.localPosition, positionOffset * zoom, Time.fixedUnscaledDeltaTime * trackSpeed);
