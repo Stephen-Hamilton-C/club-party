@@ -1,5 +1,4 @@
 using System;
-using SHamilton.ClubParty.Ball;
 using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.PowerUp;
 using UnityEngine;
