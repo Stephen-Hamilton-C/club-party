@@ -29,18 +29,10 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             Button.enabled = visible;
             ButtonImage.enabled = visible;
             if (visible) {
-                Button.interactable = LocalPlayerState.CanStroke;
+                Button.interactable = PowerUp.CanSelect;
                 ButtonText!.text = PowerUp.Name;
-                if (PowerUp is SelfPowerUpData) {
-                    Button.image.color = Color.green;
-                    ButtonText.color = Color.black;
-                } else if (PowerUp is EnvPowerUpData) {
-                    Button.image.color = Color.blue;
-                    ButtonText.color = Color.white;
-                } else if (PowerUp is OffensivePowerUpData) {
-                    Button.image.color = Color.red;
-                    ButtonText.color = Color.white;
-                }
+                Button.image.color = PowerUp.BackgroundColor;
+                ButtonText.color = PowerUp.ForegroundColor;
             } else {
                 ButtonText!.text = "";
             }
