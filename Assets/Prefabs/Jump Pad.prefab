@@ -100,6 +100,7 @@ MonoBehaviour:
   debug: 0
   floatFrequency: 0.75
   floatAmplitude: 0.00035
+  floatAxis: 1
 --- !u!114 &8292148322545709697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -113,7 +114,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  rotDegreesPerSecond: 45
+  xRotDegreesPerSecond: 0
+  yRotDegreesPerSecond: 0
+  zRotDegreesPerSecond: 0
 --- !u!1 &6556079382687974953 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0bed9f721e17c1c4cbef32f8d64b9cc3,
@@ -166,4 +169,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  padForce: 5
+  padForce: 7.5
