@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028328, g: 0.22571328, b: 0.3069218, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -143,7 +143,7 @@ PrefabInstance:
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.19999951
+      value: 0.20000066
       objectReference: {fileID: 0}
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
@@ -529,7 +529,7 @@ PrefabInstance:
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.19999953
+      value: 0.20000072
       objectReference: {fileID: 0}
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
@@ -1039,7 +1039,7 @@ MeshCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1070335003}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 9e36ae41b1fa3624abc53e1cc6b442cc, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
@@ -1420,7 +1420,7 @@ PrefabInstance:
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.19999965
+      value: 0.20000054
       objectReference: {fileID: 0}
     - target: {fileID: 1295611875248224131, guid: d086fcd31e7cff49ab98ac35eb2c59e9,
         type: 3}
