@@ -1,11 +1,13 @@
+#if UNITY_EDITOR
 using System;
 using System.Linq;
 using System.Reflection;
 using ParrelSync;
 using SHamilton.ClubParty.Network;
 using UnityEditor;
-using UnityEngine;
 using UnityEngine.SceneManagement;
+#endif
+using UnityEngine;
 
 namespace SHamilton.ClubParty.Dev {
     /// <summary>

@@ -1,13 +1,15 @@
 using System;
 using DevLocker.Utils;
 using ExitGames.Client.Photon;
-using ParrelSync;
 using Photon.Pun;
 using Photon.Realtime;
 using SHamilton.ClubParty.Serializer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Logger = SHamilton.Util.Logger;
+#if UNITY_EDITOR
+using ParrelSync;
+#endif
 
 namespace SHamilton.ClubParty.Network {
     /// <summary>
