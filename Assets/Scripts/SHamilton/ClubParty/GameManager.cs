@@ -89,7 +89,6 @@ namespace SHamilton.ClubParty {
             }
             Instance = this;
 
-            holes = GetComponentsInChildren<Hole>();
             if (holes.Length == 0)
                 throw new InvalidOperationException("There are no spawns for this set!");
         
@@ -105,7 +104,7 @@ namespace SHamilton.ClubParty {
             _spawnOffset = new Vector3(0, character.transform.localScale.y / 2, 0);
             _localCharRb = character.GetComponent<Rigidbody>();
             // Must set transform position in Start because physics
-            character.transform.position = CurrentHole.transform.position + _spawnOffset;
+            character.transform.position = CurrentHole.spawn.position + _spawnOffset;
 
             NetworkManager.onPlayerLeft += PlayerLeft;
         }
@@ -115,7 +114,7 @@ namespace SHamilton.ClubParty {
             CurrentHole.isCurrent = false;
             HoleIndex++;
             CurrentHole.isCurrent = true;
-            _localCharRb.position = CurrentHole.transform.position + _spawnOffset;
+            _localCharRb.position = CurrentHole.spawn.position + _spawnOffset;
             OnHoleFinished?.Invoke();
         }
 

@@ -1,6 +1,5 @@
 using SHamilton.ClubParty.Ball;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty {
@@ -15,6 +14,8 @@ namespace SHamilton.ClubParty {
         public GameObject map;
         [Tooltip("The hole GameObject in the map")]
         public GameObject hole;
+        [Tooltip("Where the player should spawn when starting the hole")]
+        public Transform spawn;
 
         private Logger _logger;
         private HoleCollider[] _holeColliders;
@@ -22,6 +23,22 @@ namespace SHamilton.ClubParty {
         private void Start() {
             _logger = new(this, debug);
 
+            map = gameObject;
+
+            if (spawn == null) {
+                _logger.Warn("Spawn was not set! Will attempt to automatically find the spawn by looking for " +
+                             "a GameObject called \"Spawn\"");
+                spawn = map.transform.Find("Spawn");
+            }
+            
+            // Check that hole exists
+            if (hole == null) {
+                // Try to automatically find the hole
+                _logger.Warn("Hole was not set! Will attempt to automatically find the hole by looking for " +
+                             "a GameObject called \"Hole\"");
+                hole = map.transform.Find("Hole")?.gameObject;
+            }
+            
             // Populate colliders
             var colliders = map.GetComponentsInChildren<Collider>();
             _holeColliders = new HoleCollider[colliders.Length];
@@ -34,14 +51,6 @@ namespace SHamilton.ClubParty {
                 _holeColliders[i] = holeCollider;
                 _logger.Log("Created HoleCollider");
                 i++;
-            }
-            
-            // Check that hole exists
-            if (hole == null) {
-                // Try to automatically find the hole
-                _logger.Warn("Hole was not set! Will attempt to automatically find the hole by looking for " +
-                             "a GameObject called \"Hole\"");
-                hole = map.transform.Find("Hole")?.gameObject;
             }
         }
 

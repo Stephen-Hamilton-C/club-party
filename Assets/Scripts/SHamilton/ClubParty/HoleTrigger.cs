@@ -16,7 +16,8 @@ namespace SHamilton.ClubParty {
         private void Start() {
             _logger = new(this, debug);
             if (hole == null) {
-                _logger.Err("Hole is not set! This HoleTrigger may cause bugs!");
+                _logger.Warn("Hole is not set. Will attempt to automatically find hole.");
+                hole = transform.parent.parent.GetComponent<Hole>();
             }
         }
 
