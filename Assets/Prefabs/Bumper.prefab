@@ -20,12 +20,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00000023841858
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
@@ -35,17 +35,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f564458284494f092971cb832ffa7126,
         type: 3}
@@ -65,7 +65,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: f564458284494f092971cb832ffa7126,
         type: 3}
       propertyPath: m_Name
-      value: Bumper
+      value: Bumper.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f564458284494f092971cb832ffa7126, type: 3}
@@ -102,5 +102,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 1
-  force: 2.5
+  force: 7.5
   minimumForce: 5

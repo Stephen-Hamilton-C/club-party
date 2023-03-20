@@ -5,8 +5,7 @@ namespace SHamilton.ClubParty.Interactables {
     public class Bumper : MonoBehaviour {
     
         [SerializeField] private bool debug;
-        [SerializeField] private float force = 2.5f;
-        [SerializeField] private float minimumForce = 2f;
+        [SerializeField] private float force = 7.5f;
 
         private Logger _logger;
 	
@@ -17,12 +16,11 @@ namespace SHamilton.ClubParty.Interactables {
         private void OnCollisionEnter(Collision collision) {
             if (!collision.gameObject.CompareTag("Player")) return;
             var rb = collision.gameObject.GetComponent<Rigidbody>();
-            var bounceForce = collision.impulse * force;
+            // var bounceForce = collision.impulse.normalized * force;
+            var bounceDirection = collision.rigidbody.position - transform.position;
+            bounceDirection.y = 0;
+            var bounceForce = bounceDirection.normalized * force;
             _logger.Log("Player collided, applying force: "+bounceForce);
-            if (bounceForce.magnitude < minimumForce) {
-                bounceForce = bounceForce.normalized * minimumForce;
-                _logger.Log("Force is too small! Instead, applying force: "+bounceForce);
-            }
             rb.AddForce(bounceForce, ForceMode.Impulse);
         }
     }
