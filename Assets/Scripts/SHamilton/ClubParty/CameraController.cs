@@ -99,15 +99,34 @@ namespace SHamilton.ClubParty {
             if (!_player) return;
 
             // Lerp camera to player's position
-            var nextPivotPos = Vector3.Lerp(_pivot.position, _player.position, Time.fixedUnscaledDeltaTime * trackSpeed); 
-            if ((nextPivotPos - _player.position).magnitude > maxDistance) {
+            var playerPos = _player.position;
+            var nextPivotPos = Vector3.Lerp(_pivot.position, playerPos, Time.fixedUnscaledDeltaTime * trackSpeed); 
+            if ((nextPivotPos - playerPos).magnitude > maxDistance) {
                 // Ball was probably launched really fast, don't let the camera take forever to get to the ball
-                nextPivotPos = Vector3.MoveTowards(_player.position, nextPivotPos, maxDistance);
+                nextPivotPos = Vector3.MoveTowards(playerPos, nextPivotPos, maxDistance);
             }
             _pivot.position = nextPivotPos;
 
-            // Lerp camera zoom
-            transform.localPosition = Vector3.Lerp(transform.localPosition, positionOffset * zoom, Time.fixedUnscaledDeltaTime * trackSpeed);
+            // Put camera in front of any obstacles
+            var cameraPos = transform.position;
+            var playerToCamera = cameraPos - playerPos;
+            var mask = LayerMask.GetMask("Default", "Water");
+            // TODO: CheckSphere on where camera would be if there was nothing in the way
+            if (Physics.Raycast(playerPos, playerToCamera, out var hit, (positionOffset * zoom).magnitude, mask)) {
+                var playerToHit = hit.point - playerPos;
+                var hitPos = hit.point;
+                if (playerToHit.magnitude < playerToCamera.magnitude) {
+                    transform.position = hitPos;
+                } else {
+                    transform.position =
+                        Vector3.Lerp(cameraPos, hitPos, Time.fixedUnscaledDeltaTime * trackSpeed);
+                }
+            } else {
+                // Lerp camera zoom
+                transform.localPosition = 
+                    Vector3.Lerp(transform.localPosition, positionOffset * zoom, Time.fixedUnscaledDeltaTime * trackSpeed);
+            }
+            
             // Make camera look at player
             transform.localRotation = Quaternion.Euler(baseRotation);
         }
