@@ -1448,11 +1448,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bumper.1
       objectReference: {fileID: 0}
-    - target: {fileID: 4992694790665089069, guid: 9ca8822a2695173419777842f9cad2f5,
-        type: 3}
-      propertyPath: force
-      value: 2.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9ca8822a2695173419777842f9cad2f5, type: 3}
 --- !u!1001 &1295611875395156937
@@ -1883,17 +1878,17 @@ PrefabInstance:
         type: 3}
       propertyPath: holes.Array.data[0]
       value: 
-      objectReference: {fileID: 741873464}
+      objectReference: {fileID: 1905543668}
     - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: holes.Array.data[1]
       value: 
-      objectReference: {fileID: 518594445}
+      objectReference: {fileID: 741873464}
     - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: holes.Array.data[2]
       value: 
-      objectReference: {fileID: 1905543668}
+      objectReference: {fileID: 518594445}
     - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
       propertyPath: nextLevel.m_IsDirty
