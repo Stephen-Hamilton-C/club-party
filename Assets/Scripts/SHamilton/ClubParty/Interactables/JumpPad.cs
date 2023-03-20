@@ -33,12 +33,15 @@ namespace SHamilton.ClubParty.Interactables {
 
             var force = new Vector3(0, padForce, 0);
             
+            var playerVelocity = rb.velocity;
+            // Counter the player's y velocity
+            force.y -= playerVelocity.y * rb.mass;
+            
             // Prevent ball from getting stuck on pad by applying directional force as well
-            var velocity = rb.velocity;
-            velocity.y = 0;
-            if (velocity.magnitude < 1) {
-                _logger.Log("Player too slow, applying extra force: "+velocity.normalized);
-                force += velocity.normalized;
+            playerVelocity.y = 0;
+            if (playerVelocity.magnitude < 1) {
+                _logger.Log("Player too slow, applying extra force: "+playerVelocity.normalized);
+                force += playerVelocity.normalized;
             }
 
             rb.AddForce(force, ForceMode.Impulse);
