@@ -5,6 +5,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 
 namespace SHamilton.Util {
+    [Obsolete("This is an over-engineered class.")]
     public class PlaceholderReplacer {
 
         private readonly bool _debug = false;
