@@ -71,9 +71,10 @@ namespace SHamilton.ClubParty.UI.Vote {
                 _chosenCourses = new int[toggleGroup.transform.childCount];
                 for(int i = 0; i < _chosenCourses.Length; i++) {
                     var selectedIndex = Random.Range(0, courseIndices.Count);
-                    _chosenCourses[i] = selectedIndex;
+                    _chosenCourses[i] = courseIndices[selectedIndex];
                     courseIndices.Remove(selectedIndex);
                     _logger.Log("Course selected: "+courses[selectedIndex].courseName);
+                    _logger.Log("courseIndices: "+courseIndices.ToCommaSeparatedString());
                 }
                 
                 UpdateButtons();
