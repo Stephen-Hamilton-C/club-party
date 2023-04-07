@@ -1,3 +1,6 @@
+using ExitGames.Client.Photon;
+using Photon.Realtime;
+using SHamilton.ClubParty.Network;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +13,6 @@ namespace SHamilton.ClubParty.UI.Vote {
     
         [SerializeField] private bool debug;
         [SerializeField] private Color selectedColor;
-        [SerializeField] private float transitionTime = 0.25f;
 
         public Toggle toggle;
 
@@ -36,12 +38,41 @@ namespace SHamilton.ClubParty.UI.Vote {
 
             _deselectedColor = _image.color;
             toggle.onValueChanged.AddListener(ValueChanged);
+
+            NetworkManager.onPlayerPropertiesChanged += PlayerPropertiesChanged;
+            NetworkManager.onPlayerLeft += PlayerLeft;
+            UpdateVoteCount();
+        }
+
+        private void PlayerPropertiesChanged(Player player, Hashtable changedProperties) {
+            UpdateVoteCount();
+        }
+
+        private void PlayerLeft(Player player) {
+            UpdateVoteCount();
+        }
+
+        private void UpdateVoteCount() {
+            var siblingIndex = transform.GetSiblingIndex();
+            var voteCount = 0;
+            foreach (var player in NetworkManager.Players) {
+                if (player.GetCurrentVote() == siblingIndex) {
+                    voteCount++;
+                }
+            }
+
+            _text.text = _course.courseName + " (" + voteCount + ")";
         }
 
         private void ValueChanged(bool value) {
             var color = value ? selectedColor : _deselectedColor;
             _image.color = color;
             _logger.Log("Color set to "+color);
+        }
+
+        private void OnDestroy() {
+            NetworkManager.onPlayerPropertiesChanged -= PlayerPropertiesChanged;
+            NetworkManager.onPlayerLeft -= PlayerLeft;
         }
     }
 }
