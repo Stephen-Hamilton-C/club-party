@@ -9,6 +9,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Logger = SHamilton.Util.Logger;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEngine.SceneManagement;
+#endif
 
 // TODO: Both options are just "Course 1"
 namespace SHamilton.ClubParty.UI.Vote {
@@ -43,6 +46,13 @@ namespace SHamilton.ClubParty.UI.Vote {
         }
 	
         private void Start() {
+            // Go back to main menu if this scene is loaded in editor
+            #if UNITY_EDITOR
+            if (!NetworkManager.IsConnected) {
+                SceneManager.LoadScene(0);
+            }
+            #endif
+            
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _view.OwnershipTransfer = OwnershipOption.Takeover;
