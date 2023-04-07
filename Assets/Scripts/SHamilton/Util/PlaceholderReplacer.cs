@@ -86,11 +86,6 @@ namespace SHamilton.Util {
                 ParsePlaceholders();
             }
 
-            if (_placeholderRanges.Count > 0) {
-                LogWarn("Not all placeholders have been replaced! " +
-                        _placeholderRanges.Count+" placeholder(s) remain.");
-            }
-            
             Log("Replaced \""+_text+"\" with \""+replacedText+"\"");
             return replacedText;
         }
