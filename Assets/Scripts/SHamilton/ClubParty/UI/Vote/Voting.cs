@@ -27,11 +27,12 @@ namespace SHamilton.ClubParty.UI.Vote {
         private Logger _logger;
         private PlaceholderReplacer _countdownReplacer;
         private PhotonView _view;
-        private Toggle[] _toggles;
+        private VotingButton[] _buttons;
 
         private double _countdownStartTime = -1;
         private int[] _chosenCourses;
 
+        // TODO: I could probably just do some snazzy serial/deserialization so I don't have to dance around with indices
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsReading) {
                 _logger.Log("Reading!");
@@ -62,29 +63,34 @@ namespace SHamilton.ClubParty.UI.Vote {
             // Reset vote
             NetworkManager.LocalPlayer.SetCurrentVote(-1);
             
-            _toggles = toggleGroup.GetComponentsInChildren<Toggle>();
-            foreach (var toggle in _toggles) {
-                toggle.onValueChanged.AddListener((value) => { VoteChanged(toggle, value); });
+            // Listen to each toggle
+            _buttons = toggleGroup.GetComponentsInChildren<VotingButton>();
+            foreach (var button in _buttons) {
+                button.toggle.onValueChanged.AddListener((value) => { VoteChanged(button, value); });
             }
             
             if (NetworkManager.IsMasterClient) {
+                // Ensure ownership so that these variables are sent
                 _view.TransferOwnership(NetworkManager.LocalPlayer);
                 _countdownStartTime = NetworkManager.Time;
 
+                // Pick random courses
                 _logger.Log("Picking courses...");
+                
+                // Create a list of all possible indices for the courses
                 var courseIndices = new List<int>();
                 for (int i = 0; i < courses.Count; i++) {
                     courseIndices.Add(i);
                 }
                 _logger.Log("Course indices: "+courseIndices.ToCommaSeparatedString());
 
+                // Randomly pick from these indices to send them over the network
                 _chosenCourses = new int[toggleGroup.transform.childCount];
                 for(int i = 0; i < _chosenCourses.Length; i++) {
                     var selectedIndex = Random.Range(0, courseIndices.Count);
                     _chosenCourses[i] = courseIndices[selectedIndex];
                     courseIndices.Remove(selectedIndex);
                     _logger.Log("Course selected: "+courses[selectedIndex].courseName);
-                    _logger.Log("courseIndices: "+courseIndices.ToCommaSeparatedString());
                 }
                 
                 UpdateButtons();
@@ -92,21 +98,23 @@ namespace SHamilton.ClubParty.UI.Vote {
         }
 
         private void UpdateButtons() {
-            for (int i = 0; i < _toggles.Length; i++) {
-                var text = _toggles[i].GetComponentInChildren<TMP_Text>();
+            for (int i = 0; i < _buttons.Length; i++) {
                 var courseIndex = _chosenCourses[i];
-                text.text = courses[courseIndex].courseName;
+                _buttons[i].Course = courses[courseIndex];
             }
         }
 
-        private void VoteChanged(Toggle toggle, bool value) {
+        private void VoteChanged(VotingButton button, bool value) {
             if (!value) return;
-            var voteIndex = toggle.transform.GetSiblingIndex();
+            var voteIndex = button.transform.GetSiblingIndex();
             NetworkManager.LocalPlayer.SetCurrentVote(voteIndex);
 
-            var votedCourseIndex = _chosenCourses[voteIndex];
-            var votedCourse = courses[votedCourseIndex];
-            _logger.Log("Voted for "+votedCourse.courseName);
+            // Get course name for debugging
+            if (debug) {
+                var votedCourseIndex = _chosenCourses[voteIndex];
+                var votedCourse = courses[votedCourseIndex];
+                _logger.Log("Voted for " + votedCourse.courseName);
+            }
         }
 
         private void Update() {
