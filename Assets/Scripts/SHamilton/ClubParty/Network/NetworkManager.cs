@@ -25,16 +25,19 @@ namespace SHamilton.ClubParty.Network {
         #region Events
         public delegate void TriggerEvent();
         public delegate void DisconnectedEvent(DisconnectCause cause);
-        public delegate void CustomPropertyEvent(Hashtable changedProperties);
+        public delegate void RoomPropertyEvent(Hashtable changedProperties);
+        public delegate void PlayerPropertyEvent(Player player, Hashtable changedProperties);
         public delegate void PlayerEvent(Player player);
 
+        // TODO: Documentation on events
         public static event TriggerEvent onConnectedToMaster;
         public static event TriggerEvent onJoinedRoom;
         public static event TriggerEvent onLeftRoom;
         public static event PlayerEvent onPlayerJoined;
         public static event PlayerEvent onPlayerLeft;
         public static event DisconnectedEvent onDisconnected;
-        public static event CustomPropertyEvent onRoomPropertiesChanged;
+        public static event RoomPropertyEvent onRoomPropertiesChanged;
+        public static event PlayerPropertyEvent onPlayerPropertiesChanged;
         public static event TriggerEvent onConnectionStart;
         #endregion
 
@@ -249,6 +252,16 @@ namespace SHamilton.ClubParty.Network {
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged) {
             _logger.Log("Room properties updated");
             onRoomPropertiesChanged?.Invoke(propertiesThatChanged);
+        }
+
+        /// <summary>
+        /// Pun callback when the custom properties of a player changed
+        /// </summary>
+        /// <param name="player">The player who had a custom property change</param>
+        /// <param name="propertiesThatChanged">The properties that changed</param>
+        public override void OnPlayerPropertiesUpdate(Player player, Hashtable propertiesThatChanged) {
+            _logger.Log("Player "+player+" properties updated");
+            onPlayerPropertiesChanged?.Invoke(player, propertiesThatChanged);
         }
 
         /// <summary>
