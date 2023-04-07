@@ -13,8 +13,17 @@ namespace SHamilton.ClubParty.UI.Dev {
         [SerializeField] private TMP_Text playerCount;
         [SerializeField] private TMP_Text photonTime;
 
+        private static PhotonStats _instance;
+
         private void Start() {
-            DontDestroyOnLoad(gameObject);
+            if (_instance == null) {
+                _instance = this;
+                DontDestroyOnLoad(gameObject);
+            } else {
+                // Player must have come back to the menu.
+                // Don't need several instances of these.
+                Destroy(gameObject);
+            }
         }
 
         private void Update() {
