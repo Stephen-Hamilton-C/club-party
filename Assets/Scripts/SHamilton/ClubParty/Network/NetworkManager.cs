@@ -35,6 +35,7 @@ namespace SHamilton.ClubParty.Network {
         public static event PlayerEvent onPlayerLeft;
         public static event DisconnectedEvent onDisconnected;
         public static event CustomPropertyEvent onRoomPropertiesChanged;
+        public static event TriggerEvent onConnectionStart;
         #endregion
 
         #region PhotonNetwork Abstraction
@@ -100,7 +101,10 @@ namespace SHamilton.ClubParty.Network {
         /// </summary>
         public static bool OfflineMode {
             get => PhotonNetwork.OfflineMode;
-            set => PhotonNetwork.OfflineMode = value;
+            set {
+                onConnectionStart?.Invoke();
+                PhotonNetwork.OfflineMode = value;
+            }
         }
 
         /// <summary>
@@ -198,8 +202,10 @@ namespace SHamilton.ClubParty.Network {
             // LocalPlayerProperties.Clear();
             LocalPlayer.CustomProperties.Clear();
             
-            SceneManager.LoadScene(0);
             onDisconnected?.Invoke(cause);
+            
+            if(SceneManager.GetActiveScene().buildIndex != 0)
+                SceneManager.LoadScene(0);
         }
 
         /// <summary>
@@ -252,6 +258,7 @@ namespace SHamilton.ClubParty.Network {
         public static bool Connect() {
             _logger.Log("Connecting to master server...");
             PhotonNetwork.OfflineMode = false;
+            onConnectionStart?.Invoke();
             return PhotonNetwork.ConnectUsingSettings();
         }
         

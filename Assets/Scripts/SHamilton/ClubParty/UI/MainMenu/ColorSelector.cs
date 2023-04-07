@@ -1,48 +1,50 @@
 using SHamilton.ClubParty.Network;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty.UI.MainMenu {
-    /// <summary>
-    /// Handles applying selected color
-    /// </summary>
+    [RequireComponent(typeof(ToggleGroup))]
     public class ColorSelector : MonoBehaviour {
     
         [SerializeField] private bool debug;
 
-        private Logger _logger;
+        public UnityEvent<Color> onColorSelected = new();
 
+        private Logger _logger;
+        private ToggleGroup _group;
+        private Toggle[] _toggles;
+	
         private void Start() {
             _logger = new(this, debug);
+            _group = GetComponent<ToggleGroup>();
+            _toggles = GetComponentsInChildren<Toggle>();
 
-            var colorName = PlayerPrefs.GetString("CharacterColor", "Azure");
-            var toggles = GetComponentsInChildren<Toggle>();
-            foreach (var toggle in toggles) {
-                // Ensure the correct toggle is activated
-                toggle.isOn = toggle.name == colorName;
+            var selectedColor = PlayerPrefs.GetString("CharacterColor", "Azure");
+            foreach (var toggle in _toggles) {
+                toggle.isOn = toggle.name == selectedColor;
                 
-                // Update the CharacterColor when a toggle changes
-                toggle.onValueChanged.AddListener((bool value) => {
-                    if(value)
+                _logger.Log("Adding "+toggle.name);
+                toggle.onValueChanged.AddListener((value) => {
+                    _logger.Log(toggle.name+" changed to "+value);
+                    if (value)
                         UpdateColor(toggle);
                 });
-                
-                // Update the CharacterColor with the active toggle
+
                 if (toggle.isOn)
                     UpdateColor(toggle);
             }
+            _group.EnsureValidState();
         }
 
         private void UpdateColor(Toggle toggle) {
             PlayerPrefs.SetString("CharacterColor", toggle.name);
             var color = toggle.GetComponent<Image>().color;
-            // NetworkManager.LocalPlayerProperties.CharacterColor = color;
-            // // Technically this shouldn't be necessary, but this makes the component more portable
-            // NetworkManager.LocalPlayerProperties.ApplyChanges();
             NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CharacterColor] = color;
+            onColorSelected.Invoke(color);
             _logger.Log("Saved color as "+toggle.name+" and set CharacterColor to "+color);
         }
-
     }
 }
+

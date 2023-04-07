@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 9003363312477758094}
   - component: {fileID: 4131763314515765125}
   - component: {fileID: 182112766547483379}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ball
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -539,12 +539,12 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 0.459
   m_Drag: 1
-  m_AngularDrag: 1.25
+  m_AngularDrag: 1.875
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!114 &7123623047932588716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -624,11 +624,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debug: 0
-  speed: 3
+  speed: 4
   maxPullDistance: 2
   cutOffVelocity: 0.25
   mouseTarget: {fileID: 7903855986181342628}
   mouseTargetSpeed: 10
+  timeUntilNextTurn: 1
 --- !u!114 &13049056216025871
 MonoBehaviour:
   m_ObjectHideFlags: 0
