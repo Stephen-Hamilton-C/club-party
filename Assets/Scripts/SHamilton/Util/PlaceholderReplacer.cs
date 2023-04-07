@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -38,6 +39,18 @@ namespace SHamilton.Util {
             Log("Will replace \""+_replaceString+"\" with \""+value+"\"");
             _replaceString = null;
             return this;
+        }
+
+        public PlaceholderReplacer With(int value) {
+            return With(value.ToString());
+        }
+
+        public PlaceholderReplacer With(double value) {
+            return With(value.ToString(CultureInfo.CurrentCulture));
+        }
+
+        public PlaceholderReplacer With(float value) {
+            return With(value.ToString(CultureInfo.CurrentCulture));
         }
 
         private void ParsePlaceholders() {
