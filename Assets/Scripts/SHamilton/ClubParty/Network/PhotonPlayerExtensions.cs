@@ -39,6 +39,9 @@ namespace SHamilton.ClubParty.Network {
         }
 
         public static int GetCurrentVote(this Player player) {
+            if (player.CustomProperties[PropertyKeys.CurrentVote] == null)
+                return -1;
+            
             var currentVote = (int)player.CustomProperties[PropertyKeys.CurrentVote];
             return currentVote;
         }

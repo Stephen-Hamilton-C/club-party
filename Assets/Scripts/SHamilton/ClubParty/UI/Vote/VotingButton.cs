@@ -30,7 +30,7 @@ namespace SHamilton.ClubParty.UI.Vote {
         private Color _deselectedColor;
         private TMP_Text _text;
 	
-        private void Start() {
+        private void Awake() {
             _logger = new(this, debug);
             toggle = GetComponent<Toggle>();
             _image = GetComponent<Image>();
@@ -61,7 +61,8 @@ namespace SHamilton.ClubParty.UI.Vote {
                 }
             }
 
-            _text.text = _course.courseName + " ("+voteCount+")";
+            if(_course)
+                _text.text = _course.courseName + " ("+voteCount+")";
         }
 
         private void ValueChanged(bool value) {
