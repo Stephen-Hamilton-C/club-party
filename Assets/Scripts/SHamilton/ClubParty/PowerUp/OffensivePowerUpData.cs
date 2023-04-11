@@ -1,13 +1,12 @@
 using Photon.Pun;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
+using SHamilton.ClubParty.UI.Flair;
 using SHamilton.ClubParty.UI.PowerUp;
-using UnityEngine;
 
 namespace SHamilton.ClubParty.PowerUp {
     public abstract class OffensivePowerUpData : PowerUpData {
-        public override Color BackgroundColor => Color.red;
-        public override Color ForegroundColor => Color.white;
+        public override SelectableColor.Colors ButtonColor => SelectableColor.Colors.Red;
 
         public override void Selected() {
             // Show player select UI

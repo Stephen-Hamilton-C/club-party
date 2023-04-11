@@ -1,11 +1,10 @@
 using Photon.Pun;
 using SHamilton.ClubParty.Network;
-using UnityEngine;
+using SHamilton.ClubParty.UI.Flair;
 
 namespace SHamilton.ClubParty.PowerUp {
     public abstract class SelfPowerUpData : PowerUpData {
-        public override Color BackgroundColor => Color.green;
-        public override Color ForegroundColor => Color.black;
+        public override SelectableColor.Colors ButtonColor => SelectableColor.Colors.Green;
         public override bool CanSelect =>
             base.CanSelect && !NetworkManager.LocalCharacter.TryGetComponent(ComponentType, out _);
 
