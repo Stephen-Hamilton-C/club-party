@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
 using Photon.Pun;
 using Photon.Realtime;
-using SHamilton.ClubParty.Network;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Logger = SHamilton.Util.Logger;
 
@@ -104,7 +104,7 @@ namespace SHamilton.ClubParty.Ball {
         private void FixedUpdate() {
             if (!_view.IsMine) return;
         
-            // Update CanStroke and force the ball to stop if below cutOffVelocity
+            // Update CanStroke if below cutOffVelocity
             var belowCutOff = _rb.velocity.magnitude <= cutOffVelocity;
             if (!belowCutOff) {
                 LocalPlayerState.CanStroke = false;
@@ -115,11 +115,6 @@ namespace SHamilton.ClubParty.Ball {
                     LocalPlayerState.CanStroke = true;
                 }
             }
-            
-            
-            // TODO: This is causing the ball to get stuck on slopes in certain cases. Perhaps drag should be increased?
-            // if (LocalPlayerState.CanStroke)
-            //     _rb.velocity = Vector3.zero;
         }
 
         private void LateUpdate() {
@@ -132,8 +127,12 @@ namespace SHamilton.ClubParty.Ball {
                 _mousePos = hit.point;
             }
 
-            if (_unlockCamCtrl.IsPressed() || !LocalPlayerState.CanStroke || !_aiming) {
-                // TODO: Are the extra OR checks necessary?
+            if (
+                EventSystem.current.IsPointerOverGameObject() || 
+                _unlockCamCtrl.IsPressed() || 
+                !LocalPlayerState.CanStroke || 
+                !_aiming
+            ) {
                 // Player isn't aiming, ensure the indicator is hidden
                 _aiming = false;
                 mouseTarget.gameObject.SetActive(false);
@@ -181,6 +180,8 @@ namespace SHamilton.ClubParty.Ball {
         /// </summary>
         [UsedImplicitly]
         public void OnClick() {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            
             _logger.Log("Registered player click");
             if (_aiming && LocalPlayerState.CanStroke) {
                 _aiming = false;

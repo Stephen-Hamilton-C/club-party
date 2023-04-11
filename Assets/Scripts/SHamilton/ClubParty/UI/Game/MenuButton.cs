@@ -2,7 +2,7 @@ using SHamilton.ClubParty.Ball;
 using SHamilton.Util;
 
 namespace SHamilton.ClubParty.UI.Game {
-    public class SettingsButton : ButtonBase {
+    public class MenuButton : ButtonBase {
     
         private Logger _logger;
         private bool _clicked;
