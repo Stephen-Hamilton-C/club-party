@@ -40,14 +40,25 @@ namespace SHamilton.ClubParty.UI.Flair {
         #endif
 
         private void InitializeSprites() {
-            _sprites = new Dictionary<Colors, SelectableSprites> {
-               { Colors.Red, Resources.Load<SelectableSprites>("UI/ButtonSprites/Red") },
-               { Colors.Orange, Resources.Load<SelectableSprites>("UI/ButtonSprites/Orange") },
-               { Colors.Blue, Resources.Load<SelectableSprites>("UI/ButtonSprites/Blue") },
-               { Colors.Green, Resources.Load<SelectableSprites>("UI/ButtonSprites/Green") },
-               { Colors.Black, Resources.Load<SelectableSprites>("UI/ButtonSprites/Black") },
-               { Colors.White, Resources.Load<SelectableSprites>("UI/ButtonSprites/White") },
-           };
+            if (_selectable is Slider) {
+                _sprites = new Dictionary<Colors, SelectableSprites> {
+                    { Colors.Red, Resources.Load<SelectableSprites>("UI/SliderSprites/Red") },
+                    { Colors.Orange, Resources.Load<SelectableSprites>("UI/SliderSprites/Orange") },
+                    { Colors.Blue, Resources.Load<SelectableSprites>("UI/SliderSprites/Blue") },
+                    { Colors.Green, Resources.Load<SelectableSprites>("UI/SliderSprites/Green") },
+                    { Colors.Black, Resources.Load<SelectableSprites>("UI/SliderSprites/Black") },
+                    { Colors.White, Resources.Load<SelectableSprites>("UI/SliderSprites/White") },
+                };
+            } else {
+                _sprites = new Dictionary<Colors, SelectableSprites> {
+                    { Colors.Red, Resources.Load<SelectableSprites>("UI/ButtonSprites/Red") },
+                    { Colors.Orange, Resources.Load<SelectableSprites>("UI/ButtonSprites/Orange") },
+                    { Colors.Blue, Resources.Load<SelectableSprites>("UI/ButtonSprites/Blue") },
+                    { Colors.Green, Resources.Load<SelectableSprites>("UI/ButtonSprites/Green") },
+                    { Colors.Black, Resources.Load<SelectableSprites>("UI/ButtonSprites/Black") },
+                    { Colors.White, Resources.Load<SelectableSprites>("UI/ButtonSprites/White") },
+                };
+            }
         }
 
         private void Start() {
