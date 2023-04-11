@@ -9,15 +9,15 @@ namespace SHamilton.ClubParty.UI.Tabs {
 
         [SerializeField] private bool debug;
         [SerializeField] private List<GameObject> pages = new();
-        [SerializeField] private Color tabIdle;
-        [SerializeField] private Color tabHover;
-        [SerializeField] private Color tabActive;
+        [SerializeField] private Sprite tabIdle;
+        [SerializeField] private Sprite tabHover;
+        [SerializeField] private Sprite tabActive;
         [SerializeField, CanBeNull] private TabButton selectedTab;
         
         private Logger _logger;
         private List<TabButton> _tabButtons = new();
 	
-        private void Start() {
+        private void Awake() {
             _logger = new(this, debug);
         }
 
@@ -34,7 +34,7 @@ namespace SHamilton.ClubParty.UI.Tabs {
             ResetTabs();
             if (button != selectedTab) {
                 _logger.Log("Tab is not selected: "+button);
-                button.background.color = tabHover;
+                button.background.sprite = tabHover;
             }
         }
 
@@ -53,7 +53,7 @@ namespace SHamilton.ClubParty.UI.Tabs {
             selectedTab = button;
             
             ResetTabs();
-            button.background.color = tabActive;
+            button.background.sprite = tabActive;
 
             var tabIndex = button.transform.GetSiblingIndex();
             for (int i = 0; i < pages.Count; i++) {
@@ -65,7 +65,7 @@ namespace SHamilton.ClubParty.UI.Tabs {
 
         private void ResetTabs() {
             foreach (var button in _tabButtons.Where(button => button != selectedTab)) {
-                button.background.color = tabIdle;
+                button.background.sprite = tabIdle;
             }
         }
     }

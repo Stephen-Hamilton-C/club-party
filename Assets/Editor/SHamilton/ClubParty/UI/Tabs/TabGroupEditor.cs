@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,9 +19,9 @@ namespace SHamilton.ClubParty.UI.Tabs {
         public override void OnInspectorGUI() {
             base.OnInspectorGUI();
 
-            var idleColor = serializedObject.FindProperty("tabIdle").colorValue;
-            var hoverColor = serializedObject.FindProperty("tabHover").colorValue;
-            var activeColor = serializedObject.FindProperty("tabActive").colorValue;
+            var idleSprite = serializedObject.FindProperty("tabIdle").objectReferenceValue;
+            var hoverSprite = serializedObject.FindProperty("tabHover").objectReferenceValue;
+            var activeSprite = serializedObject.FindProperty("tabActive").objectReferenceValue;
 
             var tabGroup = (TabGroup)target;
             var selectedTab = serializedObject.FindProperty("selectedTab").objectReferenceValue;
@@ -34,19 +35,19 @@ namespace SHamilton.ClubParty.UI.Tabs {
                         button.background = button.GetComponent<Image>();
                     }
 
-                    var color = idleColor;
+                    var sprite = idleSprite;
                     if ((selectedTab == null && i == 0) || (selectedTab != null && button == selectedTab)) {
                         switch (_colorMode) {
                             case ColorModes.Active:
-                                color = activeColor;
+                                sprite = activeSprite;
                                 break;
                             case ColorModes.Hover:
-                                color = hoverColor;
+                                sprite = hoverSprite;
                                 break;
                         }
                     }
 
-                    button.background.color = color;
+                    button.background.sprite = (Sprite)sprite;
                 }
             }
 
