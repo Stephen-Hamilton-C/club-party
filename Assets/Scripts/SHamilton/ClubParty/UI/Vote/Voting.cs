@@ -25,7 +25,6 @@ namespace SHamilton.ClubParty.UI.Vote {
         [SerializeField] private int countdownLength = 10;
 
         private Logger _logger;
-        private PlaceholderReplacer _countdownReplacer;
         private PhotonView _view;
         private VotingButton[] _buttons;
 
@@ -57,7 +56,6 @@ namespace SHamilton.ClubParty.UI.Vote {
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _view.OwnershipTransfer = OwnershipOption.Takeover;
-            _countdownReplacer = new PlaceholderReplacer(countdownText.text);
             Cursor.visible = true;
             
             // Reset vote
@@ -122,10 +120,8 @@ namespace SHamilton.ClubParty.UI.Vote {
             
             var timeSinceStart = NetworkManager.Time - _countdownStartTime;
             var timeUntilEnd = countdownLength - timeSinceStart;
-            countdownText.text = _countdownReplacer
-                .Replace("COUNTDOWN")
-                .With(((int)timeUntilEnd).ToString(CultureInfo.CurrentCulture))
-                .ReplacePlaceholders();
+            var countdownTimer = ((int)timeUntilEnd).ToString(CultureInfo.CurrentCulture);
+            countdownText.text = "Vote for the next Course ("+countdownTimer+")";
 
             if (NetworkManager.IsMasterClient && timeSinceStart >= countdownLength) {
                 _countdownStartTime = -1;
