@@ -12,7 +12,7 @@ namespace SHamilton.ClubParty.UI.Vote {
     public class VotingButton : MonoBehaviour {
     
         [SerializeField] private bool debug;
-        [SerializeField] private Color selectedColor;
+        [SerializeField] private Sprite selectedSprite;
 
         public Toggle toggle;
 
@@ -27,7 +27,7 @@ namespace SHamilton.ClubParty.UI.Vote {
         
         private Logger _logger;
         private Image _image;
-        private Color _deselectedColor;
+        private Sprite _deselectedSprite;
         private TMP_Text _text;
 	
         private void Awake() {
@@ -36,7 +36,7 @@ namespace SHamilton.ClubParty.UI.Vote {
             _image = GetComponent<Image>();
             _text = GetComponentInChildren<TMP_Text>();
 
-            _deselectedColor = _image.color;
+            _deselectedSprite = _image.sprite;
             toggle.onValueChanged.AddListener(ValueChanged);
 
             NetworkManager.onPlayerPropertiesChanged += PlayerPropertiesChanged;
@@ -66,9 +66,7 @@ namespace SHamilton.ClubParty.UI.Vote {
         }
 
         private void ValueChanged(bool value) {
-            var color = value ? selectedColor : _deselectedColor;
-            _image.color = color;
-            _logger.Log("Color set to "+color);
+            _image.sprite = value ? selectedSprite : _deselectedSprite;
         }
 
         private void OnDestroy() {
