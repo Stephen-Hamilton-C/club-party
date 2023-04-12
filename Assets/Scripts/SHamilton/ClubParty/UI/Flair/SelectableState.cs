@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -28,6 +29,13 @@ namespace SHamilton.ClubParty.UI.Flair {
         protected virtual void Awake() {
             _selectable = GetComponent<Selectable>();
             _previousInteractable = _selectable.IsInteractable();
+        }
+
+        protected void OnEnable() {
+            _isPointerDown = false;
+            _isPointerInside = false;
+            _isSelected = false;
+            UpdateState();
         }
 
         protected virtual void Update() {
