@@ -21,7 +21,7 @@ namespace SHamilton.ClubParty.UI.MainMenu {
             _group = GetComponent<ToggleGroup>();
             _toggles = GetComponentsInChildren<Toggle>();
 
-            var selectedColor = PlayerPrefs.GetString("CharacterColor", "Azure");
+            var selectedColor = PlayerPrefs.GetString("CharacterColor", "White");
             foreach (var toggle in _toggles) {
                 toggle.isOn = toggle.name == selectedColor;
                 

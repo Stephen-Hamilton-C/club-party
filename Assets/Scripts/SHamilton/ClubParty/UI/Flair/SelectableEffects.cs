@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace SHamilton.ClubParty.UI.Flair {
-    // TODO: Need better name
+    // TODO: Make a Button version of this
     [RequireComponent(typeof(Selectable))]
     public class SelectableEffects : SelectableState {
         [SerializeField] private RectTransform childTransform;
@@ -19,13 +19,46 @@ namespace SHamilton.ClubParty.UI.Flair {
         [SerializeField] private float disabledTop = 39;
         [SerializeField] private float disabledBottom = 11;
 
-        private void Start() {
+        private State? _forcedState;
+
+        protected override void Awake() {
+            base.Awake();
+            
             if (childTransform == null) {
                 childTransform = GetComponentsInChildren<RectTransform>()[1];
             }
         }
 
+        public void ForceState(State? state) {
+            _forcedState = state;
+            StateChanged(SelectedState);
+        }
+
+        public void ForceDisabledState() {
+            ForceState(State.Disabled);
+        }
+
+        public void ForcePressedState() {
+            ForceState(State.Pressed);
+        }
+
+        public void ForceHighlightedState() {
+            ForceState(State.Highlighted);
+        }
+
+        public void ForceIdleState() {
+            ForceState(State.Idle);
+        }
+
+        public void ClearForcedState() {
+            ForceState(null);
+        }
+
         protected override void StateChanged(State state) {
+            if (_forcedState != null) {
+                state = (State)_forcedState;
+            }
+            
             float top, bottom;
             switch (state) {
                 case State.Disabled:

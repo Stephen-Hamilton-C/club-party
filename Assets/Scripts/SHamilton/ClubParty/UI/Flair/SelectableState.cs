@@ -9,7 +9,7 @@ namespace SHamilton.ClubParty.UI.Flair {
         IPointerDownHandler, IPointerUpHandler,
         ISelectHandler, IDeselectHandler
     {
-        protected enum State {
+        public enum State {
             Disabled,
             Highlighted,
             Pressed,
