@@ -1,6 +1,7 @@
 using ExitGames.Client.Photon;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
+using SHamilton.ClubParty.UI.Flair;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,11 +9,10 @@ using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty.UI.Vote {
     [RequireComponent(typeof(Toggle))]
-    [RequireComponent(typeof(Image))]
+    [RequireComponent(typeof(SelectableColor))]
     public class VotingButton : MonoBehaviour {
     
         [SerializeField] private bool debug;
-        [SerializeField] private Sprite selectedSprite;
 
         public Toggle toggle;
 
@@ -26,17 +26,15 @@ namespace SHamilton.ClubParty.UI.Vote {
         private CourseData _course;
         
         private Logger _logger;
-        private Image _image;
-        private Sprite _deselectedSprite;
+        private SelectableColor _selectableColor;
         private TMP_Text _text;
 	
         private void Awake() {
             _logger = new(this, debug);
             toggle = GetComponent<Toggle>();
-            _image = GetComponent<Image>();
+            _selectableColor = GetComponent<SelectableColor>();
             _text = GetComponentInChildren<TMP_Text>();
 
-            _deselectedSprite = _image.sprite;
             toggle.onValueChanged.AddListener(ValueChanged);
 
             NetworkManager.onPlayerPropertiesChanged += PlayerPropertiesChanged;
@@ -66,7 +64,7 @@ namespace SHamilton.ClubParty.UI.Vote {
         }
 
         private void ValueChanged(bool value) {
-            _image.sprite = value ? selectedSprite : _deselectedSprite;
+            _selectableColor.Color = value ? SelectableColor.Colors.Green : SelectableColor.Colors.Blue;
         }
 
         private void OnDestroy() {
