@@ -64,7 +64,7 @@ namespace SHamilton.ClubParty.UI.Vote {
             // Listen to each toggle
             _buttons = toggleGroup.GetComponentsInChildren<VotingButton>();
             foreach (var button in _buttons) {
-                button.toggle.onValueChanged.AddListener((value) => { VoteChanged(button, value); });
+                button.Toggle.onValueChanged.AddListener((value) => { VoteChanged(button, value); });
             }
             
             if (NetworkManager.IsMasterClient) {

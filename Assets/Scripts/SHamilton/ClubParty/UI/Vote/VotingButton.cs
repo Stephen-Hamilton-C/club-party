@@ -4,6 +4,7 @@ using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.UI.Flair;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Logger = SHamilton.Util.Logger;
 
@@ -14,7 +15,7 @@ namespace SHamilton.ClubParty.UI.Vote {
     
         [SerializeField] private bool debug;
 
-        public Toggle toggle;
+        public Toggle Toggle => _toggle;
 
         public CourseData Course {
             get => _course;
@@ -26,16 +27,17 @@ namespace SHamilton.ClubParty.UI.Vote {
         private CourseData _course;
         
         private Logger _logger;
+        private Toggle _toggle;
         private SelectableColor _selectableColor;
         private TMP_Text _text;
 	
         private void Awake() {
             _logger = new(this, debug);
-            toggle = GetComponent<Toggle>();
+            _toggle = GetComponent<Toggle>();
             _selectableColor = GetComponent<SelectableColor>();
             _text = GetComponentInChildren<TMP_Text>();
 
-            toggle.onValueChanged.AddListener(ValueChanged);
+            Toggle.onValueChanged.AddListener(ValueChanged);
 
             NetworkManager.onPlayerPropertiesChanged += PlayerPropertiesChanged;
             NetworkManager.onPlayerLeft += PlayerLeft;
