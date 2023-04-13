@@ -66,7 +66,12 @@ namespace SHamilton.ClubParty.UI.Vote {
         }
 
         private void ValueChanged(bool value) {
-            _selectableColor.Color = value ? SelectableColor.Colors.Green : SelectableColor.Colors.Blue;
+            if (!_toggle.group.AnyTogglesOn()) {
+                // Ensure the user can't select no course for vote
+                _toggle.isOn = true;
+            } else {
+                _selectableColor.Color = value ? SelectableColor.Colors.Green : SelectableColor.Colors.Blue;
+            }
         }
 
         private void OnDestroy() {
