@@ -1,4 +1,5 @@
 using System;
+using ExitGames.Client.Photon;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -35,6 +36,20 @@ namespace SHamilton.ClubParty.Network {
             }
 
             player.CustomProperties[PropertyKeys.Character] = character;
+        }
+
+        public static int GetCurrentVote(this Player player) {
+            if (player.CustomProperties[PropertyKeys.CurrentVote] == null)
+                return -1;
+            
+            var currentVote = (int)player.CustomProperties[PropertyKeys.CurrentVote];
+            return currentVote;
+        }
+
+        public static void SetCurrentVote(this Player player, int vote) {
+            player.CustomProperties[PropertyKeys.CurrentVote] = vote;
+            var propChanges = new Hashtable() { { PropertyKeys.CurrentVote, vote } };
+            player.SetCustomProperties(propChanges);
         }
     }
 }

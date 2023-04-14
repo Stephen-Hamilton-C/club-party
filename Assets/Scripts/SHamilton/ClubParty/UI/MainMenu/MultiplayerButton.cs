@@ -1,3 +1,4 @@
+using Photon.Realtime;
 using SHamilton.ClubParty.Network;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,10 +12,15 @@ namespace SHamilton.ClubParty.UI.MainMenu {
     public class MultiplayerButton : ButtonBase {
 
         private Logger _logger;
+        private string _origText;
 
         protected override void Start() {
             base.Start();
             _logger = new(this, debug);
+            _origText = ButtonText!.text;
+            
+            NetworkManager.onConnectionStart += ConnectionStarted;
+            NetworkManager.onDisconnected += ConnectionFailed;
         }
 
         protected override void OnClick() {
@@ -23,16 +29,29 @@ namespace SHamilton.ClubParty.UI.MainMenu {
             _logger.Log(willConnect ? "Will connect..." : "Won't connect.");
             
             if (willConnect) {
-                // TODO: Need to find a way to communicate to UI that we're connecting
-                // That way, other buttons and stuff can disable/have some other interaction or something
                 NetworkManager.onJoinedRoom += GameManager.StartGame;
-                Button.interactable = false;
                 ButtonText!.text = "Connecting...";
             }
         }
 
+        private void ConnectionStarted() {
+            _logger.Log("Connection started. Disabling button.");
+            Button.interactable = false;
+        }
+
+        private void ConnectionFailed(DisconnectCause cause) {
+            ButtonText!.text = _origText;
+            Button.interactable = true;
+            new DialogBuilder()
+                .SetTitle("Connection Error")
+                .SetContent("There was a problem connecting to Photon servers. Are you online? Error cause: " + cause)
+                .Build();
+        }
+
         private void OnDestroy() {
             NetworkManager.onJoinedRoom -= GameManager.StartGame;
+            NetworkManager.onConnectionStart -= ConnectionStarted;
+            NetworkManager.onDisconnected -= ConnectionFailed;
         }
     }
 }

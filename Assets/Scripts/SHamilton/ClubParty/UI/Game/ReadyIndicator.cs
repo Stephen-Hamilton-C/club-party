@@ -6,20 +6,23 @@ namespace SHamilton.ClubParty.UI.Game {
     /// <summary>
     /// Simple prototype indicator to alert the player when they can hit the ball
     /// </summary>
-    [RequireComponent(typeof(RawImage))]
+    [RequireComponent(typeof(Image))]
     public class ReadyIndicator : MonoBehaviour {
 
-        private RawImage _image;
+        [SerializeField] private Sprite notReady;
+        [SerializeField] private Sprite ready;
+        
+        private Image _image;
 
         private void Start() {
-            _image = GetComponent<RawImage>();
+            _image = GetComponent<Image>();
             
             UpdateColor(LocalPlayerState.CanStroke);
             LocalPlayerState.OnCanStrokeChanged += UpdateColor;
         }
 
         private void UpdateColor(bool canStroke) {
-            _image.color = canStroke ? Color.green : Color.red;
+            _image.sprite = canStroke ? ready : notReady;
         }
 
         private void OnDestroy() {

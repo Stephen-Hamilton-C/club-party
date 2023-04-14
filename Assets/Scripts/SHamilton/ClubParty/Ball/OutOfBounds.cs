@@ -87,6 +87,11 @@ namespace SHamilton.ClubParty.Ball {
                 Respawn();
             }
         }
-    
+
+        private void OnTriggerEnter(Collider other) {
+            if (other.CompareTag("Respawn")) {
+                Respawn();
+            }
+        }
     }
 }

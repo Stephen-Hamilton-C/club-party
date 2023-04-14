@@ -9,12 +9,12 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 7b9e0d3f29490d642ad9a5ada0b76927
   - enabled: 1
-    path: Assets/Scenes/Set_Voting.unity
+    path: Assets/Scenes/Voting.unity
     guid: 6b6f65c32ca9026e49ef7d0d885d1a4c
   - enabled: 1
-    path: Assets/Scenes/Set1.unity
+    path: Assets/Scenes/Course 1.unity
     guid: a26d34d5f49ff654b8fb2960c4cad358
   - enabled: 1
-    path: Assets/Scenes/Set2.unity
+    path: Assets/Scenes/Course 2.unity
     guid: 3f97550351b641a49a2023b77524dcfe
   m_configObjects: {}

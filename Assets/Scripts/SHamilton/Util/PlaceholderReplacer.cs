@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using JetBrains.Annotations;
 using UnityEngine;
 
 namespace SHamilton.Util {
+    [Obsolete("This is an over-engineered class.")]
     public class PlaceholderReplacer {
 
         private readonly bool _debug = false;
@@ -38,6 +40,18 @@ namespace SHamilton.Util {
             Log("Will replace \""+_replaceString+"\" with \""+value+"\"");
             _replaceString = null;
             return this;
+        }
+
+        public PlaceholderReplacer With(int value) {
+            return With(value.ToString());
+        }
+
+        public PlaceholderReplacer With(double value) {
+            return With(value.ToString(CultureInfo.CurrentCulture));
+        }
+
+        public PlaceholderReplacer With(float value) {
+            return With(value.ToString(CultureInfo.CurrentCulture));
         }
 
         private void ParsePlaceholders() {
@@ -86,11 +100,6 @@ namespace SHamilton.Util {
                 ParsePlaceholders();
             }
 
-            if (_placeholderRanges.Count > 0) {
-                LogWarn("Not all placeholders have been replaced! " +
-                        _placeholderRanges.Count+" placeholder(s) remain.");
-            }
-            
             Log("Replaced \""+_text+"\" with \""+replacedText+"\"");
             return replacedText;
         }

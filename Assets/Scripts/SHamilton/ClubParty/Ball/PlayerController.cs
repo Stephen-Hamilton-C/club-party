@@ -1,8 +1,8 @@
 using JetBrains.Annotations;
 using Photon.Pun;
 using Photon.Realtime;
-using SHamilton.ClubParty.Network;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using Logger = SHamilton.Util.Logger;
 
@@ -27,7 +27,9 @@ namespace SHamilton.ClubParty.Ball {
         [SerializeField] private Transform mouseTarget;
         [Tooltip("How quickly the mouse target keeps up with the mouse position")]
         [SerializeField] private float mouseTargetSpeed = 10f;
-
+        [Tooltip("Determines how long to wait after the ball has stopped moving to give control back to the user")]
+        [SerializeField] private float timeUntilNextTurn = 1f;
+        
         #region Input
         private CameraControls _controls;
         private InputAction _unlockCamCtrl;
@@ -48,6 +50,10 @@ namespace SHamilton.ClubParty.Ball {
         /// The PlayerInput component for the LocalPlayer
         /// </summary>
         private static PlayerInput _playerInput;
+        /// <summary>
+        /// The amount of time that has passed since the character was moving
+        /// </summary>
+        private float _timeSinceStopped;
         /// <summary>
         /// The instance of PlayerController for the LocalPlayer
         /// </summary>
@@ -98,11 +104,17 @@ namespace SHamilton.ClubParty.Ball {
         private void FixedUpdate() {
             if (!_view.IsMine) return;
         
-            // Update CanStroke and force the ball to stop if below cutOffVelocity
-            LocalPlayerState.CanStroke = _rb.velocity.magnitude <= cutOffVelocity;
-            // TODO: This is causing the ball to get stuck on slopes in certain cases. Perhaps drag should be increased?
-            if (LocalPlayerState.CanStroke)
-                _rb.velocity = Vector3.zero;
+            // Update CanStroke if below cutOffVelocity
+            var belowCutOff = _rb.velocity.magnitude <= cutOffVelocity;
+            if (!belowCutOff) {
+                LocalPlayerState.CanStroke = false;
+                _timeSinceStopped = 0;
+            } else if(!LocalPlayerState.CanStroke) {
+                _timeSinceStopped += Time.fixedDeltaTime;
+                if (_timeSinceStopped >= timeUntilNextTurn) {
+                    LocalPlayerState.CanStroke = true;
+                }
+            }
         }
 
         private void LateUpdate() {
@@ -115,8 +127,12 @@ namespace SHamilton.ClubParty.Ball {
                 _mousePos = hit.point;
             }
 
-            if (_unlockCamCtrl.IsPressed() || !LocalPlayerState.CanStroke || !_aiming) {
-                // TODO: Are the extra OR checks necessary?
+            if (
+                EventSystem.current.IsPointerOverGameObject() || 
+                _unlockCamCtrl.IsPressed() || 
+                !LocalPlayerState.CanStroke || 
+                !_aiming
+            ) {
                 // Player isn't aiming, ensure the indicator is hidden
                 _aiming = false;
                 mouseTarget.gameObject.SetActive(false);
@@ -164,6 +180,8 @@ namespace SHamilton.ClubParty.Ball {
         /// </summary>
         [UsedImplicitly]
         public void OnClick() {
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            
             _logger.Log("Registered player click");
             if (_aiming && LocalPlayerState.CanStroke) {
                 _aiming = false;

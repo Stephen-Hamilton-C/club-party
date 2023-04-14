@@ -1,203 +1,150 @@
 using System.Collections.Generic;
-using System.Linq;
-using JetBrains.Annotations;
+using System.Globalization;
 using Photon.Pun;
-using Photon.Realtime;
 using SHamilton.ClubParty.Network;
+using SHamilton.Util;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Logger = SHamilton.Util.Logger;
 using Random = UnityEngine.Random;
+#if UNITY_EDITOR
+using UnityEngine.SceneManagement;
+#endif
 
-// TODO: Redesign this system to utilize RoomProperties
+// TODO: Singleplayer is borked because of this script. Figure out why.
 namespace SHamilton.ClubParty.UI.Vote {
     [RequireComponent(typeof(PhotonView))]
-    public class Voting : MonoBehaviour {
-
+    public class Voting : MonoBehaviour, IPunObservable {
+    
         [SerializeField] private bool debug;
-        [SerializeField] private TextMeshProUGUI countdownText;
-        [SerializeField] private int courseCount = 4;
-        [SerializeField] private List<CourseData> allCourses = new();
-        [SerializeField] private int countdownStart = 15;
+        [SerializeField] private ToggleGroup toggleGroup;
+        [SerializeField] private TMP_Text countdownText;
+        [SerializeField] private List<CourseData> courses = new();
+        [SerializeField] private int countdownLength = 10;
 
         private Logger _logger;
         private PhotonView _view;
-        private double _timer = Mathf.Infinity;
-        private readonly Dictionary<string, TextMeshProUGUI> _texts = new();
-        private readonly Dictionary<string, CourseData> _courses = new();
-        private string _currentlyVotedCourse = "";
-        private string _origCountdownText = "";
-        
+        private VotingButton[] _buttons;
+
+        private double _countdownStartTime = -1;
+        private int[] _chosenCourses;
+
+        // TODO: I could probably just do some snazzy serial/deserialization so I don't have to dance around with indices
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (stream.IsReading) {
+                _logger.Log("Reading!");
+                _countdownStartTime = (double)stream.ReceiveNext();
+                _chosenCourses = (int[])stream.ReceiveNext();
+                UpdateButtons();
+            } else if (stream.IsWriting) {
+                _logger.Log("Writing!");
+                stream.SendNext(_countdownStartTime);
+                stream.SendNext(_chosenCourses);
+            }
+        }
+	
         private void Start() {
+            // Go back to main menu if this scene is loaded in editor
+            #if UNITY_EDITOR
+            if (!NetworkManager.IsConnected) {
+                SceneManager.LoadScene(0);
+            }
+            #endif
+            
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _view.OwnershipTransfer = OwnershipOption.Takeover;
-            _origCountdownText = countdownText.text;
             Cursor.visible = true;
             
             // Reset vote
-            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote] = null;
-            var propChanges = new Hashtable() { { PropertyKeys.CurrentVote, null } };
-            NetworkManager.LocalPlayer.SetCustomProperties(propChanges);
-            // NetworkManager.LocalPlayerProperties.CurrentVote = null;
-            // NetworkManager.LocalPlayerProperties.ApplyChanges();
+            NetworkManager.LocalPlayer.SetCurrentVote(-1);
+            
+            // Listen to each toggle
+            _buttons = toggleGroup.GetComponentsInChildren<VotingButton>();
+            foreach (var button in _buttons) {
+                button.Toggle.onValueChanged.AddListener((value) => { VoteChanged(button, value); });
+            }
             
             if (NetworkManager.IsMasterClient) {
+                // Ensure ownership so that these variables are sent
                 _view.TransferOwnership(NetworkManager.LocalPlayer);
-                _view.RPC("StartCountdownRPC", RpcTarget.AllBuffered, NetworkManager.Time);
+                _countdownStartTime = NetworkManager.Time;
+
+                // Pick random courses
+                _logger.Log("Picking courses...");
                 
-                _logger.Log("Picking next courses...");
-                var coursesToPick = allCourses.ToList();
-                var changedProperties = new Hashtable();
-                for (int i = 0; i < courseCount; i++) {
-                    var selectedIndex = Random.Range(0, coursesToPick.Count);
-                    var selectedCourse = coursesToPick[selectedIndex];
-                    changedProperties["VoteCourseName" + i] = selectedCourse.courseName;
-                    changedProperties["VoteCount_" + selectedCourse.courseName] = 0;
-                    coursesToPick.RemoveAt(selectedIndex);
-                    _logger.Log("Course "+i+" selected: "+selectedCourse.courseName);
+                // Create a list of all possible indices for the courses
+                var courseIndices = new List<int>();
+                for (int i = 0; i < courses.Count; i++) {
+                    courseIndices.Add(i);
                 }
+                _logger.Log("Course indices: "+courseIndices.ToCommaSeparatedString());
 
-                NetworkManager.CurrentRoom.SetCustomProperties(changedProperties);
-            }
-
-            NetworkManager.onRoomPropertiesChanged += RoomPropertiesChanged;
-            NetworkManager.onPlayerLeft += RemovePlayerVote;
-            RoomPropertiesChanged(NetworkManager.CurrentRoom.CustomProperties);
-        }
-
-        private void OnDestroy() {
-            _logger.Log("Goodbye, world!");
-            NetworkManager.CleanRpcBufferIfMine(_view);
-            NetworkManager.onRoomPropertiesChanged -= RoomPropertiesChanged;
-            NetworkManager.onPlayerLeft -= RemovePlayerVote;
-        }
-
-        private void VoteSelected(CourseData course) {
-            if (_currentlyVotedCourse == course.courseName) return;
-            _logger.Log("Voted for "+course.courseName);
-            
-            var changedProperties = new Hashtable();
-            var currentProperties = NetworkManager.CurrentRoom.CustomProperties;
-            if (_currentlyVotedCourse != "") {
-                var oldCourseKey = "VoteCount_" + _currentlyVotedCourse;
-                changedProperties[oldCourseKey] = (int)currentProperties[oldCourseKey] - 1;
-                _logger.Log("Decremented count from previously voted course: "+_currentlyVotedCourse);
-            }
-            
-            var newCourseKey = "VoteCount_" + course.courseName;
-            if (currentProperties[newCourseKey] == null) {
-                changedProperties[newCourseKey] = 1;
-                _logger.Log("No previous vote count for course. Set to 1.");
-            } else {
-                changedProperties[newCourseKey] = (int)currentProperties[newCourseKey] + 1;
-                _logger.Log("Set vote count to "+(int)changedProperties[newCourseKey]);
-            }
-
-            _currentlyVotedCourse = course.courseName;
-
-            NetworkManager.CurrentRoom.SetCustomProperties(changedProperties);
-            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote] = _currentlyVotedCourse;
-            var propChanges = new Hashtable() {{PropertyKeys.CurrentVote, _currentlyVotedCourse}};
-            NetworkManager.LocalPlayer.SetCustomProperties(propChanges);
-            // NetworkManager.LocalPlayerProperties.CurrentVote = _currentlyVotedCourse;
-            // NetworkManager.LocalPlayerProperties.ApplyChanges();
-        }
-        
-        private void RoomPropertiesChanged(Hashtable changedProperties) {
-            if (changedProperties.ContainsKey("VoteCourseName0")) {
-                _logger.Log("Properties changed. Received course names.");
+                // Randomly pick from these indices to send them over the network
+                _chosenCourses = new int[toggleGroup.transform.childCount];
+                for(int i = 0; i < _chosenCourses.Length; i++) {
+                    var selectedIndex = Random.Range(0, courseIndices.Count);
+                    _chosenCourses[i] = courseIndices[selectedIndex];
+                    courseIndices.Remove(selectedIndex);
+                    _logger.Log("Course selected: "+courses[selectedIndex].courseName);
+                }
                 
-                // MasterClient decided on rooms
-                var buttons = GetComponentsInChildren<Button>();
-                for (int i = 0; i < courseCount; i++) {
-                    var courseName = (string)changedProperties["VoteCourseName" + i];
-                    var course = allCourses.Find(it => it.courseName == courseName);
-                    _courses[courseName] = course;
-
-                    var text = buttons[i].GetComponentInChildren<TextMeshProUGUI>();
-                    text.text = courseName + " (0)";
-                    _texts[courseName] = text;
-                    buttons[i].onClick.AddListener(() => VoteSelected(course));
-                    _logger.Log("Added "+courseName);
-                }
-            }
-            
-            foreach (var (courseName, course) in _courses) {
-                if (changedProperties.ContainsKey("VoteCount_" + courseName)) {
-                    // Vote count has changed
-                    _logger.Log("Vote count changed for "+courseName);
-                    UpdateText(_texts[courseName], course);
-                }
+                UpdateButtons();
             }
         }
 
-        private void RemovePlayerVote(Player player) {
-            if (!NetworkManager.IsMasterClient) return;
-
-            // var playerProps = new PlayerProperties(player);
-            // if (playerProps.CurrentVote == null) return;
-            // var votedCourseName = playerProps.CurrentVote;
-            var votedCourseName = (string) NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CurrentVote];
-            if (votedCourseName == null) return;
-            var voteCountKey = "VoteCount_" + votedCourseName;
-            var currentVoteCount = (int)NetworkManager.CurrentRoom.CustomProperties[voteCountKey];
-            NetworkManager.CurrentRoom.SetCustomProperties(
-                new Hashtable() { { voteCountKey, currentVoteCount - 1 } }
-            );
-        }
-
-        private void UpdateText(TextMeshProUGUI text, CourseData course) {
-            var voteCount =
-                (int)NetworkManager.CurrentRoom.CustomProperties["VoteCount_" + course.courseName];
-            text.text = course.courseName + " (" + voteCount + ")";
-        }
-
-        [PunRPC]
-        [UsedImplicitly]
-        private void StartCountdownRPC(double startTime) {
-            var timeDifference = NetworkManager.Time - startTime;
-            if (timeDifference > countdownStart * 10) {
-                _logger.Err("NetworkManager.Time seems to have wrapped around. startTime: "+startTime+", NetworkManager.Time: "+NetworkManager.Time);
+        private void UpdateButtons() {
+            for (int i = 0; i < _buttons.Length; i++) {
+                var courseIndex = _chosenCourses[i];
+                _buttons[i].Course = courses[courseIndex];
             }
-            // TODO: Check if difference is larger than countdownStart * 2. If so, NetworkManager.Time wrapped around.
-            // Will need to account for this edge case
-            _timer = countdownStart - timeDifference;
-            _logger.Log("RPC received to start countdown. startTime: "+startTime+". Timer set to "+_timer);
+        }
+
+        private void VoteChanged(VotingButton button, bool value) {
+            if (!value) return;
+            var voteIndex = button.transform.GetSiblingIndex();
+            NetworkManager.LocalPlayer.SetCurrentVote(voteIndex);
+
+            // Get course name for debugging
+            if (debug) {
+                var votedCourseIndex = _chosenCourses[voteIndex];
+                var votedCourse = courses[votedCourseIndex];
+                _logger.Log("Voted for " + votedCourse.courseName);
+            }
         }
 
         private void Update() {
-            if (double.IsPositiveInfinity(_timer)) return;
+            if (_countdownStartTime < 0) return;
             
-            _timer -= Time.deltaTime;
-            countdownText.text = _origCountdownText + " (" + (int)_timer + ")";
-            
-            if (NetworkManager.IsMasterClient && _timer < 0) {
-                _timer = Mathf.Infinity;
-                
-                // Find course with most votes
-                _logger.Log("Timer finished as master client.");
-                CourseData chosenCourse = null;
-                var mostVotes = Mathf.NegativeInfinity;
-                var changedProperties = new Hashtable();
-                foreach (var (courseName, course) in _courses) {
-                    var votes = (int)NetworkManager.CurrentRoom.CustomProperties["VoteCount_" + courseName];
-                    if (votes >= mostVotes) {
-                        chosenCourse = course;
-                        mostVotes = votes;
-                    }
+            var timeSinceStart = NetworkManager.Time - _countdownStartTime;
+            var timeUntilEnd = countdownLength - timeSinceStart;
+            var countdownTimer = ((int)timeUntilEnd).ToString(CultureInfo.CurrentCulture);
+            countdownText.text = "Vote for the next Course ("+countdownTimer+")";
 
-                    // Reset vote count
-                    changedProperties["VoteCount_" + courseName] = 0;
+            if (NetworkManager.IsMasterClient && timeSinceStart >= countdownLength) {
+                _countdownStartTime = -1;
+                _logger.Log("Timer finished as master client.");
+                var courseVotes = new int[_chosenCourses.Length];
+                foreach (var player in NetworkManager.Players) {
+                    var playerVote = player.GetCurrentVote();
+                    if (playerVote < 0 || playerVote >= courseVotes.Length) continue;
+
+                    courseVotes[playerVote]++;
                 }
 
-                _logger.Log("Most voted course: "+chosenCourse!.courseName);
-                NetworkManager.CurrentRoom.SetCustomProperties(changedProperties);
+                var mostVotedIndex = 0;
+                for (int i = 1; i < courseVotes.Length; i++) {
+                    if (courseVotes[mostVotedIndex] < courseVotes[i]) {
+                        mostVotedIndex = i;
+                    }
+                }
 
-                // Load first hole for course
-                NetworkManager.LoadLevel(chosenCourse!.courseScene);
+                var chosenCourseIndex = _chosenCourses[mostVotedIndex];
+                var chosenCourse = courses[chosenCourseIndex];
+                _logger.Log("Course chosen: " + chosenCourse.courseName);
+                NetworkManager.LoadLevel(chosenCourse.courseScene);
             }
         }
     }
