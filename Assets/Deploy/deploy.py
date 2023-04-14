@@ -49,6 +49,30 @@ print("Remote staging directory is at "+stageDir)
 print("Remote URL/IP Address is "+remoteUrl)
 print()
 
+## Modify index.html so game stretches to screen
+indexPath = os.path.join(buildPath, "index.html")
+
+# Read in all lines
+fileLines = []
+with open(indexPath, "r") as indexFile:
+    fileLines = indexFile.readlines()
+
+# Write in all the lines, only modifying the ones we care about
+with open(indexPath, "w") as indexFile:
+    removeNextBrace = False
+    for line in fileLines:
+        if line.find(".test(navigator.userAgent)") != -1:
+            # Remove if check
+            removeNextBrace = True
+        elif removeNextBrace and line.find("}") != -1:
+            # Remove closing brace from if check
+            removeNextBrace = False
+        else:
+            # This isn't the if check, leave the line alone
+            indexFile.write(line)
+
+
+
 ## Compress WebGL build into zip
 def get_all_file_paths(directory):
   
