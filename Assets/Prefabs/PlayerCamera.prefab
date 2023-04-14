@@ -2202,6 +2202,16 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 32
       objectReference: {fileID: 0}
+    - target: {fileID: 5536140701772773647, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_overflowMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140701772773647, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_enableWordWrapping
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33a00528c6fa40942b3678e74f5cbd8d, type: 3}
 --- !u!1 &1538490916284908294 stripped
