@@ -8,6 +8,7 @@ namespace SHamilton.ClubParty.Interactables {
     
         [SerializeField] private bool debug;
         [SerializeField] private float padForce = 5f;
+        [SerializeField] private float directionalForce = 2f;
 
         private Logger _logger;
         private Animator _animator;
@@ -39,10 +40,11 @@ namespace SHamilton.ClubParty.Interactables {
             
             // Prevent ball from getting stuck on pad by applying directional force as well
             playerVelocity.y = 0;
-            if (playerVelocity.magnitude < 1) {
-                _logger.Log("Player too slow, applying extra force: "+playerVelocity.normalized);
-                force += playerVelocity.normalized;
-            }
+            // if (playerVelocity.magnitude < 1) {
+                // _logger.Log("Player too slow, applying extra force: "+playerVelocity.normalized);
+                // force += playerVelocity.normalized;
+            // }
+            force += playerVelocity.normalized * directionalForce;
 
             rb.AddForce(force, ForceMode.Impulse);
             _logger.Log("Applied final jump force to "+rb.gameObject.name);
