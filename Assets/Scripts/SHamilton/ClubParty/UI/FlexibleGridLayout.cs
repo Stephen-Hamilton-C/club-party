@@ -1,12 +1,9 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty.UI {
     public class FlexibleGridLayout : LayoutGroup {
     
-        [SerializeField] private bool debug;
-
         public enum FitType {
             Uniform,
             Width,
@@ -23,13 +20,6 @@ namespace SHamilton.ClubParty.UI {
         public bool fitX;
         public bool fitY;
 
-        private Logger _logger;
-	
-        protected override void Start() {
-            base.Start();
-            _logger = new(this, debug);
-        }
-        
         public override void CalculateLayoutInputHorizontal() {
             base.CalculateLayoutInputHorizontal();
             
