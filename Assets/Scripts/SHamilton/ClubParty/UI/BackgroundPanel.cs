@@ -11,10 +11,12 @@ namespace SHamilton.ClubParty.UI {
 
         private CanvasGroup _canvas;
 
+        #if UNITY_EDITOR
         protected override void Reset() {
             base.Reset();
             color = Color.black * 0.1f;
         }
+        #endif
 
         protected override void Awake() {
             base.Awake();
