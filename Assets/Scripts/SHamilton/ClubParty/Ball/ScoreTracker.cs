@@ -11,6 +11,8 @@ namespace SHamilton.ClubParty.Ball {
         [SerializeField] private bool debug;
         [SerializeField] private int lateJoinScore;
 
+        public int Strokes => _scores[GameManager.HoleIndex] + GameManager.Instance.CurrentHole.Par;
+
         private int[] _scores;
 
         private Logger _logger;
