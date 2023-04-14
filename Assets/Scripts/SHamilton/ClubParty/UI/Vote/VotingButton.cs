@@ -4,7 +4,6 @@ using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.UI.Flair;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Logger = SHamilton.Util.Logger;
 
@@ -25,7 +24,7 @@ namespace SHamilton.ClubParty.UI.Vote {
             }
         }
         private CourseData _course;
-        
+
         private Logger _logger;
         private Toggle _toggle;
         private SelectableColor _selectableColor;
