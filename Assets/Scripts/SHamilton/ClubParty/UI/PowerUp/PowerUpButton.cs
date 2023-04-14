@@ -27,12 +27,19 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             }
         }
 
-        private void Update() {
-            var visible = _storedPowerUps.PowerUps.Count - 1 >= powerUpIndex;
+        private void SetVisibility(bool visible) {
             Button.enabled = visible;
+            ButtonImage.raycastTarget = visible;
+            
             var color = ButtonImage.color;
             color.a = visible ? 1f : 0f;
             ButtonImage.color = color;
+        }
+
+        private void Update() {
+            var visible = _storedPowerUps.PowerUps.Count - 1 >= powerUpIndex;
+            SetVisibility(visible);
+            
             if (visible) {
                 Button.interactable = PowerUp.CanSelect;
                 ButtonText!.text = PowerUp.Name;
