@@ -29,7 +29,6 @@ namespace SHamilton.ClubParty.Network {
         public delegate void PlayerPropertyEvent(Player player, Hashtable changedProperties);
         public delegate void PlayerEvent(Player player);
 
-        // TODO: Documentation on events
         /// <summary>
         /// Event when the game connects to Photon's master server
         /// </summary>

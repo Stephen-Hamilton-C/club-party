@@ -13,7 +13,6 @@ using Random = UnityEngine.Random;
 using UnityEngine.SceneManagement;
 #endif
 
-// TODO: Singleplayer is borked because of this script. Figure out why.
 namespace SHamilton.ClubParty.UI.Vote {
     [RequireComponent(typeof(PhotonView))]
     public class Voting : MonoBehaviour, IPunObservable {

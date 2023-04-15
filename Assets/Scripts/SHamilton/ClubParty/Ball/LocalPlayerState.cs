@@ -4,7 +4,6 @@ using SHamilton.ClubParty.Network;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
 
-// TODO: Make this specific to each player again. Make a static LocalInstance variable instead.
 namespace SHamilton.ClubParty.Ball {
     /// <summary>
     /// Holds general information about the LocalPlayer
