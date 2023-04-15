@@ -30,14 +30,43 @@ namespace SHamilton.ClubParty.Network {
         public delegate void PlayerEvent(Player player);
 
         // TODO: Documentation on events
+        /// <summary>
+        /// Event when the game connects to Photon's master server
+        /// </summary>
         public static event TriggerEvent onConnectedToMaster;
+        /// <summary>
+        /// Event when the local player joins a room
+        /// </summary>
         public static event TriggerEvent onJoinedRoom;
+        /// <summary>
+        /// Event when the local player leaves a room
+        /// </summary>
         public static event TriggerEvent onLeftRoom;
+        /// <summary>
+        /// Event when another player joins the current room
+        /// </summary>
         public static event PlayerEvent onPlayerJoined;
+        /// <summary>
+        /// Event when another player leaves the current room
+        /// </summary>
         public static event PlayerEvent onPlayerLeft;
+        /// <summary>
+        /// Event when the game disconnects from the Photon master server
+        /// </summary>
         public static event DisconnectedEvent onDisconnected;
+        /// <summary>
+        /// Event when the room properties change
+        /// </summary>
         public static event RoomPropertyEvent onRoomPropertiesChanged;
+        /// <summary>
+        /// Event when a player's custom properties change
+        /// </summary>
         public static event PlayerPropertyEvent onPlayerPropertiesChanged;
+        /// <summary>
+        /// Event when the game is attempting to connect to multiplayer.
+        /// The next event would be onConnectedToMaster, then onJoinedRoom.
+        /// If the connection fails, onDisconnected is called.
+        /// </summary>
         public static event TriggerEvent onConnectionStart;
         #endregion
 
