@@ -12,7 +12,7 @@ namespace SHamilton.ClubParty.UI.PowerUp {
         public Player Player;
         
         private Logger _logger;
-        private PlaceholderReplacer _replacer;
+        private Placeholder _replacer;
         private OffensivePowerUpData PowerUp => OffensivePowerUpSelector.CurrentPowerUp;
         private GameObject _character;
 	
@@ -20,9 +20,9 @@ namespace SHamilton.ClubParty.UI.PowerUp {
             base.Start();
             
             _logger = new(this, debug);
-            _replacer = new PlaceholderReplacer(ButtonText!.text)
-                .Replace("PLAYERNAME").With(Player.NickName);
-            ButtonText!.text = _replacer.ReplacePlaceholders();
+            _replacer = new Placeholder(ButtonText!.text)
+                .Set("PLAYERNAME", Player.NickName);
+            ButtonText!.text = _replacer.Replace();
 
             _character = Player.GetCharacter();
         }
