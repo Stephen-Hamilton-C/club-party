@@ -12,6 +12,7 @@ namespace SHamilton.ClubParty.UI {
         [SerializeField] private GameObject scoreboardPlayerPrefab;
         [SerializeField] private Transform playersContainer;
         [SerializeField] private TextMeshProUGUI[] parScores;
+        [SerializeField] private TextMeshProUGUI parTotal;
 
         private Logger _logger;
         private bool _scoreboardShown;
@@ -39,9 +40,13 @@ namespace SHamilton.ClubParty.UI {
         private void ShowScoreboard() {
             _logger.Log("Showing scoreboard...");
             _scoreboardShown = true;
+            var total = 0;
             for (int i = 0; i < parScores.Length; i++) {
-                parScores[i].text = GameManager.Instance.holes[i].Par.ToString();
+                var par = GameManager.Instance.holes[i].Par;
+                parScores[i].text = par.ToString();
+                total += par;
             }
+            parTotal.text = total.ToString();
             
             foreach(var player in NetworkManager.Players) {
                 var scoreboardPlayer = Instantiate(scoreboardPlayerPrefab, playersContainer);
