@@ -32,7 +32,7 @@ namespace SHamilton.Util {
         /// <returns>This Placeholder instance, to allow chained calls</returns>
         public Placeholder Set(string placeholderName, string replaceText) {
             _isCacheDirty = true;
-            _placeholderValues.Add(placeholderName, replaceText);
+            _placeholderValues[placeholderName] = replaceText;
             return this;
         }
         
