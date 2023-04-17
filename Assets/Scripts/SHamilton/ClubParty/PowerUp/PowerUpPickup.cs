@@ -1,6 +1,7 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Photon.Pun;
+using Photon.Realtime;
 using SHamilton.ClubParty.Network;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
@@ -20,7 +21,27 @@ namespace SHamilton.ClubParty.PowerUp {
         private void Start() {
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
-            _powerUps = StoredPowerUps.PowerUpDatas.Values.ToArray();
+            UpdatePowerUpList();
+
+            NetworkManager.onPlayerJoined += UpdatePowerUpList;
+            NetworkManager.onPlayerLeft += UpdatePowerUpList;
+        }
+
+        private void OnDestroy() {
+            NetworkManager.onPlayerJoined -= UpdatePowerUpList;
+            NetworkManager.onPlayerLeft -= UpdatePowerUpList;
+        }
+
+        private void UpdatePowerUpList(Player _ = null) {
+            if (NetworkManager.PlayerCount > 1) {
+                _powerUps = StoredPowerUps.PowerUpDatas.Values
+                    .ToArray();
+            } else {
+                // Don't let players pickup Offensive Power Ups if they're the only one in-game
+                _powerUps = StoredPowerUps.PowerUpDatas.Values
+                    .Where(data => data is not OffensivePowerUpData)
+                    .ToArray();
+            }
         }
 
         private void OnTriggerEnter(Collider other) {
