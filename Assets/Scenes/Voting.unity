@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Vote for the next Course (10)
+  m_text: Vote for the next Course (%NUM%)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8b0982b7487c6a54eb3516361ad23863, type: 2}
   m_sharedMaterial: {fileID: 5287771534153577669, guid: 8b0982b7487c6a54eb3516361ad23863,
@@ -317,7 +317,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Course Name
+  m_text: '%NAME% (%NUM%)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8b0982b7487c6a54eb3516361ad23863, type: 2}
   m_sharedMaterial: {fileID: 5287771534153577669, guid: 8b0982b7487c6a54eb3516361ad23863,
@@ -522,7 +522,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Course Name
+  m_text: '%NAME% (%NUM%)'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8b0982b7487c6a54eb3516361ad23863, type: 2}
   m_sharedMaterial: {fileID: 5287771534153577669, guid: 8b0982b7487c6a54eb3516361ad23863,

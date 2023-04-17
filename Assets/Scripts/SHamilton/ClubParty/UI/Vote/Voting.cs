@@ -26,6 +26,7 @@ namespace SHamilton.ClubParty.UI.Vote {
         private Logger _logger;
         private PhotonView _view;
         private VotingButton[] _buttons;
+        private Placeholder _countdownReplacer;
 
         private double _countdownStartTime = -1;
         private int[] _chosenCourses;
@@ -55,6 +56,7 @@ namespace SHamilton.ClubParty.UI.Vote {
             _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
             _view.OwnershipTransfer = OwnershipOption.Takeover;
+            _countdownReplacer = new Placeholder(countdownText.text);
             Cursor.visible = true;
             
             // Reset vote
@@ -120,7 +122,9 @@ namespace SHamilton.ClubParty.UI.Vote {
             var timeSinceStart = NetworkManager.Time - _countdownStartTime;
             var timeUntilEnd = countdownLength - timeSinceStart;
             var countdownTimer = ((int)timeUntilEnd).ToString(CultureInfo.CurrentCulture);
-            countdownText.text = "Vote for the next Course ("+countdownTimer+")";
+            countdownText.text = _countdownReplacer
+                .Set("NUM", countdownTimer)
+                .Replace();
 
             if (NetworkManager.IsMasterClient && timeSinceStart >= countdownLength) {
                 _countdownStartTime = -1;

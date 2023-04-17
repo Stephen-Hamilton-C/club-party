@@ -2,6 +2,7 @@ using ExitGames.Client.Photon;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
 using SHamilton.ClubParty.UI.Flair;
+using SHamilton.Util;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,12 +30,14 @@ namespace SHamilton.ClubParty.UI.Vote {
         private Toggle _toggle;
         private SelectableColor _selectableColor;
         private TMP_Text _text;
+        private Placeholder _nameReplacer;
 	
         private void Awake() {
             _logger = new(this, debug);
             _toggle = GetComponent<Toggle>();
             _selectableColor = GetComponent<SelectableColor>();
             _text = GetComponentInChildren<TMP_Text>();
+            _nameReplacer = new Placeholder(_text.text);
 
             Toggle.onValueChanged.AddListener(ValueChanged);
 
@@ -60,8 +63,11 @@ namespace SHamilton.ClubParty.UI.Vote {
                 }
             }
 
-            if(_course)
-                _text.text = _course.courseName + " ("+voteCount+")";
+            if (_course)
+                _text.text = _nameReplacer
+                    .Set("NAME", _course.courseName)
+                    .Set("NUM", voteCount)
+                    .Replace();
         }
 
         private void ValueChanged(bool value) {
