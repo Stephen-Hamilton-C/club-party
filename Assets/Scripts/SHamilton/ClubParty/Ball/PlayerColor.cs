@@ -1,4 +1,7 @@
+using System;
+using ExitGames.Client.Photon;
 using Photon.Pun;
+using Photon.Realtime;
 using SHamilton.ClubParty.Network;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
@@ -22,10 +25,27 @@ namespace SHamilton.ClubParty.Ball {
             _view = GetComponent<PhotonView>();
             _renderer = GetComponent<Renderer>();
 
-            // var color = new PlayerProperties(_view.Owner).CharacterColor;
-            var color = (Color) _view.Owner.CustomProperties[PropertyKeys.CharacterColor];
+            UpdateColor();
+            NetworkManager.onPlayerPropertiesChanged += PlayerPropertiesChanged;
+            
+            if (_view.IsMine && NetworkManager.LocalPlayer.GetCharacterColor() == null) {
+                NetworkManager.LocalPlayer.SetCharacterColor(Prefs.CharacterColor);
+            }
+        }
+
+        private void OnDestroy() {
+            NetworkManager.onPlayerPropertiesChanged -= PlayerPropertiesChanged;
+        }
+
+        private void UpdateColor() {
+            var color = _view.Owner.GetCharacterColor();
             _logger.Log("Changing color to "+color);
-            _renderer.material.color = color;
+            _renderer.material.color = color ?? Color.white;
+        }
+
+        private void PlayerPropertiesChanged(Player player, Hashtable changedProperties) {
+            if (!changedProperties.ContainsKey(PropertyKeys.CharacterColor)) return;
+            UpdateColor();
         }
     }
 }

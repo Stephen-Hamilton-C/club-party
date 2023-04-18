@@ -21,9 +21,9 @@ namespace SHamilton.ClubParty.UI.MainMenu {
             _group = GetComponent<ToggleGroup>();
             _toggles = GetComponentsInChildren<Toggle>();
 
-            var selectedColor = PlayerPrefs.GetString("CharacterColor", "White");
+            var selectedColor = Prefs.CharacterColor;
             foreach (var toggle in _toggles) {
-                toggle.isOn = toggle.name == selectedColor;
+                toggle.isOn = toggle.image.color == selectedColor;
                 
                 _logger.Log("Adding "+toggle.name);
                 toggle.onValueChanged.AddListener((value) => {
@@ -35,13 +35,14 @@ namespace SHamilton.ClubParty.UI.MainMenu {
                 if (toggle.isOn)
                     UpdateColor(toggle);
             }
+            
             _group.EnsureValidState();
         }
 
         private void UpdateColor(Toggle toggle) {
-            PlayerPrefs.SetString("CharacterColor", toggle.name);
-            var color = toggle.GetComponent<Image>().color;
-            NetworkManager.LocalPlayer.CustomProperties[PropertyKeys.CharacterColor] = color;
+            var color = toggle.image.color;
+            Prefs.CharacterColor = color;
+            NetworkManager.LocalPlayer.SetCharacterColor(color);
             onColorSelected.Invoke(color);
             _logger.Log("Saved color as "+toggle.name+" and set CharacterColor to "+color);
         }
