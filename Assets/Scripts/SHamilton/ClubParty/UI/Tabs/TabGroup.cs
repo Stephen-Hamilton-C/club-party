@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
@@ -8,25 +9,19 @@ namespace SHamilton.ClubParty.UI.Tabs {
     public class TabGroup : MonoBehaviour {
 
         [SerializeField] private bool debug;
-        [SerializeField] private List<GameObject> pages = new();
         [SerializeField] private Sprite tabIdle;
         [SerializeField] private Sprite tabHover;
         [SerializeField] private Sprite tabActive;
         [SerializeField, CanBeNull] private TabButton selectedTab;
         
         private Logger _logger;
-        private List<TabButton> _tabButtons = new();
+        private TabButton[] _tabButtons;
 	
-        private void Awake() {
+        private void Start() {
             _logger = new(this, debug);
-        }
-
-        public void Subscribe(TabButton button) {
-            _tabButtons.Add(button);
-            if (button == selectedTab) {
-                _logger.Log("Found default tab.");
-                OnTabSelected(button);
-            }
+            _tabButtons = GetComponentsInChildren<TabButton>();
+            if(selectedTab)
+                OnTabSelected(selectedTab);
         }
 
         public void OnTabEnter(TabButton button) {
@@ -55,12 +50,22 @@ namespace SHamilton.ClubParty.UI.Tabs {
             ResetTabs();
             button.background.sprite = tabActive;
 
-            var tabIndex = button.transform.GetSiblingIndex();
-            for (int i = 0; i < pages.Count; i++) {
-                pages[i].SetActive(i == tabIndex);
-            }
-            
             button.Select();
+        }
+
+        public void PreviousTab() {
+            var previousIndex = Array.IndexOf(_tabButtons, selectedTab) - 1;
+            if (previousIndex < 0)
+                previousIndex = _tabButtons.Length - 1;
+            
+            _logger.Log("Going to tab at previous index: "+previousIndex);
+            OnTabSelected(_tabButtons[previousIndex]);
+        }
+
+        public void NextTab() {
+            var nextIndex = (Array.IndexOf(_tabButtons, selectedTab) + 1) % _tabButtons.Length;
+            _logger.Log("Going to tab at next index: "+nextIndex);
+            OnTabSelected(_tabButtons[nextIndex]);
         }
 
         private void ResetTabs() {

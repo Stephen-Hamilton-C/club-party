@@ -9,6 +9,7 @@ namespace SHamilton.ClubParty.UI.Tabs {
     public class TabButton : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler, IPointerExitHandler {
 
         [SerializeField] private TabGroup tabGroup;
+        [SerializeField] public GameObject page;
         public Image background;
 
         public UnityEvent onTabSelected = new();
@@ -21,7 +22,6 @@ namespace SHamilton.ClubParty.UI.Tabs {
         private void Start() {
             _logger = new(this, debug);
             background = GetComponent<Image>();
-            tabGroup.Subscribe(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData) {
@@ -37,10 +37,12 @@ namespace SHamilton.ClubParty.UI.Tabs {
         }
 
         public void Select() {
+            page.SetActive(true);
             onTabSelected.Invoke();
         }
 
         public void Deselect() {
+            page.SetActive(false);
             onTabDeselected.Invoke();
         }
     }
