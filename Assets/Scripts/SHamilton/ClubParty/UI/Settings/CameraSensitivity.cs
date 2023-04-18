@@ -8,9 +8,9 @@ namespace SHamilton.ClubParty.UI.Settings {
         
         private void Start() {
             var slider = GetComponent<Slider>();
-            slider.value = PlayerPrefs.GetFloat("MouseSensitivity", slider.value);
+            slider.value = Prefs.MouseSensitivity;
             slider.onValueChanged.AddListener((value) => {
-                PlayerPrefs.SetFloat("MouseSensitivity", value);
+                Prefs.MouseSensitivity = value;
             });
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using ExitGames.Client.Photon;
+using JetBrains.Annotations;
 using Photon.Realtime;
 using UnityEngine;
 
@@ -39,17 +40,32 @@ namespace SHamilton.ClubParty.Network {
         }
 
         public static int GetCurrentVote(this Player player) {
-            if (player.CustomProperties[PropertyKeys.CurrentVote] == null)
-                return -1;
-            
-            var currentVote = (int)player.CustomProperties[PropertyKeys.CurrentVote];
-            return currentVote;
+            return (int)player.GetProperty(PropertyKeys.CurrentVote, -1)!;
         }
 
         public static void SetCurrentVote(this Player player, int vote) {
-            player.CustomProperties[PropertyKeys.CurrentVote] = vote;
-            var propChanges = new Hashtable() { { PropertyKeys.CurrentVote, vote } };
-            player.SetCustomProperties(propChanges);
+            player.SetProperty(PropertyKeys.CurrentVote, vote);
+        }
+
+        public static Color? GetCharacterColor(this Player player) {
+            return (Color?)player.GetProperty(PropertyKeys.CharacterColor);
+        }
+
+        public static void SetCharacterColor(this Player player, Color color) {
+            player.SetProperty(PropertyKeys.CharacterColor, color);
+        }
+
+        [CanBeNull]
+        private static object GetProperty(this Player player, string key, object defaultValue = null) {
+            return player.CustomProperties[key] ?? defaultValue;
+        }
+
+        private static void SetProperty(this Player player, string key, object value) {
+            player.CustomProperties[key] = value;
+            if (NetworkManager.IsConnected) {
+                var propChanges = new Hashtable() { { key, value } };
+                player.SetCustomProperties(propChanges);
+            }
         }
     }
 }

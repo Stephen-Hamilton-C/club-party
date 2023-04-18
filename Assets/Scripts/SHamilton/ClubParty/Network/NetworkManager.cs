@@ -80,7 +80,7 @@ namespace SHamilton.ClubParty.Network {
         public static string PlayerName {
             get => PhotonNetwork.NickName;
             set {
-                PlayerPrefs.SetString("PlayerName", value);
+                Prefs.PlayerName = value;
                 PhotonNetwork.NickName = value;
             }
         }
@@ -373,7 +373,7 @@ namespace SHamilton.ClubParty.Network {
             RegisterSerializers();
         
             // Load name and initialize settings
-            PhotonNetwork.NickName = PlayerPrefs.GetString("PlayerName", "Player");
+            PhotonNetwork.NickName = Prefs.PlayerName;
             PhotonNetwork.AutomaticallySyncScene = true;
         
             DontDestroyOnLoad(this);

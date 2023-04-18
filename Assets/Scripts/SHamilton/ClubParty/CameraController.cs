@@ -123,7 +123,7 @@ namespace SHamilton.ClubParty {
             if (cameraUnlocked && _lookCtrl.triggered) {
                 var mouse = _lookCtrl.ReadValue<Vector2>();
                 var localRot = _pivot.localRotation.eulerAngles;
-                var sensitivity = PlayerPrefs.GetFloat("MouseSensitivity", 2.5f);
+                var sensitivity = Prefs.MouseSensitivity;
             
                 // Calculate pitch
                 var oldPitch = _pitch;
