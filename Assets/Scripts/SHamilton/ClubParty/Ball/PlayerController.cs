@@ -31,7 +31,7 @@ namespace SHamilton.ClubParty.Ball {
         [SerializeField] private float timeUntilNextTurn = 1f;
         
         #region Input
-        private CameraControls _controls;
+        private Controls _controls;
         private InputAction _unlockCamCtrl;
         #endregion
     
@@ -64,9 +64,11 @@ namespace SHamilton.ClubParty.Ball {
         /// </summary>
         private bool _aiming;
 
+        private bool _isMouseOverUI;
+
         private void Awake() {
-            _controls = new();
-            _unlockCamCtrl = _controls.Player.CameraUnlock;
+            _controls = new Controls();
+            _unlockCamCtrl = _controls.Camera.CameraUnlock;
         }
 
         private void OnEnable() {
@@ -119,6 +121,7 @@ namespace SHamilton.ClubParty.Ball {
 
         private void LateUpdate() {
             if (!_view.IsMine) return;
+            _isMouseOverUI = EventSystem.current.IsPointerOverGameObject();
             
             // Update mouse position on control plane
             var ray = _camera.ScreenPointToRay(_mouseScreenPos);
@@ -180,7 +183,7 @@ namespace SHamilton.ClubParty.Ball {
         /// </summary>
         [UsedImplicitly]
         public void OnClick() {
-            if (EventSystem.current.IsPointerOverGameObject()) return;
+            if (_isMouseOverUI) return;
             
             _logger.Log("Registered player click");
             if (_aiming && LocalPlayerState.CanStroke) {

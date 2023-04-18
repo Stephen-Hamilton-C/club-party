@@ -65,10 +65,10 @@ namespace SHamilton.ClubParty {
 
         private void Awake() {
             // Init inputs
-            CameraControls controls = new();
-            _lookCtrl = controls.Player.Look;
-            _unlockCamCtrl = controls.Player.CameraUnlock;
-            _zoomCtrl = controls.Player.Zoom;
+            var controls = new Controls();
+            _lookCtrl = controls.Camera.Look;
+            _unlockCamCtrl = controls.Camera.CameraUnlock;
+            _zoomCtrl = controls.Camera.Zoom;
         }
 
         private void OnEnable() {

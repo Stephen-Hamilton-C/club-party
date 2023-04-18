@@ -1,69 +1,69 @@
 {
-    "name": "CameraControls",
+    "name": "Controls",
     "maps": [
         {
             "name": "Player",
             "id": "663a158f-de0f-4221-88fc-f8f41bb88578",
             "actions": [
                 {
-                    "name": "Look",
-                    "type": "Value",
-                    "id": "472417c4-ca21-4e5e-af88-2f15992e60f4",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
-                    "name": "CameraUnlock",
+                    "name": "Click",
                     "type": "Button",
-                    "id": "3205a12a-21dc-4ff6-a53f-8b2b1333a7cb",
+                    "id": "b1209bd2-7cf0-4cf6-9dac-7ce899cb8571",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Zoom",
+                    "name": "MouseMove",
                     "type": "Value",
-                    "id": "433b546a-073a-4326-8153-00ddb46f1bac",
-                    "expectedControlType": "Axis",
+                    "id": "3f9f72f7-1fd6-4988-8bd8-f92a7b53001d",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "CancelShot",
+                    "type": "Button",
+                    "id": "4d57a694-5f4f-4a6b-b147-646ed3ed7a68",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "8c8e490b-c610-4785-884f-f04217b23ca4",
-                    "path": "<Pointer>/delta",
+                    "id": "14a4ad5b-6509-45e7-8628-66c193df89b5",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse;Touch",
-                    "action": "Look",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "a4c6d02d-bae4-4796-aadc-0236da0b2c3d",
-                    "path": "<Mouse>/rightButton",
+                    "id": "68c85ef1-3042-4ea6-85f1-75543b24037c",
+                    "path": "<Mouse>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "CameraUnlock",
+                    "action": "MouseMove",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "31f482bd-5a7a-4244-9320-4f81e8739e57",
-                    "path": "<Mouse>/scroll/y",
+                    "id": "3ef4061a-176e-4e55-ae61-ea4490715116",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Zoom",
+                    "action": "CancelShot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -159,6 +159,15 @@
                     "type": "PassThrough",
                     "id": "47fad19a-3633-4aad-8a44-b8e4cfdcafc6",
                     "expectedControlType": "Quaternion",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "TabNavigation",
+                    "type": "PassThrough",
+                    "id": "841dbdd3-d78a-437c-98c7-dfea88dfea39",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -580,6 +589,140 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Keyboard",
+                    "id": "0623edc5-5cc3-483e-8a60-c680f63c34ae",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TabNavigation",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "a97d00a0-96c8-4983-b33d-3a009e7e2bae",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "TabNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "3961595b-c1d8-4fad-8cfb-c162fe768308",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "TabNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Gamepad",
+                    "id": "e2cdd0d4-8f6f-43f7-b247-a6f26f978c09",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "TabNavigation",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "ebb94aa7-0da6-4075-b966-31e0b60ab391",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "TabNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "54b48bb8-cbc7-4857-95f5-ce8ada8742a5",
+                    "path": "<Gamepad>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "TabNavigation",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Camera",
+            "id": "92a11310-f49b-4d75-8d5e-4b868295d208",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "9c91521b-6e37-4368-8e36-0177a98bd4bd",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "CameraUnlock",
+                    "type": "Button",
+                    "id": "a5b220c7-2949-4dbe-87ad-5d2414e93ad9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "5031f7ac-b867-43de-81fe-ca2ec05ad750",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3b39f94a-2711-4a59-8fe7-41a2d161ab87",
+                    "path": "<Pointer>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse;Touch",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34009249-fddb-4953-a1aa-1b4b43f4c869",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CameraUnlock",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fad01d59-2794-495b-8c34-2344675271a8",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
