@@ -31,7 +31,6 @@ namespace SHamilton.ClubParty {
             if (shouldDeploy) {
                 // TODO: Maybe try a separate thread? The editor appears to hang when yes is clicked.
                 // TODO: Test this with Windows
-                Debug.LogWarning("NOT IMPLEMENTED: Need to run deploy.py");
                 var deployScript = Path.Join(deployDir, "deploy.py");
                 var process = new Process();
                 process.StartInfo = new ProcessStartInfo("python", deployScript) {
