@@ -5,6 +5,8 @@ using System.IO;
 using System.Diagnostics;
 using Debug = UnityEngine.Debug;
 
+// FIXME: When this deploys, the scene is empty!
+// Check if this is a caching issue or if this is hooking in too early
 namespace SHamilton.ClubParty {
     public static class AutoDeploy {
         [PostProcessBuild(100)]
