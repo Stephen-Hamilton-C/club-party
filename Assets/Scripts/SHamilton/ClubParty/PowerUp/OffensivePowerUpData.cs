@@ -17,7 +17,7 @@ namespace SHamilton.ClubParty.PowerUp {
         public void ApplyToPlayer(Player player) {
             var character = player.GetCharacter();
             var view = character.GetComponent<PhotonView>();
-            view.RPC("AddPowerUpComponentRPC", RpcTarget.AllBuffered, Name);
+            view.RPC("AddPowerUpComponentRPC", view.Owner, Name);
 
             RemoveFromStorage();
         }

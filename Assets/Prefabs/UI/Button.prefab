@@ -158,8 +158,8 @@ MonoBehaviour:
   idleBottom: 25
   highlightedTop: 18
   highlightedBottom: 32
-  pressedTop: 32
-  pressedBottom: 18
+  pressedTop: 30
+  pressedBottom: 20
   disabledTop: 39
   disabledBottom: 11
 --- !u!1 &5536140701772773641

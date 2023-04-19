@@ -29,7 +29,7 @@ namespace SHamilton.ClubParty.UI.PowerUp {
 
         private void Update() {
             // Don't let player be selected if the PowerUp is already applied
-            Button.interactable = !_character.TryGetComponent(PowerUp.ComponentType, out _);
+            // Button.interactable = !_character.TryGetComponent(PowerUp.ComponentType, out _);
         }
 
         protected override void OnClick() {

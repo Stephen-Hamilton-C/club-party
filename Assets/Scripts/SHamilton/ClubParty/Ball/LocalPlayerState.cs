@@ -36,11 +36,13 @@ namespace SHamilton.ClubParty.Ball {
             }
         }
         private static bool _canStroke;
+
+        public static bool Stroked => _stroked;
+        private static bool _stroked;
     
         private static LocalPlayerState _instance;
         private PhotonView _view;
         private OutOfBounds _outOfBounds;
-        private static bool _stroked;
         private Logger _logger;
     
         private void Awake() {
@@ -97,7 +99,7 @@ namespace SHamilton.ClubParty.Ball {
         /// <summary>
         /// Informs the LocalPlayerState that a stroke has been performed
         /// </summary>
-        public static void Stroked() {
+        public static void Stroke() {
             _stroked = true;
             OnStroke?.Invoke();
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
@@ -109,12 +110,20 @@ namespace SHamilton.ClubParty {
             NetworkManager.onPlayerLeft += PlayerLeft;
         }
 
+        private IEnumerator MovePlayer() {
+            _localCharRb.isKinematic = true;
+            yield return new WaitForFixedUpdate();
+            _localCharRb.position = CurrentHole.spawn.position + _spawnOffset;
+            yield return new WaitForFixedUpdate();
+            _localCharRb.isKinematic = false;
+        }
+        
         private void HoleFinished() {
             _logger.Log("Hole finished. Old HoleIndex: "+HoleIndex+", new HoleIndex: "+(HoleIndex+1));
             CurrentHole.isCurrent = false;
             HoleIndex++;
             CurrentHole.isCurrent = true;
-            _localCharRb.position = CurrentHole.spawn.position + _spawnOffset;
+            StartCoroutine(MovePlayer());
             OnHoleFinished?.Invoke();
         }
 

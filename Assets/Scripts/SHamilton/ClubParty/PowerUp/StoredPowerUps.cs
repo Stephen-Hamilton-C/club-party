@@ -4,30 +4,33 @@ using JetBrains.Annotations;
 using Photon.Pun;
 using SHamilton.ClubParty.PowerUp.HoleMagnet;
 using SHamilton.ClubParty.PowerUp.Hyperball;
-using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty.PowerUp {
     [RequireComponent(typeof(PhotonView))]
     public class StoredPowerUps : MonoBehaviour {
-
+        public event PowerUpComponent.PowerUpEvent OnPowerUpApplied;
+        public event PowerUpComponent.PowerUpEvent OnAppliedPowerUpRemoved;
+        
         public static readonly Dictionary<string, PowerUpData> PowerUpDatas = new() {
             // NOTE: It's very important that the key exactly matches the Name property
             {"Hyperball", new HyperballData()},
             {"Hole Magnet", new HoleMagnetData()},
         };
 
-        [SerializeField] private bool debug;
         [SerializeField] private int maxPowerUps = 3;
 
         public int MaxPowerUps => maxPowerUps;
         public IReadOnlyList<PowerUpData> PowerUps => _powerUps;
         private readonly List<PowerUpData> _powerUps = new();
+        /// <summary>
+        /// NOTE: This works only on the LocalCharacter!
+        /// </summary>
+        public IReadOnlyList<PowerUpComponent> AppliedPowerUps => _appliedPowerUps;
+        private readonly List<PowerUpComponent> _appliedPowerUps = new();
 
         private PhotonView _view;
-        private Logger _logger;
 
         private void Start() {
-            _logger = new(this, debug);
             _view = GetComponent<PhotonView>();
         }
 
@@ -50,11 +53,24 @@ namespace SHamilton.ClubParty.PowerUp {
         [PunRPC, UsedImplicitly]
         private void AddPowerUpComponentRPC(string powerUpName) {
             var powerUp = PowerUpDatas[powerUpName];
-            // Don't apply if already applied
-            if (TryGetComponent(powerUp.ComponentType, out _)) return;
-            
-            gameObject.AddComponent(powerUp.ComponentType);
+            if (TryGetComponent(powerUp.ComponentType, out var existingComponent)) {
+                var powerUpComponent = existingComponent as PowerUpComponent;
+                powerUpComponent!.Amount++;
+            } else {
+                var addedComponent = gameObject.AddComponent(powerUp.ComponentType) as PowerUpComponent;
+                addedComponent!.Data = powerUp;
+                _appliedPowerUps.Add(addedComponent);
+                addedComponent!.OnPowerUpDestroyed += PowerUpDestroyed;
+                
+                OnPowerUpApplied?.Invoke(addedComponent);
+            }
         }
 
+        private void PowerUpDestroyed(PowerUpComponent component) {
+            _appliedPowerUps.Remove(component);
+            component.OnPowerUpDestroyed -= PowerUpDestroyed;
+            
+            OnAppliedPowerUpRemoved?.Invoke(component);
+        }
     }
 }

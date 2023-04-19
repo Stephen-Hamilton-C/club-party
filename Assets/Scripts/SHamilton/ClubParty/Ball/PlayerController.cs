@@ -197,7 +197,7 @@ namespace SHamilton.ClubParty.Ball {
                 var force = -pointToBall * speed;
                 _logger.Log("Applying impulse: "+force);
                 _rb.AddForce(force, ForceMode.Impulse);
-                LocalPlayerState.Stroked();
+                LocalPlayerState.Stroke();
             } else if (!_aiming) {
                 // Toggle aiming on
                 _aiming = LocalPlayerState.CanStroke && !_unlockCamCtrl.IsPressed();

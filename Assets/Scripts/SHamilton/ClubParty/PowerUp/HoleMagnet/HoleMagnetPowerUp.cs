@@ -1,45 +1,72 @@
 using JetBrains.Annotations;
 using Photon.Pun;
+using Photon.Realtime;
 using SHamilton.ClubParty.Ball;
 using UnityEngine;
-using Logger = SHamilton.Util.Logger;
 
 namespace SHamilton.ClubParty.PowerUp.HoleMagnet {
-    [RequireComponent(typeof(PhotonView))]
-    public class HoleMagnetPowerUp : MonoBehaviour {
+    public class HoleMagnetPowerUp : PowerUpComponent {
     
-        [SerializeField] private bool debug;
-
-        private Logger _logger;
-        private PhotonView _view;
         private GameObject _magnet;
+        private GameObject _magnetResource;
+        private bool _ignoreNextStroke;
 	
-        private void Start() {
-            _logger = new(this, debug);
-            _view = GetComponent<PhotonView>();
+        protected override void Start() {
+            base.Start();
             
-            if (_view.IsMine) {
+            if (View.IsMine) {
                 // Apply effect
-                var magnetResource = Resources.Load<GameObject>("PowerUp/HoleMagnet");
-                var hole = GameManager.Instance.CurrentHole.hole.transform;
-                _magnet = Instantiate(magnetResource, hole.position, Quaternion.identity);
+                _magnetResource = Resources.Load<GameObject>("PowerUp/HoleMagnet");
+                CreateMagnet();
 
-                LocalPlayerState.OnStrokeFinished += RemovePowerUp;
-                LocalPlayerState.OnHoleFinished += RemovePowerUp;
+                LocalPlayerState.OnStrokeFinished += StrokeFinished;
+                GameManager.OnPlayerFinished += PlayerFinished;
+                GameManager.OnHoleFinished += CreateMagnet;
             }
         }
 
-        private void RemovePowerUp() {
-            _view.RPC("RemoveHoleMagnetRPC", RpcTarget.AllBuffered);
+        private void CreateMagnet() {
+            if(_magnet)
+                Destroy(_magnet);
+
+            var hole = GameManager.Instance.CurrentHole.hole.transform;
+            _magnet = Instantiate(_magnetResource, hole.position, Quaternion.identity);
         }
 
-        private void OnDestroy() {
+        private void PowerUpFinished() {
+            CreateMagnet();
+            Amount--;
+        }
+
+        private void StrokeFinished() {
+            if(_ignoreNextStroke) {
+                _ignoreNextStroke = false;
+                return;
+            }
+
+            PowerUpFinished();
+        }
+        
+        private void PlayerFinished(Player player) {
+            if (!player.IsLocal) return;
+            
+            // Account for edge case
+            if(LocalPlayerState.Stroked)
+                _ignoreNextStroke = true;
+            
+            PowerUpFinished();
+        }
+
+        protected override void OnDestroy() {
+            base.OnDestroy();
+            
             // Reset effect
             if(_magnet != null)
                 Destroy(_magnet);
 
-            LocalPlayerState.OnStrokeFinished -= RemovePowerUp;
-            LocalPlayerState.OnHoleFinished -= RemovePowerUp;
+            LocalPlayerState.OnStrokeFinished -= StrokeFinished;
+            GameManager.OnPlayerFinished -= PlayerFinished;
+            GameManager.OnHoleFinished -= CreateMagnet;
         }
 
         [PunRPC, UsedImplicitly]
