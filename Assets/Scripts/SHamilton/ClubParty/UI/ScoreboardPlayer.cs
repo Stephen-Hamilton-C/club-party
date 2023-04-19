@@ -13,6 +13,8 @@ namespace SHamilton.ClubParty.UI {
         [SerializeField] private TextMeshProUGUI playerName;
         [SerializeField] private TextMeshProUGUI[] scores;
         [SerializeField] private TextMeshProUGUI totalScore;
+        [SerializeField] private Color positiveScoreColor;
+        [SerializeField] private Color negativeScoreColor;
 
         private Logger _logger;
 	
@@ -26,7 +28,18 @@ namespace SHamilton.ClubParty.UI {
             
             playerName.text = player.NickName;
             for (int i = 0; i < scores.Length; i++) {
-                scores[i].text = (playerScores[i] + GameManager.Instance.holes[i].Par).ToString();
+                var score = playerScores[i];
+                var strokes = score + GameManager.Instance.holes[i].Par;
+                var sign = "";
+                var color = scores[i].color;
+
+                if(score > 0) {
+                    color = positiveScoreColor;
+                } else if(score < 0) {
+                    color = negativeScoreColor;
+                }
+                scores[i].text = sign + strokes;
+                scores[i].color = color;
             }
             totalScore.text = playerScores.Sum().ToString();
         }
