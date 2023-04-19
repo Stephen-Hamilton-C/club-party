@@ -883,6 +883,41 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1442097944, guid: 618596abd1e22e544992cbdb85237437,
         type: 3}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1669995250}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OkClicked
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SHamilton.ClubParty.UI.Dialog, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5536140700660184426, guid: 33a00528c6fa40942b3678e74f5cbd8d,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 5536140700660184427, guid: 33a00528c6fa40942b3678e74f5cbd8d,
         type: 3}
       propertyPath: m_Sprite
