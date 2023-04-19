@@ -61,7 +61,7 @@ namespace SHamilton.ClubParty.PowerUp.HoleMagnet {
             base.OnDestroy();
             
             // Reset effect
-            if(_magnet != null)
+            if(_magnet)
                 Destroy(_magnet);
 
             LocalPlayerState.OnStrokeFinished -= StrokeFinished;
