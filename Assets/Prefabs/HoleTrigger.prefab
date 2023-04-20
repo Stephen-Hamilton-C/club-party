@@ -144,6 +144,10 @@ MonoBehaviour:
   moveTo: 0.75
   animTime: 0.3
   visibleTime: 2
+  aceColor: {r: 0.20392157, g: 0.59607846, b: 0.85882354, a: 1}
+  goodColor: {r: 0.9529412, g: 0.6117647, b: 0.07058824, a: 1}
+  parColor: {r: 0.9254902, g: 0.9411765, b: 0.94509804, a: 1}
+  badColor: {r: 0.90588236, g: 0.29803923, b: 0.23529412, a: 1}
 --- !u!1 &6802252786989121372
 GameObject:
   m_ObjectHideFlags: 0

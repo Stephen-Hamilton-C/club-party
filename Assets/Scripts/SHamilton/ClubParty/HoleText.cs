@@ -9,6 +9,11 @@ namespace SHamilton.ClubParty {
         [SerializeField] private float moveTo;
         [SerializeField] private float animTime;
         [SerializeField] private float visibleTime;
+        [SerializeField] private Color aceColor;
+        [SerializeField] private Color goodColor;
+        [SerializeField] private Color parColor;
+        [SerializeField] private Color badColor;
+
         private TMP_Text _text;
         private Hole _hole;
         private float _finishedTime;
@@ -31,23 +36,33 @@ namespace SHamilton.ClubParty {
             var scores = NetworkManager.LocalCharacter.GetComponent<ScoreTracker>();
             if(scores.Strokes <= 1) {
                 _text.text = "ACE!";
+                _text.color = aceColor;
             } else if(scores.CurrentScore == 1) {
                 _text.text = "Bogey";
+                _text.color = badColor;
             } else if(scores.CurrentScore == 2) {
                 _text.text = "Double Bogey";
+                _text.color = badColor;
             } else if(scores.CurrentScore == 3) {
                 _text.text = "Triple Bogey";
+                _text.color = badColor;
             } else if(scores.CurrentScore == 0) {
                 _text.text = "Par";
+                _text.color = parColor;
             } else if(scores.CurrentScore == -1) {
                 _text.text = "Birdie!";
+                _text.color = goodColor;
             } else if(scores.CurrentScore == -2) {
                 _text.text = "Eagle!";
+                _text.color = goodColor;
             } else if(scores.CurrentScore == -3) {
                 _text.text = "Double Eagle!";
+                _text.color = goodColor;
             } else {
-               var positiveSign = scores.CurrentScore > 0 ? "+" : "";
-               _text.text = positiveSign + scores.CurrentScore;
+                var isScorePositive = scores.CurrentScore > 0;
+                var positiveSign = isScorePositive ? "+" : "";
+                _text.text = positiveSign + scores.CurrentScore;
+                _text.color = isScorePositive ? badColor : goodColor;
             }
             
             LeanTween.moveLocalZ(gameObject, moveTo, animTime).setEaseOutQuad();
