@@ -19,7 +19,7 @@ namespace SHamilton.ClubParty {
         /// <summary>
         /// How much time to wait before loading the next level
         /// </summary>
-        private const float TimeBeforeNextLevel = 1f;
+        private const float TimeBeforeNextLevel = 3f;
     
         [SerializeField] private bool debug;
 
@@ -175,8 +175,10 @@ namespace SHamilton.ClubParty {
         /// </summary>
         /// <param name="player">The ActorNumber of the PhotonPlayer that finished the hole</param>
         public void PlayerInHole(Player player) {
+            var alreadyInHole = !_finishedPlayers.Add(player);
+            if(alreadyInHole) return;
+
             _logger.Log("Player has made it in the hole. Player: "+player);
-            _finishedPlayers.Add(player);
         
             // Disable player inter-collision
             var character = player.GetCharacter();
