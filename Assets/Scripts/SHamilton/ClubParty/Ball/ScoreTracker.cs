@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using SHamilton.ClubParty.Network;
@@ -12,6 +13,8 @@ namespace SHamilton.ClubParty.Ball {
         [SerializeField] private int lateJoinScore;
 
         public int Strokes => _scores[GameManager.HoleIndex] + GameManager.Instance.CurrentHole.Par;
+        public IReadOnlyList<int> Scores => _scores;
+        public int CurrentScore => _scores[GameManager.HoleIndex];
 
         private int[] _scores;
 
