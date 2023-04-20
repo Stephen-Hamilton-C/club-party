@@ -12,7 +12,7 @@ namespace SHamilton.ClubParty {
     public class HoleTrigger : MonoBehaviour {
     
         [SerializeField] private bool debug;
-        [SerializeField] private Hole hole;
+        public Hole hole;
 
         private Logger _logger;
         private PhotonView _view;
