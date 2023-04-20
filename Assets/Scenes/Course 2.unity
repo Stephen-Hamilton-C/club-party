@@ -2678,6 +2678,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1347856428}
     m_Modifications:
+    - target: {fileID: -2053301650839742936, guid: 416303b01c0fce344a5c3fd4c095e8e4,
+        type: 3}
+      propertyPath: hole
+      value: 
+      objectReference: {fileID: 856085511}
     - target: {fileID: 1829735977568502723, guid: 416303b01c0fce344a5c3fd4c095e8e4,
         type: 3}
       propertyPath: sceneViewId
