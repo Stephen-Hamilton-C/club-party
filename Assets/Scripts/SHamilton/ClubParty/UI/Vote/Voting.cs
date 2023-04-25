@@ -30,6 +30,7 @@ namespace SHamilton.ClubParty.UI.Vote {
 
         private double _countdownStartTime = -1;
         private int[] _chosenCourses;
+        private bool _voted;
 
         // TODO: I could probably just do some snazzy serial/deserialization so I don't have to dance around with indices
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
@@ -107,6 +108,7 @@ namespace SHamilton.ClubParty.UI.Vote {
             if (!value) return;
             var voteIndex = button.transform.GetSiblingIndex();
             NetworkManager.LocalPlayer.SetCurrentVote(voteIndex);
+            _voted = true;
 
             // Get course name for debugging
             if (debug) {
@@ -126,7 +128,9 @@ namespace SHamilton.ClubParty.UI.Vote {
                 .Set("NUM", countdownTimer)
                 .Replace();
 
-            if (NetworkManager.IsMasterClient && timeSinceStart >= countdownLength) {
+            var singleplayerSelected = NetworkManager.PlayerCount == 1 && _voted;
+
+            if (NetworkManager.IsMasterClient && timeSinceStart >= countdownLength || singleplayerSelected) {
                 _countdownStartTime = -1;
                 _logger.Log("Timer finished as master client.");
                 var courseVotes = new int[_chosenCourses.Length];
