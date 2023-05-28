@@ -997,6 +997,7 @@ MonoBehaviour:
   - {fileID: 25736056}
   - {fileID: 1029034701}
   - {fileID: 870058106}
+  holeNameText: {fileID: 1555636221}
 --- !u!1 &446431937
 GameObject:
   m_ObjectHideFlags: 0

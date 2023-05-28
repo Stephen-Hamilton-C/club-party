@@ -5101,6 +5101,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
         type: 3}
+      propertyPath: currentCourse
+      value: 
+      objectReference: {fileID: 11400000, guid: e26599113567b65938f660df63ed2022,
+        type: 2}
+    - target: {fileID: 6570246153575660057, guid: e1916e47ea58f574ca37b6bd142b4ebc,
+        type: 3}
       propertyPath: holes.Array.size
       value: 3
       objectReference: {fileID: 0}

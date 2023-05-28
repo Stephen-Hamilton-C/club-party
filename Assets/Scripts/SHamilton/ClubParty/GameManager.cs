@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Realtime;
 using SHamilton.ClubParty.Network;
+using SHamilton.ClubParty.UI.Vote;
 using UnityEngine;
 using Logger = SHamilton.Util.Logger;
 
@@ -40,6 +41,9 @@ namespace SHamilton.ClubParty {
         /// </summary>
         public static GameEvent OnLevelFinished;
         #endregion
+
+        public static CourseData CurrentCourse => Instance.currentCourse;
+        [SerializeField] private CourseData currentCourse; 
 
         /// <summary>
         /// Each hole in this course
