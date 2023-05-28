@@ -6,6 +6,7 @@ namespace SHamilton.ClubParty.Interactables {
     
         [SerializeField] private bool debug;
         [SerializeField] private float padForce = 10f;
+        [SerializeField] private float correctionForceFactor = 0.3f;
 
         private Logger _logger;
 	
@@ -14,7 +15,14 @@ namespace SHamilton.ClubParty.Interactables {
         }
 
         private void OnTriggerEnter(Collider other) {
-            other.attachedRigidbody.AddForce(-transform.forward * padForce, ForceMode.Impulse);
+            var plrVelocity = other.attachedRigidbody.velocity;
+            var padDirection = -transform.forward;
+
+            var projectionVelOnDir = Vector3.Dot(plrVelocity, padDirection) * padDirection;
+            var rejectionVelOnDir = plrVelocity - projectionVelOnDir;
+            var correctionForce = rejectionVelOnDir * correctionForceFactor;
+
+            other.attachedRigidbody.AddForce(padDirection * padForce - correctionForce, ForceMode.Impulse);
         }
     }
 }
