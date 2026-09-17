@@ -1,10 +1,14 @@
+# Archived - 2026-09-17
+All repositories have been transferred to a personally-run repository.
+This remains up for legacy purposes.
+
 # NOTICE
 Club Party has ceased development for the time being.
 I wanted to create this because my friends and I loved playing Putt Party,
 and we were considerably upset when the game got paywalled.
 However, Discord Activities have been brought back,
 and thus the point of creating this game is now moot.
-I won't archive this repo, just in cause Discord pulls a corporation moment and paywalls it again.
+~~I won't archive this repo, just in cause Discord pulls a corporation moment and paywalls it again.~~
 
 # Club Party
 Club Party is a recreation of the beloved Putt Party from Discord's activities.
